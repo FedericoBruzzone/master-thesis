@@ -35,7 +35,6 @@ In this chapter, we provide an overview of the concepts and technologies that ar
 The goal of this chapter is to provide the reader with the necessary background knowledge to understand the work presented in the following chapters. We assume that the reader has a basic understanding of programming languages and software development.
 
 \section{Language Server Protocol}\label{sec:LanguageServerProtocol}
-% Introduction to the Language Server Protocol
 The Language Server Protocol\footnote{\url{https://microsoft.github.io/language-server-protocol}} (LSP) is a protocol that allows for the communication between a language server and an editor or an IDE. The LSP is used to decuple the a language-agnotic editor or integrated development environment (IDE) from the language-specific features of a language server (see Listing~\ref{lst:lsp}). This allows for the development of language servers that can be used with multiple editors or IDEs. The LSP is based on the stateless JSON-RPC protocol and defines a set of messages that are used to communicate between the language server and the editor or IDE.
 
 Usually, the LSP Clients are developed as plugins for popular editors or IDEs decresing the effort to support a new language in a given editor. The LSP Clients are responsible for sending requests to the language server and processing the responses. The language server is responsible for providing language-specific features. The LSP defines a set of messages that are used to communicate between the language server and the editor or IDE. These messages include requests for code completion, code navigation, and code analysis, as well as notifications for changes to the document, diagnostics, and progress reports.
@@ -54,6 +53,46 @@ JSON-RPC is a JSON based implementation of the RPC protocol. It defines a set of
 All messages refer to a \textit{method} that is a string containing the name of the method to be called. The \textit{params} field is an array or object containing the parameters to be passed to the method. Typically, messages are synchronous, meaning that the client waits for a response from the server before continuing. The \textit{id} field is a unique identifier for the message, which is used to match requests with responses. However, the JSON-RPC protocol also supports asynchronous messages, known as notifications, which do not require a response from the server. This is implemented by setting the \textit{id} field to \textit{null}, in which case the server does not send a response back to the client.
 
 The JSON-RPC specification includes the ability for clients to batch multiple requests or notifications by sending them as a list. The server is expected to respond with a corresponding list of results for each request. Additionally, the server has the flexibility to process these requests concurrently.
+
+\subsection{Command Specifications}\label{sec:CommandSpecification}
+The LSP is defined on top of the JSON-RPC protocol described in section \ref{subsec:JSONRPC}. In abstract terms, the LSP defines a set of command that can be sent between a client and a server. In the Language Server Protocol Specification\footnote{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification}, these commands are divided into four categories: \textit{Language Features}, \textit{Text Document Synchronization}, \textit{Workspace Features}, and \textit{Window Features}.
+
+\subsubsection{Language Features}
+The \textit{Language Features} provide the smarts of the language server. Usually, the client sends a request to the server to get information about the document as a tuple of \texttt{TextDocument} and \texttt{Position}. \textit{Code comprehension} and \textit{Coding Features} are the two main categories of commands in this category.
+
+Here a brief description of the most important commands in this category:
+\begin{itemize}
+    \item \texttt{textDocument/completion}: The completion request is sent from the client to the server to compute completion items at a given cursor position. Completion items are presented in the editor's user interface. If computing full completion items is expensive, servers can additionally provide a handler for the completion item resolve request (\texttt{completionItem/resolve}). This request is sent when a completion item is selected in the user interface.
+
+    \item \texttt{textDocument/hover}: The hover request is sent from the client to the server to request hover information at a given text document position. Hover information typically includes the symbol's signature and documentation.
+
+    \item \texttt{textDocument/definition}: The definition request is sent from the client to the server to resolve the definition location of a symbol at a given text document position.
+
+    \item \texttt{textDocument/references}: The references request is sent from the client to the server to resolve project-wide references for the symbol denoted by the given text document position.
+
+    \item \texttt{textDocument/documentHighlight}: The document highlight request is sent from the client to the server to resolve a document highlights for a given text document position. For programming languages, this usually highlights all references to the symbol denoted by the given text document position.
+\end{itemize}
+
+\subsubsection{Text Document Synchronization}\label{subsec:TextDocumentSynchronization}
+The \textit{Text Document Synchronization} commands are used to notify the server of changes to the document. Client support for \texttt{textDocument/didOpen}, \texttt{textDocument/didChange}, \texttt{textDocument/didClose} is mandatory. This includes the ability to fully and incrementally synchronize changes to the document, such as inserting, deleting, and replacing text.
+
+Here a brief description of the most important commands in this category:
+\begin{itemize}
+    \item \texttt{textDocument/didOpen}: The document open notification signals that the client is now managing a text document. The server should not read the document using its URI. Open notifications are balanced with close notifications, with only one open notification allowed at a time for a document. The server's ability to fulfill requests is unaffected by a document's open or closed status.
+
+    \item \texttt{textDocument/didChange}: The document change notification is sent from the client to the server to signal changes to a text document. In response, the server should compute a new version of the document's content. The server should not rely on the client to send a specific sequence of change events. The server is free to compute the new version of the document on the fly.
+
+    \item \texttt{textDocument/didClose}: The document close notification is sent from the client to the server when the document is no longer managed by the client. The document's URI is no longer valid and the server should not resolve the document using the URI.
+
+    \item \texttt{textDocument/didSave}: The document save notification is sent from the client to the server when the document is saved. The notification is sent after the document has been saved.
+\end{itemize}
+
+\subsubsection{Workspace Features}
+
+% HERE
+
+\subsubsection{Window Features}
+
 
 \section{Language Workbenches}\label{sec:LanguageWorkbenches}
 
