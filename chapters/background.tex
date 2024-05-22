@@ -238,8 +238,78 @@ In the figure \ref{fig:completion} we can see that the code completion is trigge
     \label{fig:completion}
 \end{figure}
 
+\subsection{Approaches to Source Code Analysis in Language Servers}\label{subsec:ApproachesToSourceCodeAnalysis}
+Language servers handle source code analysis using various methods, influenced significantly by the complexity of the language. The choice of approach affects how servers process file indexes, manage changes, and respond to requests.
+
+The Language Server Protocol (LSP) supports two methods for sending updates: diffs of atomic changes and complete transmission of changed files. The former requires incremental parsing and analysis, which are challenging to implement but enable much faster processing of files upon changes. Incremental parsing relies on an internal representation of the source code that allows efficient updates for small changes. This method necessitates providing the parser with the right context to correctly parse a changed fragment of code.
+
+In practice, most language servers re-index the entire file when changes occur, discarding the previous internal state. This approach is more straightforward to implement as it poses fewer requirements for the architects of the language server, but it is significantly less performant. Unlike incremental processing, which updates only the affected portions of its internal structure, even minor changes such as adding or removing lines require reprocessing the entire file. This method may suffice for small languages and codebases but becomes a performance bottleneck with larger ones.
+
+For code analysis, LSP implementers must choose between lazy and greedy approaches to processing files and answering requests. Greedy implementations resolve most available information during the file's initial indexing, enabling the server to answer requests using simple lookups. Conversely, lazy approaches resolve only minimal local information during indexing, invoking ad-hoc resolution for requests and possibly memoizing the results for future use. Lazy resolution is more common with incremental indexing, as it reduces the work associated with file changes, which is crucial for complex languages that would otherwise require a significant amount of redundant work.
 
 \section{Language Workbenches}\label{sec:LanguageWorkbenches}
+
+The term \textit{Language Workbench} was coined by Martin Fowler in 2005~\cite{Fowler05} to describe a set of tools that support the development of domain-specific languages (DSLs) in the context of \textit{language-oriented programming} paradigm~\cite{Ward94}.
+
+A language workbench will typically include tools to support the definition, reuse and composition of domain-specific languages together with their integrated development environment.
+
+Current language workbenches usually support:
+\begin{itemize}
+    \item Specification of the language concepts or metamodel
+    \item Specification of the editing environments for the domain-specific language
+    \item Specification of the execution semantics, e.g. through interpretation and code generation
+\end{itemize}
+
+
+
+Language workbenches have been developed for various technological spaces. Some of the most popular language workbenches are:
+\begin{itemize}
+    \item \textbf{JetBrains MPS}\footnote{\url{https://www.jetbrains.com/mps/}}: A powerful language workbench that allows the creation of domain-specific languages and the generation of code from them.
+    \item \textbf{Xtext}\footnote{\url{https://www.eclipse.org/Xtext/}}: A framework for developing domain-specific languages and languages for code generation.
+    \item \textbf{Spoofax}\footnote{\url{https://www.metaborg.org/en/latest/}}: A language workbench for developing textual domain-specific languages.
+\end{itemize}
+
+Instead, we discuss \texttt{Neverlang} (Sect.~\ref{subsec:neverlang}) in particular detail, since most of the research discussed in this dissertation will use \textsf{Neverlang} as a running example.
+
+\subsection{Neverlang}\label{subsec:neverlang}
+
+\begin{Listing}[t]
+	% \begingroup
+	% \catcode`\!=\active%
+	% \def!#1!{\tikz[na]\coordinate(#1);\label{#1}}
+	\setminted[neverlang]{escapeinside=@@}
+	\showneverlang*{Backup.nl}\vskip -10pt%
+	\caption{Syntax and semantics for the backup task.}\label{lst:backup}
+	% \endgroup
+	\newcommand{\nt}[1]{%
+		\node[draw, fill=none, shape=circle, inner sep=0pt, minimum width=.375cm] (c\i) at (s\i) {};%
+		\coordinate (d\i0p) at ($(d\i0)+(-1pt,2pt)$);% chktex 1
+		\coordinate (d\i1p) at ($(d\i1)+(1pt,-3pt)$);% chktex 1
+		\node[draw, thick, shape=rectangle, name=d\i, inner sep=1pt, fit=(d\i0p) (d\i1p)] {};% chktex 1 % chktex 36
+	}
+	\begin{tikzpicture}[overlay, thick, BloodRed]
+		\coordinate (s0) at ($(s0)+(2pt,0pt)$) ;
+		\foreach \i in {0, 1, 2} {%
+			\nt{\i}
+			\draw[-stealth, rounded corners=7pt] (c\i) -- (d\i);
+		}
+	\end{tikzpicture}
+\end{Listing}
+
+The \textit{Neverlang} \cite{Cazzola12c, Cazzola13e, Cazzola15c} framework promote the code reusability and the separation of concerns in the implementation of programming languages, based around the concept of \textit{language-feature}.
+The basic development unit is the \textbf{module}, as shown in line 1 of Listing \ref{lst:backup}.
+A module may contain a \textbf{reference syntax} and could have zero or multiple \textbf{role}s. A role, used to define the semantics, is unit of composition that defines actions that should be executed when some syntax is recognized, as defined by \textit{syntax-directed translation} \cite{Aho86}.
+Syntax definitions are defined using \textit{Backus–Naur form} (BNF) grammars, represented as sets of \textit{productions} and \textit{terminals}.
+Syntax definitions and semantic \textbf{role}s are tied together using \textit{slice}s.
+Listing \ref{lst:backup} shows a simple example of a Neverlang module implementing a backup task of the \texttt{LogLang} LPL. Reference syntax is defined in lines 2-6; the \textit{categories} (line 5) are used also to generate the syntax highlighting for the IDEs.
+Semantic actions may be attached to a non-terminal using the production's name as a reference, or using the position of the non-terminal in the grammar, as shown in line 8, numbering start with 0 from the top left to the bottom right.
+The two \textit{String} non-terminals on the right-hand side of the \textit{Backup} production are referenced using 1 and 2, respectively.
+Different semantic actions may be attached to the same production thanks to the multiplicity of \textbf{role}s that can be defined for a module. Each \textbf{role} is a compilation phase that can be executed in a specific order, as shown in line 24.
+In contrast, the \texttt{BackupSlice} (lines 14-18) reveals how the syntax and semantics are tied together; choosing the \texttt{concrete syntax} from the Backup module (line 15), and two \texttt{role}s from two different modules (lines 16-17).
+Finally, the \texttt{language} can be created by composing multiple \textbf{slices} (line 20).
+The composition in Neverlang is twofold: between modules and between slices. Thus, the grammars are merged in order to generate the complete language parser. On the other hand, the semantic actions are composed in a pipeline, and each \textbf{role} traverses the syntax tree in the order specified in the \textbf{roles} clause (line 24).
+
+
 
 \section{Type Systems}\label{sec:TypeSystems}
 
