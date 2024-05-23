@@ -238,7 +238,7 @@ In the figure \ref{fig:completion} we can see that the code completion is trigge
     \label{fig:completion}
 \end{figure}
 
-\subsection{Approaches to Source Code Analysis in Language Servers}\label{subsec:ApproachesToSourceCodeAnalysis}
+\subsection{Approaches to Source Code Analysis}\label{subsec:ApproachesToSourceCodeAnalysis}
 Language servers handle source code analysis using various methods, influenced significantly by the complexity of the language. The choice of approach affects how servers process file indexes, manage changes, and respond to requests.
 
 The Language Server Protocol (LSP) supports two methods for sending updates: diffs of atomic changes and complete transmission of changed files. The former requires incremental parsing and analysis, which are challenging to implement but enable much faster processing of files upon changes. Incremental parsing relies on an internal representation of the source code that allows efficient updates for small changes. This method necessitates providing the parser with the right context to correctly parse a changed fragment of code.
@@ -260,8 +260,6 @@ Current language workbenches usually support:
     \item Specification of the execution semantics, e.g. through interpretation and code generation
 \end{itemize}
 
-
-
 Language workbenches have been developed for various technological spaces. Some of the most popular language workbenches are:
 \begin{itemize}
     \item \textbf{JetBrains MPS}\footnote{\url{https://www.jetbrains.com/mps/}}: A powerful language workbench that allows the creation of domain-specific languages and the generation of code from them.
@@ -269,7 +267,7 @@ Language workbenches have been developed for various technological spaces. Some 
     \item \textbf{Spoofax}\footnote{\url{https://www.metaborg.org/en/latest/}}: A language workbench for developing textual domain-specific languages.
 \end{itemize}
 
-Instead, we discuss \texttt{Neverlang} (Sect.~\ref{subsec:neverlang}) in particular detail, since most of the research discussed in this dissertation will use \textsf{Neverlang} as a running example.
+Instead, we discuss \texttt{Neverlang} (Sect.~\ref{subsec:neverlang}) in particular detail, since most of the research discussed in this dissertation will use \texttt{Neverlang} as a running example.
 
 \subsection{Neverlang}\label{subsec:neverlang}
 
@@ -279,7 +277,8 @@ Instead, we discuss \texttt{Neverlang} (Sect.~\ref{subsec:neverlang}) in particu
 	% \def!#1!{\tikz[na]\coordinate(#1);\label{#1}}
 	\setminted[neverlang]{escapeinside=@@}
 	\showneverlang*{Backup.nl}\vskip -10pt%
-	\caption{Syntax and semantics for the backup task.}\label{lst:backup}
+	\caption{Syntax and semantics for the backup task. Borrowed from \cite{Cazzola20}}
+    \label{lst:backup}
 	% \endgroup
 	\newcommand{\nt}[1]{%
 		\node[draw, fill=none, shape=circle, inner sep=0pt, minimum width=.375cm] (c\i) at (s\i) {};%
@@ -307,10 +306,175 @@ The two \textit{String} non-terminals on the right-hand side of the \textit{Back
 Different semantic actions may be attached to the same production thanks to the multiplicity of \textbf{role}s that can be defined for a module. Each \textbf{role} is a compilation phase that can be executed in a specific order, as shown in line 24.
 In contrast, the \texttt{BackupSlice} (lines 14-18) reveals how the syntax and semantics are tied together; choosing the \texttt{concrete syntax} from the Backup module (line 15), and two \texttt{role}s from two different modules (lines 16-17).
 Finally, the \texttt{language} can be created by composing multiple \textbf{slices} (line 20).
-The composition in Neverlang is twofold: between modules and between slices. Thus, the grammars are merged in order to generate the complete language parser. On the other hand, the semantic actions are composed in a pipeline, and each \textbf{role} traverses the syntax tree in the order specified in the \textbf{roles} clause (line 24).
+The composition in Neverlang is twofold \cite{Cazzola20}: between modules and between slices. Thus, the grammars are merged in order to generate the complete language parser. On the other hand, the semantic actions are composed in a pipeline, and each \textbf{role} traverses the syntax tree in the order specified in the \textbf{roles} clause (line 24).
+Plase see \cite{Cazzola15c} for a more detailed explanation of the \texttt{Neverlang} framework.
+
+\section{Static Analysis and Type Systems}\label{sec:SaticAnalysisAndTypeSystems}
+
+Static code analysis is a software verification technique refers to the process of examining the code without executing it in order to capture the defects in the code early avoiding costly later fixations \cite{Aurum02}. Static code analysis has two main approaches: manual and automated \cite{Ilyas16}.
+Manual code analysis is a time-consuming process that requires human expertise to review the code and identify defects. Automated code analysis, on the other hand, uses tools to analyze the code and identify defects automatically. Automated code analysis tools can be used to analyze the code for defects such as syntax errors, type errors, and logic errors. These tools can also be used to enforce coding standards and best practices, such as naming conventions, code formatting, and code complexity.
 
 
+\subsection{Type Systems}\label{subsec:TypeSystems}
 
-\section{Type Systems}\label{sec:TypeSystems}
+\textit{Type systems} are a fundamental part of static code analysis. A type system~\cite{Pierce02} is a set of rules that define how types are used in a programming language. The type system defines the types of variables, functions, and expressions, as well as the rules for type compatibility and type inference.
+
+\textit{Type checking} is the process of verifying that the types of variables, functions, and expressions are used correctly in the code. Type checking can be done \textit{statically}, at compile time, or \textit{dynamically}, at runtime. Static type checking is more efficient and catches type errors earlier in the development process, while dynamic type checking is more flexible and allows for more dynamic programming.
+
+\textit{Type inference} is the process of automatically deducing the types of variables, functions, and expressions in the code. Type inference is used to reduce the amount of type annotations required in the code, making the code more concise and easier to read. Type inference is used in statically typed languages such as OCaml, Java, and Rust, as well as in dynamically typed languages such as Python and JavaScript, see table~\ref{tab:TypeSystems}.
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Language} & \textbf{Type System} & \textbf{Type Checking} & \textbf{Type Inference} \\
+        \hline
+        C & Weak & Static & No \\
+        OCaml & Strong & Static & Yes \\
+        Java & Strong & Static  & Yes \\
+        Rust & Strong & Static  & Yes \\
+        Python & Strong & Dynamic  & Yes \\
+        JavaScript & Weak & Dynamic  & Yes \\
+        Haskell & Strong & Static  & Yes \\
+        Erlang & Strong & Dynamic  & Yes \\
+        Perl & Weak & Dynamic  & No \\
+        \hline
+    \end{tabular}
+    \caption{Examples of programming languages and their type systems}
+    \label{tab:TypeSystems}
+\end{table}
+
+A programming language can be classified based on its type system and type checking. There are two main categories of type systems: \textit{strong} and \textit{weak}. A strong type system enforces type safety and does not allow for implicit type conversions, while a weak type system allows for implicit type conversions and does not enforce type safety. A programming language can also be classified based on its type checking: \textit{static} or \textit{dynamic}. Static type checking is done at compile time and catches type errors before the code is executed, while dynamic type checking is done at runtime and catches type errors as the code is executed.
+
+In table \ref{tab:TypeSystems} we show examples of programming languages and their type systems. C is a statically typed language with a weak type system, meaning that it allows for implicit type conversions and does not enforce type safety. OCaml, Java, and Rust are statically typed languages with strong type systems, meaning that they enforce type safety and do not allow for implicit type conversions. Python and JavaScript are dynamically typed languages with strong type systems, meaning that they enforce type safety at runtime. Haskell is a statically typed language with a strong type system and support for type inference. Erlang is a dynamically typed language with a strong type system and support for type inference.
+
+\subsection{Theoretical Aspects}\label{subsec:TheoreticalAspects}
+
+Theoretical aspects of type systems are an important research area in computer science. Type systems are used to ensure the correctness and safety of programs by enforcing rules about how types are used in the code. Type systems can be classified based on their properties, such as \textit{soundness}, \textit{completeness}, and \textit{decidability}.
+
+A brief explanation of these properties is given below:
+\begin{itemize}
+    \item A type system is \textbf{sound} if it guarantees that well-typed programs do not produce runtime errors. Soundness is an important property of a type system because it ensures that the type system is correct and that it enforces the correct use of types in the code.
+    \item A type system is \textbf{complete} if it can infer the type of any expression in the code. Completeness is an important property of a type system because it ensures that the type system can handle all possible expressions in the code.
+    \item A type system is \textbf{decidable} if it can determine the type of any expression in a finite amount of time. Decidability is an important property of a type system because it ensures that the type system is efficient and can be used in practice.
+\end{itemize}
+
+\subsection{Type Theory as a Logic}\label{subsec:TypeTheoryAsALogic}
+
+A \textit{Type theory} is a mathematical logic, which is to say it is a collection of rules of inference that result in judgments.
+Most logics are based on judgements, which are statements that assert the truth of a proposition.
+Martin-L\"of in \textit{Intuitionistic Type Theory}~\cite{Martin84} introduced a new type theory, previously published in 1972, that is based on the idea of judgments as the central concept of the theory.
+In Martin-L\"of's~\cite{Martin96} type system, a judgment is no longer just an affirmation or denial of a proposition, but a general act of knowledge. When reasoning mathematically we make judgments about mathematical objects. One form of judgment is to state that some mathematical statement is true. Another form of judgment is to state that something is a mathematical object, for example a set~\cite{sep-type-theory-intuitionistic}.
+
+In the following sections, we will discuss the basic concepts of type theory and how it is used in the context of programming languages.
+
+\subsubsection{Judgements}\label{subsubsec:Judgements}
+
+Martin-L\"of type theory has four basic forms of judgments and is a considerably more complicated system than first-order logic.
+
+The four basic forms of judgments are:
+\begin{itemize}
+    \item $\vdash A \textrm{ type}$ --- This judgment asserts that $A$ is a well-formed type.
+    \item $\vdash a : A$ --- This judgment asserts that $a$ is an element of type $A$.
+    \item $\vdash A = B \textrm{ type}$ --- This judgment asserts that $A$ and $B$ are equal types.
+    \item $\vdash a = b : A$ --- This judgment asserts that $a$ and $b$ are equal elements of type $A$.
+\end{itemize}
+
+In programming languages, the first two judgments are used to define the types of variables and functions, while the last two judgments are used to define equality between types and elements.
+For instance,
+$$
+\vdash \texttt{Int} \textrm{ type} \quad \vdash 1 : \texttt{Int} \quad \vdash \texttt{Int} = \texttt{Int} \textrm{ type} \quad \vdash 1 = 1 : \texttt{Int}
+$$
+
+\subsubsection{Contexts}\label{subsubsec:Contexts}
+
+In general, judgments are \textit{hypothetical}, meaning that they are made under certain assumptions. These assumptions are kept track of in a \textit{context}.
+In Martin-L\"of's type theory, the context is a list $x_1 : A_1, \ldots, x_n : A_n$ of variables and their types. Note that the context is ordered, meaning that the order of the variables matters.
+
+The four basic forms of judgments are made in the context of a given context $\Gamma$:
+\begin{itemize}
+    \item $\Gamma \vdash A \textrm{ type}$ --- This judgment asserts that $A$ is a well-formed type in the context $\Gamma$.
+    \item $\Gamma \vdash a : A$ --- This judgment asserts that $a$ is an element of type $A$ in the context $\Gamma$.
+    \item $\Gamma \vdash A = B \textrm{ type}$ --- This judgment asserts that $A$ and $B$ are equal types in the context $\Gamma$.
+    \item $\Gamma \vdash a = b : A$ --- This judgment asserts that $a$ and $b$ are equal elements of type $A$ in the context $\Gamma$.
+\end{itemize}
+
+In programming languages, the context is used to keep track of the types of variables and functions in the code. For instance,
+$$
+x : \texttt{Int}, y : \texttt{Int} \vdash x + y : \texttt{Int}
+$$
+or,
+$$
+x : \texttt{Int}, y : \texttt{Int} \vdash x + y = y + x : \texttt{Int}
+$$
+
+\subsubsection{Inference Rules}\label{subsubsec:InferenceRules}
+Let $\Pi$ be a set of type functions in the form of $\Pi x : A. B$ where $x$ is a variable of type $A$ and $B$ is a type.
+
+The first group of inference rules in Martin-L\"of's type theory are the \textit{formation rules}. These rules define how types are formed and how elements are formed in a given context. The formation rules are used to define the types of variables and functions in the code.
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash A \textrm{ type}$}
+    \AxiomC{$\Gamma, x : A \vdash B \textrm{ type}$}
+    \BinaryInfC{$\Gamma \vdash \Pi x : A. B \textrm{ type}$}
+\end{prooftree}
+Written in natural language, the $\Pi$-formation rule states that if $A$ is a type in the context $\Gamma$ and $B$ is a type in the context $\Gamma, x : A$, then $\Pi x : A. B$ is a type in the context $\Gamma$.
+
+\hfill \break
+\hfill \break
+The second group of inference rules in Martin-L\"of's type theory are the \textit{introduction rules}. These rules define how elements are introduced in a given context. The introduction rules are used to define the elements of variables and functions in the code.
+\begin{prooftree}
+    \AxiomC{$\Gamma, x : A \vdash b : B$}
+    \UnaryInfC{$\Gamma \vdash \lambda x : A. b : \Pi x : A. B$}
+\end{prooftree}
+Written in natural language, the $\Pi$-introduction rule states that if $b$ is an element of type $B$ in the context $\Gamma, x : A$, then $\lambda x : A. b$ is an element of type $\Pi x : A. B$ in the context $\Gamma$.
+
+\hfill \break
+\hfill \break
+The third group of inference rules in Martin-L\"of's type theory are the \textit{elimination rules}. These rules define how elements are eliminated in a given context. The elimination rules are used to define the elimination of variables and functions in the code.
+
+In the following $B[x := a]$ denotes the substitution of $a$ for $x$ in $B$.
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash f : \Pi x : A. B$}
+    \AxiomC{$\Gamma \vdash a : A$}
+    \BinaryInfC{$\Gamma \vdash f a : B[x := a]$}
+\end{prooftree}
+Written in natural language, the $\Pi$-elimination rule states that if $f$ is an element of type $\Pi x : A. B$ in the context $\Gamma$ and $a$ is an element of type $A$ in the context $\Gamma$, then $f a$ is an element of type $B[x := a]$ in the context $\Gamma$.
+
+\hfill \break
+\hfill \break
+The fourth group of inference rules in Martin-L\"of's type theory are the \textit{equality rules}. These rules define how types and elements are equal in a given context. The equality rules are used to define the equality of types and elements in the code.
+
+In the following $B[x := a]$ denotes the substitution of $a$ for $x$ in $B$.
+\begin{prooftree}
+    \AxiomC{$\Gamma, x : A \vdash b : B$}
+    \AxiomC{$\Gamma \vdash a : A$}
+    \BinaryInfC{$\Gamma \vdash (\lambda x : A. b) a = b[x := a] : B[x := a]$}
+\end{prooftree}
+Written in natural language, the $\Pi$-equality rule states that if $b$ is an element of type $B$ in the context $\Gamma, x : A$ and $a$ is an element of type $A$ in the context $\Gamma$, then $(\lambda x : A. b) a$ is equal to $b[x := a]$ in the context $\Gamma$.
+
+\subsection{Type Inference in Programming Languages}\label{subsubsec:TypeInferenceInProgrammingLanguages}
+
+Given the typing environment $\Gamma$, the type inference algorithm uses the rules of type theory to deduce the types of variables, functions, and expressions in the code. The type inference algorithm is used to determine the types of variables and functions in the code, as well as to check the correctness of the code.
+
+\begin{Listing}[t]
+    \centering
+    \mbox{
+        \showrust*[.3\textwidth]{typeinference.rs}
+        \quad
+        \showml*[.3\textwidth]{typeinference.ml}
+    }
+    % \begin{minted}[linenos, breaklines]{rust}
+    %     fn main() {
+    %         let x = 42;
+    %         let y = 3.14;
+    %         let z = x + y;
+    %         println!("The sum is: {}", z);
+    %     }
+    % \end{minted}
+    \caption{Example of type inference in Rust and OCaml}
+    \label{lst:typeinference}
+\end{Listing}
+
+In listing~\ref{lst:typeinference} we show an example of type inference in Rust and OCaml. In both examples, the type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code, the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code, the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
 
 \section{Software and Language Product Lines}\label{sec:SoftwareProductLines}
