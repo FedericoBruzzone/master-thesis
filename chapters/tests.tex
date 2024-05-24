@@ -1,0 +1,123 @@
+\chapter{Tests}
+
+\begin{tcolorbox}%[breakable, enhanced]
+   \small\textbf{
+       Test
+   }\\~\\
+   This is a test.
+   \begin{compactitem}
+      \item \textit{Test1}---This is a test.
+      \item \textit{Test2}---This is another test.
+      \item \textit{Test3}---This is yet another test.
+   \end{compactitem}
+\end{tcolorbox}
+
+% Error
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=My Heading]
+This is a \textbf{tcolorbox}.
+\tcblower
+Here, you see the lower part of the box.
+\end{tcolorbox}
+
+% Warning
+\begin{tcolorbox}[colback=yellow!5!white,colframe=yellow!75!black,title=My Heading]
+This is a \textbf{tcolorbox}.
+\tcblower
+Here, you see the lower part of the box.
+\end{tcolorbox}
+
+% Info
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=My Heading]
+This is a \textbf{tcolorbox}.
+\tcblower
+Here, you see the lower part of the box.
+\end{tcolorbox}
+
+% Success
+\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=My Heading]
+This is a \textbf{tcolorbox}.
+\tcblower
+Here, you see the lower part of the box.
+\end{tcolorbox}
+
+\newcounter{myboxcounter}
+\tcbset{
+    myboxstyle/.style={
+        enhanced, breakable,
+        sharp corners,
+        left skip=8mm,
+        attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+        boxed title style={colframe=#1!40, height=6mm, bean arc, boxrule=1pt},
+        colback=#1!10, colframe=#1!30, boxrule=1pt,
+        coltitle=black, colbacktitle=#1!10,
+        fonttitle=\bfseries,
+        underlay boxed title={%
+            \node[circle, fill=#1!10, draw=#1!40, inner sep=1pt, minimum size=6mm, line width=1pt, font=\bfseries] (boxnumber) at ([xshift=-6mm]title.west) {\thetcbcounter};
+        },
+        underlay unbroken={%
+            \draw[#1!40, line width=1pt] (title.west)--(boxnumber);
+            \draw[#1!40, -{stealth}, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
+        },
+        underlay first={%
+            \draw[#1!40, line width=1pt] (title.west)--(boxnumber);
+            \draw[#1!40, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
+        },
+        underlay middle={%
+            \draw[#1!40, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
+        },
+        underlay last={%
+            \draw[#1!40, -{stealth}, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
+        },
+    }
+}
+
+\newtcolorbox[use counter=myboxcounter]{example}[2][]{%
+    myboxstyle=#2, title=Example, #1
+}
+
+\newtcolorbox[use counter=myboxcounter]{solution}[2][]{%
+    myboxstyle=#2, title=Solution, #1
+}
+
+\begin{example}{blue}
+    hello
+\end{example}
+
+\begin{solution}{red}
+    hello
+\end{solution}
+
+\begin{example}{green}
+    hello
+\end{example}
+
+\begin{solution}{yellow}
+    hello
+\end{solution}
+
+\begin{tcolorbox}[myboxstyle=red!75!black]
+    This is a \textbf{tcolorbox}.
+\end{tcolorbox}
+
+
+
+% CODE
+\begin{Listing}[t]
+    \centering
+    % \mbox{
+    %     \showrust*[.3\textwidth]{typeinference.rs}
+    %     \quad
+    %     \showml*[.3\textwidth]{typeinference.ml}
+    % }
+    \begin{minted}[linenos, breaklines]{rust}
+        fn main() {
+            let x = 42;
+            let y = 3.14;
+            let z = x + y;
+            println!("The sum is: {}", z);
+        }
+    \end{minted}
+    \caption{Example of type inference in Rust and OCaml}
+    \label{lst:typeinference}
+\end{Listing}
+

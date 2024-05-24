@@ -3,8 +3,6 @@
 \usepackage{pifont}
 \usepackage{rotating}
 
-
-
 \newcommand{\cwcomment}[1]{\profcomment[Walter]{#1}}
 \newcommand{\fbcomment}[1]{\studcomment[Federico]{#1}}
 
@@ -15,6 +13,19 @@
 
 % ========== My settings ==========
 \usepackage{bussproofs}
+
+\tcbset{
+    myboxstyle/.style={
+        enhanced, breakable,
+        sharp corners,
+        % left skip=8mm,
+        attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+        boxed title style={colframe=#1!40, height=6mm, bean arc, boxrule=1pt},
+        colback=#1!10, colframe=#1!30, boxrule=1pt,
+        coltitle=black, colbacktitle=#1!10,
+        fonttitle=\bfseries,
+    }
+}
 
 % \fboxsep=10mm %padding thickness
 \fboxrule=1.5pt %border thickness
@@ -49,11 +60,12 @@
 
 \input chapters/introduction.tex
 \input chapters/background.tex
+\input chapters/related-work.tex
 \input chapters/concept.tex
 \input chapters/implementation.tex
 \input chapters/evaluation.tex
-\input chapters/related-work.tex
 \input chapters/conclusions.tex
+\input chapters/tests.tex
 
 % \inlinerust{fn}
 
