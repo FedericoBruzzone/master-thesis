@@ -324,11 +324,12 @@ Manual code analysis is a time-consuming process that requires human expertise t
 \textit{Type inference} is the process of automatically deducing the types of variables, functions, and expressions in the code. Type inference is used to reduce the amount of type annotations required in the code, making the code more concise and easier to read. Type inference is used in statically typed languages such as OCaml, Java, and Rust, as well as in dynamically typed languages such as Python and JavaScript, see table~\ref{tab:TypeSystems}.
 
 \begin{table}[t]
+    \rowcolors{2}{gray!25}{white}
+    % \setlength\arrayrulewidth{0pt}
     \centering
-    \begin{tabular}{c|c|c|c}
-        \hline
-        \textbf{Language} & \textbf{Type System} & \textbf{Type Checking} & \textbf{Type Inference} \\
-        \hline
+    \begin{tabular}{ c c c c }
+        \\\toprule \textbf{Language} & \textbf{Type System} & \textbf{Type Checking} & \textbf{Type Inference} \\
+        \midrule
         C & Weak & Static & No \\
         OCaml & Strong & Static & Yes \\
         Java & Strong & Static  & Yes \\
@@ -338,7 +339,7 @@ Manual code analysis is a time-consuming process that requires human expertise t
         Haskell & Strong & Static  & Yes \\
         Erlang & Strong & Dynamic  & Yes \\
         Perl & Weak & Dynamic  & No \\
-        \hline
+        \bottomrule
     \end{tabular}
     \caption{Examples of programming languages and their type systems}
     \label{tab:TypeSystems}

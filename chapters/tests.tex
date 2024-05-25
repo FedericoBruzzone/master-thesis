@@ -121,3 +121,52 @@ Here, you see the lower part of the box.
     \label{lst:typeinference}
 \end{Listing}
 
+
+% TABLES
+\begin{table}[t]
+    \rowcolors{2}{green!80!yellow!50}{green!70!yellow!40}
+    \setlength\arrayrulewidth{1pt}
+    \setlength\arrayrulewidth{1pt}
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Language} & \textbf{Type System} & \textbf{Type Checking} & \textbf{Type Inference} \\
+        \hline
+        C & Weak & Static & No \\
+        OCaml & Strong & Static & Yes \\
+        Java & Strong & Static  & Yes \\
+        Rust & Strong & Static  & Yes \\
+        Python & Strong & Dynamic  & Yes \\
+        JavaScript & Weak & Dynamic  & Yes \\
+        Haskell & Strong & Static  & Yes \\
+        Erlang & Strong & Dynamic  & Yes \\
+        Perl & Weak & Dynamic  & No \\
+        \hline
+    \end{tabular}
+    \caption{Examples of programming languages and their type systems}
+    \label{tab:TypeSystems}
+\end{table}
+
+\begin{table}[t]
+    \rowcolors{2}{gray!25}{white}
+    % \setlength\arrayrulewidth{0pt}
+    \centering
+    \begin{tabular}{ c c c c }
+        \\\toprule \textbf{Language} & \textbf{Type System} & \textbf{Type Checking} & \textbf{Type Inference} \\
+        \midrule
+        C & Weak & Static & No \\
+        OCaml & Strong & Static & Yes \\
+        Java & Strong & Static  & Yes \\
+        Rust & Strong & Static  & Yes \\
+        Python & Strong & Dynamic  & Yes \\
+        JavaScript & Weak & Dynamic  & Yes \\
+        Haskell & Strong & Static  & Yes \\
+        Erlang & Strong & Dynamic  & Yes \\
+        Perl & Weak & Dynamic  & No \\
+        \bottomrule
+    \end{tabular}
+    \caption{Examples of programming languages and their type systems}
+    \label{tab:TypeSystems}
+\end{table}
+
+

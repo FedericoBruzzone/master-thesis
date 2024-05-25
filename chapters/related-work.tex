@@ -1,10 +1,10 @@
 \chapter{Related Work}\label{chap:RelatedWork}
 
 According to Tomasetti~\cite{tomassetti_complete_2017}, an external Domain-Specific Language in contrast to an internal one has tool support. So, in order to build this support language workbenches come to the rescue.
-Nowadays, developers are increasingly using IDEs to write code, as they provide features such as syntax highlighting, code completion, and code navigation, thanks also to the Language Server Protocol (LSP) \cite{Rodriguez-Echeverria18a}.
+Nowadays, developers are increasingly using IDEs to write code, both for general-purpose languages (GPLs) and for domain-specific languages (DSLs), as they provide features such as syntax highlighting, code completion, and code navigation, thanks also to the Language Server Protocol (LSP) \cite{Rodriguez-Echeverria18a}.
 To develop this kind of tool support, there are various language workbenches available that simplify the creation of abstract syntax, parsers, editors, and generators~\cite{Fowler05}.
 
-In this chapter, we will present some of the most relevant language workbenches and tools that are available to support the language development process, and we will also discuss the importance of modularization and composition in the context of language workbenches and IDEs generation.
+In this chapter, we will present some of the most relevant language workbenches and tools that are available to support the language development process (Section~\ref{sec:background:syntax-semantics}). We will also present some of the most relevant tools that support modularization and composition of languages (Section~\ref{sec:background:modularization}). Finally, we will present some of the most relevant tools that support IDEs generation (Section~\ref{sec:background:ide-support}) and the Language Server Protocol (Section~\ref{sec:background:lsp-support}).
 
 \section{Syntax and Semantics Definition in Language Workbenches}\label{sec:background:syntax-semantics}
 
@@ -15,7 +15,7 @@ It doesn’t offer built-in support for concrete syntax definition or parser gen
 
 \subsection{Melange}\label{subsec:background:melange}
 \textit{Melange}~\cite{Degueule15}  is a language workbench developed by the DiverSE research team at the Institut National de Recherche en Informatique et en Automatique (INRIA). Based on the Eclipse Modeling Framework (EMF)~\cite{Steinberg08}, Melange is meant to be used for the development of domain-specific languages. Abstract syntax support is provided by EMF, while concrete syntax is defined using the Xtext (Sect.~\ref{subsec:background:xtext}) language workbench.
-Semantic is specified using the Kermeta 3 (K3) language~\cite{Jezequel15} which is based on Xtend\footnote{\url{https://www.eclipse.org/xtend/}}.
+Semantics is specified using the Kermeta 3 (K3) language~\cite{Jezequel15} which is based on Xtend\footnote{\url{https://www.eclipse.org/xtend/}}.
 
 \subsection{MontiCore}\label{subsec:background:monticore}
 \textit{MontiCore}~\cite{Krahn10} is a language workbench developed by the Software Engineering group at the RWTH Aachen University. Using a single DLS it is possible to define the abstract syntax, the concrete syntax; it takes one or more grammars as input and generates Java source code.
@@ -30,19 +30,16 @@ A visitor pattern is written in Java to define the semantics of the language.
 
 \subsection{Spoofax}\label{subsec:background:spoofax}
 
+\textit{Spoofax}~\cite{Visser10} is a language workbench developed at the Delft University of Technology. It is an Eclipse based solution that provides support that use \textit{Syntax Definition Formalism 3} (SDF3)~\cite{Heering89c} for defining grammars.
+In Spoofax, the semantics is defined using the \textit{Stratego}~\cite{Visser01} language, which is a term rewriting language.Spoofax, the sew
+
 \subsection{Xtext}\label{subsec:background:xtext}
 
+\textit{Xtext}~\cite{Bettini13b} is a language workbench developed by the Eclipse Foundation. The grammar is written in Xtext language, which is capable of generating both the ANTLR-based~\cite{Parr95} parser and EMF~\cite{Steinberg08} model used to represent the AST.  Semantics is in fact defined by implementing a code generator; this integrates \textit{out of the box} with Eclipse's built-in system.system. Xtext is distributed with \textit{Xtend}~\cite{Eysholdt10}, a Java-like language that can be used to define the semantics of the language.
 
 \section{Modularization and Composition}\label{sec:background:modularization}
-
 
 \section{IDE Support}\label{sec:background:ide-support}
 
 \section{LSP Support}\label{sec:background:lsp-support}
 Xtext is by now the only language workbench supporting the LSP.~\cite{Bunder19a}
-
-
-
-
-
-
