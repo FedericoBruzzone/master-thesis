@@ -462,7 +462,7 @@ The fourth type of inference rule in Martin-L\"of's type theory are the \textit{
     Written in natural language, the $\Pi$-equality rule states that if $b$ is an element of type $B$ in the context $\Gamma, x : A$ and $a$ is an element of type $A$ in the context $\Gamma$, then $(\lambda x : A. b) a$ is equal to $b[x := a]$ in the context $\Gamma$.
 \end{tcolorbox}
 
-\subsection{Type Inference in Programming Languages}\label{subsubsec:TypeInferenceInProgrammingLanguages}
+\subsection{Type Inference in Programming Languages}\label{subsubsec:background:TypeInferenceInProgrammingLanguages}
 
 Given the typing environment $\Gamma$, the type inference algorithm uses the rules of type theory to deduce the types of variables, functions, and expressions in the code. The type inference algorithm is used to determine the types of variables and functions in the code, as well as to check the correctness of the code.
 
@@ -474,12 +474,12 @@ Given the typing environment $\Gamma$, the type inference algorithm uses the rul
         \showml*[.45\textwidth]{typeinference.ml}
     }
     \caption{Example of type inference in Rust and OCaml}
-    \label{lst:typeinference}
+    \label{lst:background:typeinference}
 \end{Listing}
 
-In listing~\ref{lst:typeinference} we show an example of type inference in Rust and OCaml. In both examples, the type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code (line 5), the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code (line 3), the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
+In listing~\ref{lst:background:typeinference} we show an example of type inference in Rust and OCaml. In both examples, the type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code (line 5), the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code (line 3), the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
 
-\section{Software and Language Product Lines}\label{sec:SoftwareProductLines}
+\section{Software and Language Product Lines}\label{sec:background:software-and-language-product-lines}
 
 
 
