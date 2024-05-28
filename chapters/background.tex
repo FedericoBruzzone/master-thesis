@@ -30,11 +30,11 @@
 \label{lst:lsp}
 \end{Listing}
 
-In this chapter, we provide an overview of the concepts and technologies that are relevant to the work presented in this thesis. We start by introducing the concept of language servers and the Language Server Protocol (LSP) in Section~\ref{sec:LanguageServerProtocol}. We then discuss language workbenches in Section~\ref{sec:LanguageWorkbenches}, type systems in Section~\ref{sec:TypeSystems}, and software and language product lines in Section~\ref{sec:SoftwareProductLines}.
+In this chapter, we provide an overview of the concepts and technologies that are relevant to the work presented in this thesis. We start by introducing the concept of language servers and the Language Server Protocol (LSP) in Section~\ref{sec:background:LanguageServerProtocol}. We then discuss language workbenches in Section~\ref{sec:bckgnd:language-workbenches}, static analysis and type systems in Section~\ref{sec:background:StaticAnalysisAndTypeSystems}, and software and language product lines in Section~\ref{sec:background:SoftwareAndLanguageProductLines}.
 
 The goal of this chapter is to provide the reader with the necessary background knowledge to understand the work presented in the following chapters. We assume that the reader has a basic understanding of programming languages and software development.
 
-\section{Language Server Protocol}\label{sec:LanguageServerProtocol}
+\section{Language Server Protocol}\label{sec:background:LanguageServerProtocol}
 The Language Server Protocol\footnote{\url{https://microsoft.github.io/language-server-protocol}} (LSP) is a protocol that allows for the communication between a language server and an editor or an IDE. The LSP is used to decuple the a language-agnotic editor or integrated development environment (IDE) from the language-specific features of a language server (see Listing~\ref{lst:lsp}). This allows for the development of language servers that can be used with multiple editors or IDEs. The LSP is based on the stateless JSON-RPC protocol and defines a set of messages that are used to communicate between the language server and the editor or IDE.
 
 Usually, the LSP Clients are developed as plugins for popular editors or IDEs decresing the effort to support a new language in a given editor. The LSP Clients are responsible for sending requests to the language server and processing the responses. The language server is responsible for providing language-specific features. The LSP defines a set of messages that are used to communicate between the language server and the editor or IDE. These messages include requests for code completion, code navigation, and code analysis, as well as notifications for changes to the document, diagnostics, and progress reports.
@@ -43,7 +43,7 @@ Language servers are \textit{de facto} standard for providing language-specific 
 
 The LSP is initiated by Microsoft and is now an open standard that is maintained by the Language Server Protocol Working Group. It was designed for the use with the Visual Studio Code editor, but it has since been adopted by other editors and IDEs. The LSP is under open-source license and is available on GitHub\footnote{\url{https://github.com/microsoft/language-server-protocol}}.
 
-\subsection{JSON-RPC}\label{subsec:JSONRPC}
+\subsection{JSON-RPC}\label{subsec:background:JSONRPC}
 The LSP uses JSON-RPC to communicate between a language server and an editor. JSON-RPC (v2)\footnote{\url{https://www.jsonrpc.org/specification}} is a stateless, light-weight remote procedure call (RPC) \cite{Birrell84} protocol that uses JSON as the data format.
 
 RPC is a protocol that allows a client to call a procedure on a remote server. The client sends a request to the server, and the server sends a response back to the client. The JSON-RPC protocol defines a set of messages that are used to communicate between the client and the server. These messages include requests, responses, and notifications. The JSON-RPC protocol is designed to be simple and easy to implement, making it well-suited for use in web applications and other distributed systems.
@@ -54,10 +54,10 @@ All messages refer to a \textit{method} that is a string containing the name of 
 
 The JSON-RPC specification includes the ability for clients to batch multiple requests or notifications by sending them as a list. The server is expected to respond with a corresponding list of results for each request. Additionally, the server has the flexibility to process these requests concurrently.
 
-\subsection{Command Specifications}\label{sec:CommandSpecification}
+\subsection{Command Specifications}\label{subsec:background:CommandSpecifications}
 The LSP is defined on top of the JSON-RPC protocol described in section \ref{subsec:JSONRPC}. In abstract terms, the LSP defines a set of command that can be sent between a client and a server. In the Language Server Protocol Specification\footnote{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification}, these commands are divided into four categories: \textit{Language Features}, \textit{Text Document Synchronization}, \textit{Workspace Features}, and \textit{Window Features}.
 
-\subsubsection{Language Features}\label{subsec:LanguageFeatures}
+\subsubsection{Language Features}\label{subsec:background:LanguageFeatures}
 The \textit{Language Features} provide the smarts of the language server. Usually, the client sends a request to the server to get information about the document as a tuple of \texttt{TextDocument} and \texttt{Position}. \textit{Code comprehension} and \textit{Coding Features} are the two main categories of commands in this category.
 
 Here a brief description of the most important commands in this category:
@@ -69,7 +69,7 @@ Here a brief description of the most important commands in this category:
     \item \texttt{textDocument/documentHighlight}: The document highlight request is sent from the client to the server to resolve a document highlights for a given text document position. For programming languages, this usually highlights all references to the symbol denoted by the given text document position.
 \end{itemize}
 
-\subsubsection{Text Document Synchronization}\label{subsec:TextDocumentSynchronization}
+\subsubsection{Text Document Synchronization}\label{subsec:background:TextDocumentSynchronization}
 The \textit{Text Document Synchronization} commands are used to notify the server of changes to the document. Client support for \texttt{textDocument/didOpen}, \texttt{textDocument/didChange}, \texttt{textDocument/didClose} is mandatory. This includes the ability to fully and incrementally synchronize changes to the document, such as inserting, deleting, and replacing text.
 
 Here a brief description of the most important commands in this category:
@@ -80,7 +80,7 @@ Here a brief description of the most important commands in this category:
     \item \texttt{textDocument/didSave}: The document save notification is sent from the client to the server when the document is saved. The notification is sent after the document has been saved.
 \end{itemize}
 
-\subsubsection{Workspace Features}\label{subsec:WorkspaceFeatures}
+\subsubsection{Workspace Features}\label{subsec:background:WorkspaceFeatures}
 The \texttt{Workspace Features} category includes commands that allow the client to interact with the workspace. The workspace is the collection of open documents and the client's configuration. The workspace commands are used to manage the workspace, such as symbol search, workspace configuration and client configuration.
 
 Here a brief description of the most important commands in this category:
@@ -91,7 +91,7 @@ Here a brief description of the most important commands in this category:
     \item \texttt{workspace/didChangeWorkspaceFolders}: The workspace folder change notification is sent from the client to the server to signal changes to the workspace's folders. The server should use the new workspace folders to update its behavior.
 \end{itemize}
 
-\subsubsection{Window Features}\label{subsec:WindowFeatures}
+\subsubsection{Window Features}\label{subsec:background:WindowFeatures}
 
 The \texttt{Window Features} category includes commands that allow the client to interact with the window. The window is the client's user interface, such as the editor, the sidebar, and the status bar. The window commands are used to manage the window, such as showing messages, showing notifications, and showing progress.
 
@@ -103,7 +103,7 @@ Here a brief description of the most important commands in this category:
     \item \texttt{window/showMessageRequest}: The show message request is sent from the server to the client to show a message to the user and get a response. The message can be shown in a variety of ways, such as a dialog box, a status bar, or a notification.
 \end{itemize}
 
-\subsection{Key Methods Overview}\label{subsec:KeyMethodsOverview}
+\subsection{Key Methods Overview}\label{subsec:bacground:KeyMethodsOverview}
 
 Six \textit{key methods} have been identified by langserver organization\footnote{\url{https://langserver.org}} as the most important methods to be implemented by a language server. These capabilities are:
 \begin{enumerate}
@@ -115,7 +115,7 @@ Six \textit{key methods} have been identified by langserver organization\footnot
     \item \textbf{Code Completion} --- Provide completions for a symbol at the cursor.
 \end{enumerate}
 
-\subsubsection{Diagnostic Analysis}\label{subsubsec:DiagnosticAnalysis}
+\subsubsection{Diagnostic Analysis}\label{subsubsec:background:DiagnosticAnalysis}
 
 The diagnostic analysis is the process of parsing and type-checking the source code to provide diagnostics. The diagnostics are used to identify errors and warnings in the source code, such as syntax errors, type errors, and unused variables. The diagnostics are presented to the user in the editor's user interface, such as a list of errors and warnings in the sidebar.
 
@@ -132,7 +132,7 @@ In the figure \ref{fig:diagnostic} we can see an example of diagnostics in Neovi
     \label{fig:diagnostic}
 \end{figure}
 
-\subsubsection{Workspace/Document Symbols}\label{subsubsec:WorkspaceDocumentSymbols}
+\subsubsection{Workspace/Document Symbols}\label{subsubsec:background:WorkspaceDocumentSymbols}
 
 \fbox{
     \parbox{\textwidth}{
@@ -150,7 +150,7 @@ The \texttt{textDocument/workspaceSymbol} request is sent from the client to the
 The difference between \texttt{textDocument/workspaceSymbol} and \texttt{textDocument/documentSymbol} is that the first one takes into account the visibility of the symbols in the workspace showing only the public ones. The second one shows all symbols in the document.
 
 
-\subsubsection{Jump to Definition}\label{subsubsec:JumpToDefinition}
+\subsubsection{Jump to Definition}\label{subsubsec:background:JumpToDefinition}
 \fbox{
     \parbox{\textwidth}{
         \centering
@@ -174,7 +174,7 @@ In the figure \ref{fig:hover} we can see that at the top of floating window ther
 }
 \hfill \break
 
-The retrieval of references is the inverse of the jump to definition explained in the previous section (\ref{subsubsec:JumpToDefinition}).
+The retrieval of references is the inverse of the jump to definition explained in the previous section (\ref{subsubsec:background:JumpToDefinition}).
 
 The \texttt{textDocument/references} request is sent from the client to the server to resolve project-wide references for the symbol denoted by the given text document position. The server should return a list of references to the symbol, such as the file path, line number, and the column number.
 
@@ -189,7 +189,7 @@ In the figure \ref{fig:references} we can see that the function \texttt{hello\_w
     \label{fig:references}
 \end{figure}
 
-\subsubsection{Hover Information}
+\subsubsection{Hover Information}\label{subsubsec:background:HoverInformation}
 
 \fbox{
     \parbox{\textwidth}{
@@ -214,7 +214,7 @@ In the figure \ref{fig:hover} we can see that the function \texttt{hello\_world}
     \label{fig:hover}
 \end{figure}
 
-\subsubsection{Code Completion}
+\subsubsection{Code Completion}\label{subsubsec:background:CodeCompletion}
 \fbox{
     \parbox{\textwidth}{
         \centering
@@ -238,7 +238,7 @@ In the figure \ref{fig:completion} we can see that the code completion is trigge
     \label{fig:completion}
 \end{figure}
 
-\subsection{Approaches to Source Code Analysis}\label{subsec:ApproachesToSourceCodeAnalysis}
+\subsection{Approaches to Source Code Analysis}\label{subsec:background:ApproachesToSourceCodeAnalysis}
 Language servers handle source code analysis using various methods, influenced significantly by the complexity of the language. The choice of approach affects how servers process file indexes, manage changes, and respond to requests.
 
 The Language Server Protocol (LSP) supports two methods for sending updates: diffs of atomic changes and complete transmission of changed files. The former requires incremental parsing and analysis, which are challenging to implement but enable much faster processing of files upon changes. Incremental parsing relies on an internal representation of the source code that allows efficient updates for small changes. This method necessitates providing the parser with the right context to correctly parse a changed fragment of code.
@@ -309,13 +309,13 @@ The composition in Neverlang is twofold \cite{Cazzola20}: between modules and be
 Plase see \cite{Cazzola15c} for a more detailed explanation of the \texttt{Neverlang} framework.
 
 
-\section{Static Analysis and Type Systems}\label{sec:SaticAnalysisAndTypeSystems}
+\section{Static Analysis and Type Systems}\label{sec:background:StaticAnalysisAndTypeSystems}
 
 Static code analysis is a software verification technique refers to the process of examining the code without executing it in order to capture the defects in the code early avoiding costly later fixations \cite{Aurum02}. Static code analysis has two main approaches: manual and automated \cite{Ilyas16}.
 Manual code analysis is a time-consuming process that requires human expertise to review the code and identify defects. Automated code analysis, on the other hand, uses tools to analyze the code and identify defects automatically. Automated code analysis tools can be used to analyze the code for defects such as syntax errors, type errors, and logic errors. These tools can also be used to enforce coding standards and best practices, such as naming conventions, code formatting, and code complexity.
 
 
-\subsection{Type Systems}\label{subsec:TypeSystems}
+\subsection{Type Systems}\label{subsec:background:TypeSystems}
 
 \textit{Type systems} are a fundamental part of static code analysis. A type system~\cite{Pierce02} is a set of rules that define how types are used in a programming language. The type system defines the types of variables, functions, and expressions, as well as the rules for type compatibility and type inference.
 
@@ -349,7 +349,7 @@ A programming language can be classified based on its type system and type check
 
 In table \ref{tab:TypeSystems} we show examples of programming languages and their type systems. C is a statically typed language with a weak type system, meaning that it allows for implicit type conversions and does not enforce type safety. OCaml, Java, and Rust are statically typed languages with strong type systems, meaning that they enforce type safety and do not allow for implicit type conversions. Python and JavaScript are dynamically typed languages with strong type systems, meaning that they enforce type safety at runtime. Haskell is a statically typed language with a strong type system and support for type inference. Erlang is a dynamically typed language with a strong type system and support for type inference.
 
-\subsection{Theoretical Aspects}\label{subsec:TheoreticalAspects}
+\subsection{Theoretical Aspects}\label{subsec:background:TheoreticalAspects}
 
 Theoretical aspects of type systems are an important research area in computer science. Type systems are used to ensure the correctness and safety of programs by enforcing rules about how types are used in the code. Type systems can be classified based on their properties, such as \textit{soundness}, \textit{completeness}, and \textit{decidability}.
 
@@ -360,7 +360,7 @@ A brief explanation of these properties is given below:
     \item A type system is \textbf{decidable} if it can determine the type of any expression in a finite amount of time. Decidability is an important property of a type system because it ensures that the type system is efficient and can be used in practice.
 \end{itemize}
 
-\subsection{Type Theory as a Logic}\label{subsec:TypeTheoryAsALogic}
+\subsection{Type Theory as a Logic}\label{subsec:background:TypeTheoryAsALogic}
 
 A \textit{Type theory} is a mathematical logic, which is to say it is a collection of rules of inference that result in judgments.
 Most logics are based on judgements, which are statements that assert the truth of a proposition.
@@ -369,7 +369,7 @@ In Martin-L\"of's~\cite{Martin96} type system, a judgment is no longer just an a
 
 In the following sections, we will discuss the basic concepts of type theory and how it is used in the context of programming languages.
 
-\subsubsection{Judgements}\label{subsubsec:Judgements}
+\subsubsection{Judgements}\label{subsubsec:background:Judgements}
 
 Martin-L\"of type theory has four basic forms of judgments and is a considerably more complicated system than first-order logic.
 
@@ -387,7 +387,7 @@ $$
 \vdash \texttt{Int} \textrm{ type} \quad \vdash 1 : \texttt{Int} \quad \vdash \texttt{Int} = \texttt{Int} \textrm{ type} \quad \vdash 1 = 1 : \texttt{Int}
 $$
 
-\subsubsection{Contexts}\label{subsubsec:Contexts}
+\subsubsection{Contexts}\label{subsubsec:background:Contexts}
 
 In general, judgments are \textit{hypothetical}, meaning that they are made under certain assumptions. These assumptions are kept track of in a \textit{context}.
 In Martin-L\"of's type theory, the context is a list $x_1 : A_1, \ldots, x_n : A_n$ of variables and their types. Note that the context is ordered, meaning that the order of the variables matters.
@@ -409,7 +409,7 @@ $$
 x : \texttt{Int}, y : \texttt{Int} \vdash x + y = y + x : \texttt{Int}
 $$
 
-\subsubsection{Inference Rules}\label{subsubsec:InferenceRules}
+\subsubsection{Inference Rules}\label{subsubsec:background:InferenceRules}
 Let $\Pi$ be a set of type functions in the form of $\Pi x : A. B$ where $x$ is a variable of type $A$ and $B$ is a type.
 
 The first type of inference rule in Martin-L\"of's type theory is the \textit{formation rule}.
@@ -477,9 +477,9 @@ Given the typing environment $\Gamma$, the type inference algorithm uses the rul
     \label{lst:background:typeinference}
 \end{Listing}
 
-In listing~\ref{lst:background:typeinference} we show an example of type inference in Rust and OCaml. In both examples, the type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code (line 5), the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code (line 3), the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
+In listing~\ref{lst:background:typeinference} we show an example of type inference in Rust and OCaml. In both examples, thesec:background:software-and-language-product-lines type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code (line 5), the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code (line 3), the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
 
-\section{Software and Language Product Lines}\label{sec:background:software-and-language-product-lines}
+\section{Software and Language Product Lines}\label{sec:background:SoftwareAndLanguageProductLines}
 
 
 

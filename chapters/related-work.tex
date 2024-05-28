@@ -38,17 +38,18 @@ In Spoofax, the semantics is defined using the \textit{Stratego}~\cite{Visser01}
 \textit{Xtext}~\cite{Bettini13b} is a language workbench developed by the Eclipse Foundation. The grammar is written in Xtext language, which is capable of generating both the ANTLR-based~\cite{Parr95} parser and EMF~\cite{Steinberg08} model used to represent the AST.  Semantics is in fact defined by implementing a code generator; this integrates \textit{out of the box} with Eclipse's built-in system.system. Xtext is distributed with \textit{Xtend}~\cite{Bettini13b}, a Java-like language that can be used to define the semantics of the language.
 
 \section{Modularization and Composition in Language Workbenches}\label{sec:related-work:modularization}
-Finding and working with the right abstractions for describing a problem or its solution is one of the central pillars of software engineering~\cite{Voelter12}.
-In fact, modularization and composition are important and advanced features in language workbenches. They allow the developer to define a language by composing multiple features, each of which can be developed independently and then combined to create a new language.
 
-Developers typically tackle the complexity of building an interpreter by using a vertical, functional decomposition approach. This method generally involves creating distinct phases for a lexer, parser, semantic analyzer, and code evaluator. While organizing the process into these phases is beneficial, it is not sufficient on its own~\cite{Cazzola16e}.
-According to Bosch~\cite{Bosch96}, a vertical decomposition still results in complex compilers or interpreters that are hard to maintain, extend and whose pieces are hardly reusable. He suggests that a vertical, functional decomposition should be accompanied by a horizontal, structural decomposition.
+Finding and working with the right abstractions for describing a problem or its solution is one of the central pillars of software engineering~\cite{Voelter12}. Modularization and composition are critical and advanced features in language workbenches, enabling developers to define a language by combining multiple features. Each feature can be developed independently and then integrated to create a new language, enhancing flexibility and reuse.
 
-A component can be any language feature (see Sect.~\ref{sec:background:software-and-language-product-lines}) that can be reused across different languages. Syntax and semantics are commonly used together to define a language feature, but other features can be defined as well. Each feature can be precompiled~\cite{Cazzola13e} or not. There are several language workbenches that support modularization and composition of languages, either with precompiled components or not. Different language workbenches provide different levels of support for modularization and composition of languages. In the following, we will present some of the most relevant language workbenches.
+Developers typically manage the complexity of building an interpreter by using a vertical, functional decomposition approach. This method generally involves creating distinct phases for a lexer, parser, semantic analyzer, and code evaluator. While organizing the process into these phases is beneficial, it is not sufficient on its own~\cite{Cazzola16e}. According to Bosch~\cite{Bosch96}, a vertical decomposition still results in complex compilers or interpreters that are hard to maintain and extend, with components that are seldom reusable. He suggests that a vertical, functional decomposition should be accompanied by a horizontal, structural decomposition to better manage complexity.
 
-Following the order of the previous section, we will present the language workbenches that support modularization and composition of languages. \textbf{JustAdd} allows the developer to define a language by composing multiple features, but it requires that syntax and semantics have the same signature. On the other hand, thanks to an Encore model, that is a declarative specification of a set of classes, each of which can contain fields, methods, and constraints, \textbf{Melange} support composition. Encore models can be composed by renaming elements, which allows the developer to define a new language by composing multiple features. Another language workbench that supports modularization and composition of languages is \textbf{MontiCore}. It supports multiple grammars inheritance, but it does not give support for adding new attributes to imported symbols. Due to the fact that \textbf{MPS} is a projectional editor, without parsing phase, it allows arbitrary notations to be combined. It supports composition of languages, but it does not support precompiled components. Moving to \textbf{Rascal}, rewrite rules is the principal mechanism to compose features; the obstacle is that certain identifiers, such as constructors for the operations ADT, must be consistent across seemingly unrelated modules. \textbf{Spoofax} is unique in its support for modularization and composition of languages. It uses \textit{Stratego}~\cite{Bravenboer08} to rewrite the tree, allowing the conversion from an AST to another. \textbf{Xtext}, instead, supporting only single grammar inheritance, does not support composition of languages.
+A component can be any language feature (see Sect.\ref{sec:background:software-and-language-product-lines}) that can be reused across different languages. Syntax and semantics are commonly used together to define a language feature, but other features can be defined as well. Each feature can be precompiled\cite{Cazzola13e} or not. Several language workbenches support modularization and composition of languages, either with precompiled components or without. Different language workbenches provide varying levels of support for these features. In the following, we will present some of the most relevant language workbenches.
 
-The only language workbenches that support precompiled components are \textbf{Neverlang}~\cite{Cazzola13e}. While in \textbf{MontiCore} and \textbf{Xtext} code implementing semantics can be excluded from package, but the grammar cannot be excluded, so it is possible have a partial support for precompiled components.
+Following the order of the previous section, we will present the language workbenches that support modularization and composition of languages. \textbf{JustAdd} allows the developer to define a language by composing multiple features, but it requires that syntax and semantics have the same signature. Conversely, \textbf{Melange} supports composition through Encore models, which are declarative specifications of a set of classes that can contain fields, methods, and constraints. Encore models can be composed by renaming elements, allowing the developer to define a new language by combining multiple features. Another language workbench that supports modularization and composition of languages is \textbf{MontiCore}. It supports multiple grammar inheritance, but it does not support adding new attributes to imported symbols. \textbf{MPS}, being a projectional editor without a parsing phase, allows arbitrary notations to be combined. It supports language composition but does not support precompiled components. Moving to \textbf{Rascal}, rewrite rules are the principal mechanism for composing features, but certain identifiers, such as constructors for the operations ADT, must be consistent across seemingly unrelated modules. \textbf{Spoofax} is unique in its support for modularization and composition of languages. It uses \textit{Stratego}~\cite{Bravenboer08} to rewrite the tree, allowing the conversion from one AST to another. In contrast, \textbf{Xtext}, supporting only single grammar inheritance, does not support language composition.
+
+The only language workbench that supports precompiled components is \textbf{Neverlang}~\cite{Cazzola13e}. While in \textbf{MontiCore} and \textbf{Xtext}, code implementing semantics can be excluded from the package, the grammar cannot be excluded, allowing for partial support for precompiled components.
+
+Additionally, some language workbenches offer unique approaches to modularization and composition. For instance, \textbf{Spoofax} employs a meta-programming language, Stratego, which specializes in program transformation. This approach enables the composition of language features by transforming abstract syntax trees (ASTs), providing a flexible mechanism for integrating various language aspects. On the other hand, \textbf{MPS} leverages its projectional editing paradigm to support modularization, allowing developers to mix and match different syntactic constructs seamlessly.
 
 \begin{table}[t]
     \rowcolors{2}{gray!25}{white}
@@ -71,29 +72,39 @@ The only language workbenches that support precompiled components are \textbf{Ne
     \label{tab:related-work:modularization-composition}
 \end{table}
 
-In Table~\ref{tab:related-work:modularization-composition} we summarize the support for modularization and composition of the language workbenches presented in this section. In the first column, we list the language workbenches. Using \circleblack, \circleleft, and \circlewhite, in the second and third columns, we indicate whether the language workbench supports, partially supports, or does not support modularization and composition, respectively.
+In Table~\ref{tab:related-work:modularization-composition}, we summarize the support for modularization and composition of the language workbenches presented in this section. In the first column, we list the language workbenches. Using \circleblack, \circleleft, and \circlewhite in the second and third columns, we indicate whether the language workbench supports, partially supports, or does not support modularization and composition, respectively. This overview highlights the varying capabilities of each tool, providing a clear comparison for developers looking to select a language workbench that best suits their needs.
 
-\section{IDE and LSP Support}\label{sec:related-work:ide-support}
+\section{IDE and LSP Generation and Usage}\label{sec:related-work:ide-support}
 
-Xtext is by now the only language workbench supporting the LSP.~\cite{Bunder19a}
+IDE generation is a crucial feature for language workbenches, as it enables developers to create tools that support the development of domain-specific languages (DSLs) within integrated development environments (IDEs).
+Nowadays, Language Server Protocol (LSP) is a key technology that enables the development of language servers that can be used in any IDE that supports the protocol. In this section, we will present some of the most relevant language workbenches that support IDE and LSP generation.
 
+Four of the tools are closely integrated with IDE ecosystems. \textbf{Spoofax}, \textbf{Xtext}, and \textbf{Melange} are all Eclipse-based frameworks. Spoofax and Xtext support the automatic generation of plugins for text editor syntax highlighting and real-time visualization of the parsed AST (Eclipse’s outline). Melange integrates with the EMF GUI-based model editor. In \textbf{MPS}, DSLs are both developed and used within the same IDE, with each concept (AST node type) having a default projectional editor component that can be optionally customized. \textbf{MontiCore} and \textbf{Rascal} can be used either as standalone command line programs or as Eclipse plugins. As detailed in~\cite{Krahn10}, Section 4.5 and~\cite{Inostroza21}, respectively, both MontiCore and Rascal support the generation of Eclipse tooling for the languages developed using them.
+
+On the other hand, LSP generation is a feature that is not supported by all language workbenches. JustAdd, Melange, MontiCore, MPS, Rascal, and Spoofax all do not support LSP generation. \textbf{Xtext}, according to~\cite{Bunder19a}, is the only language workbench that supports the LSP.
+
+Finally, also LSP modularization is a feature that is not supported by all language workbenches. JustAdd, Melange, MontiCore, MPS, Rascal. \textbf{Xtext}, as explained in section \ref{sec:related-work:modularization}, does not support modularization and composition of languages, and therefore does not support LSP modularization.
 
 \begin{table}[t]
     \rowcolors{2}{gray!25}{white}
     % \setlength\arrayrulewidth{0pt}
     \centering
     \begin{tabular}{ c c c c }
-        \toprule \textbf{Language Workbench} & \textbf{Native IDE gen.} & \textbf{Native LSP Gen.} & \textbf{LSP Mod.} \\
+        \toprule \textbf{Language Workbench} & \textbf{Native IDE gen.} & \textbf{LSP Gen.} & \textbf{LSP Mod.} \\
         \midrule
-        JustAdd & \circlewhite & \circlewhite \\
-        Melange & \circleblack & \circlewhite \\
-        MontiCore & 3 & \circlewhite \\
-        MPS & \circleblack & \circlewhite \\
-        Rascal & \circleblack & \circlewhite \\
-        Spoofax & \circleblack & \circlewhite \\
-        Xtext & \circleblack & \circleblack \\
+        JustAdd & \circlewhite & \circlewhite & \circlewhite \\
+        Melange & 3rd party (EMF) & \circlewhite & \circlewhite \\
+        MontiCore & \circleblack & \circlewhite & \circlewhite \\
+        MPS & \circleblack & \circlewhite & \circlewhite \\
+        Rascal & \circleblack & \circlewhite & \circlewhite \\
+        Spoofax & \circleblack & \circlewhite & \circlewhite \\
+        Xtext & \circleblack & \circleblack & \circlewhite \\
+        Neverlang & \circleblack & \circleblack & \circleblack \\
         \bottomrule
     \end{tabular}
     \caption{Language Workbenches Supporting Modularization and Composition}
     \label{tab:related-work:modularization-composition}
 \end{table}
+
+In Table~\ref{tab:related-work:ide-lsp-generation}, we summarize the support for IDE and LSP generation of the language workbenches presented in this section. In the first column, we list the language workbenches. Using \circleblack, \circlewhite, and \circleleft in the second, third, and fourth columns, we indicate whether the language workbench supports, partially supports, or does not support IDE generation, LSP generation, and LSP modularizatio, respectively.
+
