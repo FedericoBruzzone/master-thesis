@@ -26,7 +26,7 @@
 \draw[<->, very thick, >=stealth] (4,1.5) -- (7,1.5)
         node[midway,fill=white] {\emph{LSP}};
 \end{tikzpicture}
-\caption{LSP approach to language support. Borrowed from \cite{Rodriguez-Echeverria18a}}
+\caption{LSP approach to language support. Borrowed from~\cite{Rodriguez-Echeverria18a}}
 \label{lst:lsp}
 \end{Listing}
 
@@ -55,7 +55,7 @@ All messages refer to a \textit{method} that is a string containing the name of 
 The JSON-RPC specification includes the ability for clients to batch multiple requests or notifications by sending them as a list. The server is expected to respond with a corresponding list of results for each request. Additionally, the server has the flexibility to process these requests concurrently.
 
 \subsection{Command Specifications}\label{subsec:background:CommandSpecifications}
-The LSP is defined on top of the JSON-RPC protocol described in section \ref{subsec:JSONRPC}. In abstract terms, the LSP defines a set of command that can be sent between a client and a server. In the Language Server Protocol Specification\footnote{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification}, these commands are divided into four categories: \textit{Language Features}, \textit{Text Document Synchronization}, \textit{Workspace Features}, and \textit{Window Features}.
+The LSP is defined on top of the JSON-RPC protocol described in section \ref{subsec:background:JSONRPC}. In abstract terms, the LSP defines a set of command that can be sent between a client and a server. In the Language Server Protocol Specification\footnote{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification}, these commands are divided into four categories: \textit{Language Features}, \textit{Text Document Synchronization}, \textit{Workspace Features}, and \textit{Window Features}.
 
 \subsubsection{Language Features}\label{subsec:background:LanguageFeatures}
 The \textit{Language Features} provide the smarts of the language server. Usually, the client sends a request to the server to get information about the document as a tuple of \texttt{TextDocument} and \texttt{Position}. \textit{Code comprehension} and \textit{Coding Features} are the two main categories of commands in this category.
@@ -480,6 +480,58 @@ Given the typing environment $\Gamma$, the type inference algorithm uses the rul
 In listing~\ref{lst:background:typeinference} we show an example of type inference in Rust and OCaml. In both examples, thesec:background:software-and-language-product-lines type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code (line 5), the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code (line 3), the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
 
 \section{Software and Language Product Lines}\label{sec:background:SoftwareAndLanguageProductLines}
+
+Variability in products is common in industrial production. For instance, in a car factory, a base car model can be customized with various options such as different colors, a navigation system, a cooling system, and parking sensors. This type of industrial production, known as variability-rich production, has been managed in traditional engineering environments through the development of product lines.
+
+\textit{Software Product Line Engineering} (SPLE)~\cite{Van01, Van07} is a software engineering methodology that extends the concept of product lines to software development, following the dream of massive software reuse. The objective of SPLE is to find similarities among software products and to manage the variability in the software development process.
+
+At the same time, a \textit{software family} can be obtained using SPL~\cite{Clements01} by defining a set of features. A feature can be a \textit{core} feature, which is mandatory for all products in the family, or an \textit{variable} feature, which can be included or excluded from the product. The set of features defines the \textit{feature model} of the software family.
+
+\subsection{Feature Variability}\label{subsec:background:FeatureVariabilityInSPL}
+
+Feature variability is a key concept in SPL. They are often developed using a \textit{feature-oriented programming}~\cite{Prehofer97} (FOP) paradigm, which allows developers to define features as first-class entities in the code. In this context, each feature represents either functional or non-functional characteristics of a subset of the software family's members. However, there is no universally accepted formal definition of software features. Typically, a feature is informally described as an increment~\cite{Batory21}. Therefore, an SPL can be viewed as a collection of all available features, while a product configuration is a valid subset of the SPL. Each configuration corresponds to a specific member of the software family. Although various approaches to expressing SPLs exist in the literature, \textbf{feature models}~\cite{Kang90} (FMs) are considered the \textit{de facto} standard for variability modeling~\cite{Czarnecki12}.
+An FM is a tree-like structure that represents the features of a software family and their relationships. The root of the tree represents the software family, and the node represents a feature. The edges represent the relationships between the features.
+It is important to note that, given a FM, a software variant is identified through a configuration, which is a set of features that are selected from the FM. A configuration is valid if it satisfies all the constraints defined in the FM.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/FM/background_featuremodel.pdf}
+    \caption{FM of a family of neural networks used to encode the MNIST1dataset, taken from \cite{Cazzola22cCazzola22c}}
+    \label{lst:background:featuremodel}
+\end{figure}
+
+Figure~\ref{lst:background:featuremodel} shows an example of an FM for a family of neural networks used to encode the MNIST dataset.
+FM structures implicitly define dependencies among features. Features can be \textit{abstract} (\texttt{Reducer} and \texttt{Prepare} in Fig~\ref{lst:background:featuremodel}) or \textit{concrete} (\texttt{Logging} and \texttt{Train} in Fig~\ref{lst:background:featuremodel}).
+An abstract feature represents a group of related features, while a concrete feature represents a specific functionality.
+Features are \textit{mandatory} -- such as \texttt{Dimension} in Fig~\ref{lst:background:featuremodel} -- if they must be included if their parent feature is selected, \textit{optional} if they can be included or excluded.
+Features that are part of a group can be put in an \textit{alternative} or \textit{or} relationship.Or-relationship (children of Logging node in Fig.~\ref{lst:background:featuremodel}) means that only one of the features in the group can be selected, while an alternative relationship (children of Train node in Fig.~\ref{lst:background:featuremodel}) means that at least one of the features in the group must be selected if the parent feature is selected.
+
+Dependencies can be explicitly defined using cross-tree constraints -- i.e., Boolean expression among features of the FM~\cite{Cazzola22c}, where each features represents a term in the expression. Each term is true if the corresponding feature is active in the current configuration and false otherwise. Cross-tree constraints support general Boolean operators such as AND, OR, NOT, IMPLIES, and IFF with their traditional meanings.
+The expressiveness of these constraints allows for defining dependencies that span the entire feature model, rather than being limited to parent-child relationships. A configuration is considered invalid if any cross-tree constraint evaluates to false.
+
+An example of a cross-tree constraint is the following:
+\begin{equation*}
+    \texttt{Train} \Rightarrow \texttt{Logging} \vee \texttt{Strategy}
+\end{equation*}
+
+Implicit and explicit dependencies among features can lead to issues such as dead features (features that can never be activated), false-optional features (features labeled as optional but are actually required), and atomic sets (groups of features that must either all be activated or all be deactivated in any given configuration). Conducting static analysis of Feature Models (FMs) to identify these anomalies can enhance the quality of Software Product Lines. This research area encompasses both structural~\cite{TerBeek21} and behavioral~\cite{Benavides10} methodologies.
+ Additionally to FOP, other paradigms for SPLE such as aspect-oriented programming (AOP)~\cite{Groher09} and delta-oriented programming (DOP)~\cite{Koscielny14} exist.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

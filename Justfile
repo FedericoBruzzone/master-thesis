@@ -7,7 +7,6 @@ _default:
 
 # Build the pdf file
 all:
-  @echo "Making all pdf files"
   @just pdflatex
   @just bibtex
   @just pdflatex
@@ -15,16 +14,21 @@ all:
 
 # Build the pdf file
 build:
-  @echo "Making all pdf files"
   @just pdflatex
   @just bibtex
   @just pdflatex
   @just pdflatex
 
 # Build the pdf file once
-pdflatex:
+pdflatex: compile_figs
   # @pdflatex -shell-escape -interaction=nonstopmode -file-line-error ./{{NAME}}.tex
   @pdflatex -shell-escape -file-line-error ./{{NAME}}.tex
+
+# Compile the figures
+compile_figs:
+  @pdflatex -shell-escape -file-line-error -output-directory=./figs/FM ./figs/FM/background_featuremodel.tex
+  @pdflatex -shell-escape -file-line-error -output-directory=./figs/FM ./figs/FM/background_featuremodel.tex
+  @pdflatex -shell-escape -file-line-error -output-directory=./figs/FM ./figs/FM/background_featuremodel.tex
 
 # Build the bibtex file
 bibtex:
@@ -33,21 +37,22 @@ bibtex:
 # Clean up generated files and the pdf file
 clean_all:
   @just clean
+  @just clean_figs
   @just clean_pdf
 
 # Clean up generated files
-clean:
-  @echo "Cleaning up generated files"
+clean: clean_figs
   @rm -rf *.aux *.bbl *.blg *.log *.out *.spl *.synctex.gz *.toc *.bcf *.run.xml *.nav *.snm *.vrb *.fdb_latexmk *.fls .{{NAME}}-blx.bib .{{NAME}}-cache
+
+clean_figs:
+  @rm -rf ./figs/FM/*.pdf ./figs/FM/*.aux ./figs/FM/*.bbl ./figs/FM/*.blg ./figs/FM/*.log ./figs/FM/*.out ./figs/FM/*.spl ./figs/FM/*.synctex.gz ./figs/FM/*.toc ./figs/FM/*.bcf ./figs/FM/*.run.xml ./figs/FM/*.nav ./figs/FM/*.snm ./figs/FM/*.vrb ./figs/FM/*.fdb_latexmk ./figs/FM/*.fls ./figs/FM/.{{NAME}}-blx.bib ./figs/FM/.{{NAME}}-cache
 
 # Clean up the pdf file
 clean_pdf:
-  @echo "Cleaning up pdf file"
   @rm -f {{NAME}}.pdf
 
 # Run latexmk in interactive mode
-run_interactive:
-  @echo "Running latexmk in interactive mode"
+run_interactive: clean clean_figs compile_figs
   @latexmk -pvc -pdf -shell-escape -interaction=nonstopmode -file-line-error ./{{NAME}}.tex
 
 _help:
