@@ -1,34 +1,11 @@
 \chapter{Background}\label{chap:Background}
 
-\begin{Listing}[t]
-\centering
-\begin{tikzpicture}
-\draw[blue, very thick, rounded corners, fill=blue!20, anchor=north]
-        (0,0) rectangle (4,3)
-        node[anchor=north, align=center] at (2,3.5) {Editor};
-\draw[gray, very thick, fill=gray!20]
-        (0.15, 1.75) rectangle (3.85,2.75)
-        node[black, text width=4cm, pos=.5, align=center] {Language-agnostic \linebreak editing support};
-\draw[gray, very thick, fill=gray!20]
-        (0.15, 0.25) rectangle (3.85,1.65)
-        node[black, text width=4cm, pos=.5, align=center] {Editing actions \linebreak $\Updownarrow$ \linebreak  Text changes};
-
-\draw[red, very thick, rounded corners, fill=red!20, anchor=north]
-        (7,0) rectangle (11,3)
-        node[anchor=north, align=center] at (9,3.5) {Server};
-\draw[gray, very thick, fill=gray!20]
-        (7.15, 1.75) rectangle (10.85,2.75)
-        node[black, text width=4cm, pos=.5, align=center] {Language-specific \linebreak editing support};
-\draw[gray, very thick, fill=gray!20]
-        (7.15, 0.25) rectangle (10.85,1.65)
-        node[black, text width=4cm, pos=.5, align=center] {Language actions \linebreak $\Updownarrow$ \linebreak Text Changes};
-
-\draw[<->, very thick, >=stealth] (4,1.5) -- (7,1.5)
-        node[midway,fill=white] {\emph{LSP}};
-\end{tikzpicture}
-\caption{LSP approach to language support. Borrowed from~\cite{Rodriguez-Echeverria18a}}
-\label{lst:lsp}
-\end{Listing}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/background/lsp_diagram.pdf}
+    \caption{LSP approach to language support. Borrowed from~\cite{Rodriguez-Echeverria18a}}
+    \label{lst:background:featuremodel}
+\end{figure}
 
 In this chapter, we provide an overview of the concepts and technologies that are relevant to the work presented in this thesis. We start by introducing the concept of language servers and the Language Server Protocol (LSP) in Section~\ref{sec:background:LanguageServerProtocol}. We then discuss language workbenches in Section~\ref{sec:bckgnd:language-workbenches}, static analysis and type systems in Section~\ref{sec:background:StaticAnalysisAndTypeSystems}, and software and language product lines in Section~\ref{sec:background:SoftwareAndLanguageProductLines}.
 
@@ -495,10 +472,11 @@ It is important to note that, given a FM, a software variant is identified throu
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.9\linewidth]{figs/FM/background_featuremodel.pdf}
-    \caption{FM of a family of neural networks used to encode the MNIST1dataset, taken from \cite{Cazzola22cCazzola22c}}
+    \includegraphics[width=0.9\linewidth]{figs/background/mnist_featuremodel.pdf}
+    \caption{FM of a family of neural networks used to encode the MNIST\footnotemark dataset, taken from \cite{Cazzola22c}}
     \label{lst:background:featuremodel}
 \end{figure}
+\footnotetext[\thefootnote]{\url{https://www.jetbrains.com/mps/}}
 
 Figure~\ref{lst:background:featuremodel} shows an example of an FM for a family of neural networks used to encode the MNIST dataset.
 FM structures implicitly define dependencies among features. Features can be \textit{abstract} (\texttt{Reducer} and \texttt{Prepare} in Fig~\ref{lst:background:featuremodel}) or \textit{concrete} (\texttt{Logging} and \texttt{Train} in Fig~\ref{lst:background:featuremodel}).
