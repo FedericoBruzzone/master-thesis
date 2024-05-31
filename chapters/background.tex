@@ -456,6 +456,12 @@ Given the typing environment $\Gamma$, the type inference algorithm uses the rul
 
 In listing~\ref{lst:background:typeinference} we show an example of type inference in Rust and OCaml. In both examples, thesec:background:software-and-language-product-lines type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code (line 5), the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code (line 3), the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
 
+
+\section{Domain-Specific Languages}\label{sec:background:DomainSpecificLanguages}
+
+
+
+
 \section{Software and Language Product Lines}\label{sec:background:SoftwareAndLanguageProductLines}
 
 Variability in products is common in industrial production. For instance, in a car factory, a base car model can be customized with various options such as different colors, a navigation system, a cooling system, and parking sensors. This type of industrial production, known as variability-rich production, has been managed in traditional engineering environments through the development of product lines.
@@ -473,10 +479,9 @@ It is important to note that, given a FM, a software variant is identified throu
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figs/background/mnist_featuremodel.pdf}
-    \caption{FM of a family of neural networks used to encode the MNIST\footnotemark dataset, taken from \cite{Cazzola22c}}
+    \caption{FM of a family of neural networks used to encode the MNIST dataset, taken from \cite{Cazzola22c}}
     \label{lst:background:featuremodel}
 \end{figure}
-\footnotetext[\thefootnote]{\url{https://www.jetbrains.com/mps/}}
 
 Figure~\ref{lst:background:featuremodel} shows an example of an FM for a family of neural networks used to encode the MNIST dataset.
 FM structures implicitly define dependencies among features. Features can be \textit{abstract} (\texttt{Reducer} and \texttt{Prepare} in Fig~\ref{lst:background:featuremodel}) or \textit{concrete} (\texttt{Logging} and \texttt{Train} in Fig~\ref{lst:background:featuremodel}).
@@ -487,7 +492,7 @@ Features that are part of a group can be put in an \textit{alternative} or \text
 Dependencies can be explicitly defined using cross-tree constraints -- i.e., Boolean expression among features of the FM~\cite{Cazzola22c}, where each features represents a term in the expression. Each term is true if the corresponding feature is active in the current configuration and false otherwise. Cross-tree constraints support general Boolean operators such as AND, OR, NOT, IMPLIES, and IFF with their traditional meanings.
 The expressiveness of these constraints allows for defining dependencies that span the entire feature model, rather than being limited to parent-child relationships. A configuration is considered invalid if any cross-tree constraint evaluates to false.
 
-An example of a cross-tree constraint is the following:
+An example of a cross-tree constraint is the following, where $\Rightarrow$ represents the implication operator:
 \begin{equation*}
     \texttt{Train} \Rightarrow \texttt{Logging} \vee \texttt{Strategy}
 \end{equation*}
@@ -495,21 +500,28 @@ An example of a cross-tree constraint is the following:
 Implicit and explicit dependencies among features can lead to issues such as dead features (features that can never be activated), false-optional features (features labeled as optional but are actually required), and atomic sets (groups of features that must either all be activated or all be deactivated in any given configuration). Conducting static analysis of Feature Models (FMs) to identify these anomalies can enhance the quality of Software Product Lines. This research area encompasses both structural~\cite{TerBeek21} and behavioral~\cite{Benavides10} methodologies.
  Additionally to FOP, other paradigms for SPLE such as aspect-oriented programming (AOP)~\cite{Groher09} and delta-oriented programming (DOP)~\cite{Koscielny14} exist.
 
+\subsection{Language Product Lines}\label{subsec:background:LanguageProductLines}
 
+\textit{Language Product Lines} (LPLs)~\cite{Mendez-Acuna16, Cazzola16i, Cazzola15f, Cazzola13g} are a specialization of SPLs that focus on the variability of programming languages. Researchers and practitioners have gained interest in LPLs~\cite{Cazzola17, Ghosh11b, Kuehn14} due to the increasing complexity of software systems and the need for more efficient and effective ways to manage variability in programming languages.
+LPLs are used to manage the variability in the syntax and semantics of programming languages. In particular, a family of programming languages can be defined using an LPL, where each language in the family is a member of the software family. The variability in the family is managed using features, which represent the different syntax and semantics of the languages in the family.
 
+LPLs enable developers to efficiently generate and maintain multiple language variants within a coherent framework.
+In this context, any language workbenches, such as Neverlang, adopt the LPL approach to manage the variability~\cite{Klint09b, Cazzola13g} and the modularization of the syntax and semantics of programming languages.
 
+Since LPLs are an engineering methodology for creating languages, researchers have also concentrated on assessing the quality of these LPLs. This assessment involves proposing various software metrics~\cite{Cazzola21b}. Additionally, there is an emphasis on mutation operators for mutation testing of LPLs, as outlined in~\cite{Cazzola22b}.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/background/expression_featuremodel.pdf}
+    \caption{Feature Model for the expression language}
+    \label{lst:background:exprfeaturemodel}
+\end{figure}
 
+In Figure~\ref{lst:background:exprfeaturemodel}, we show an example of an FM for a family of expression languages. In the figure are omitted the \textit{cross-tree constraints} for the sake of simplicity, for more details see~\cite{Cazzola15f}.
 
-
-
-
-
-
-
-
-
-
-
-
-
+\begin{Listing}[t]
+    \centering
+    \showneverlang*[\textwidth]{AddExpr.nl}
+    \caption{Example of a Neverlang module for the addition expression}
+    \label{lst:background:addexpr}
+\end{Listing}

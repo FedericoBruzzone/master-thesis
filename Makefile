@@ -37,8 +37,8 @@ clean_pdf:
 	$(call clean_main_pdf)
 	$(call clean_figs_pdf)
 
-run_interactive: clean clean_pdf compile_figs
-	latexmk -pvc -pdf -shell-escape -interaction=nonstopmode -file-line-error ./$(NAME).tex
+run_interactive: compile_figs
+	latexmk -pdf -pvc -shell-escape -interaction=nonstopmode -file-line-error ./$(NAME).tex
 
 # =============== COMPILING ===============
 # pdflatex -shell-escape -interaction=nonstopmode -file-line-error ./$(NAME).tex
