@@ -459,6 +459,31 @@ In listing~\ref{lst:background:typeinference} we show an example of type inferen
 
 \section{Domain-Specific Languages}\label{sec:background:DomainSpecificLanguages}
 
+According to~\cite{Mernik05}, many software language are \textit{domain specific} rather than general purpose. They can be classified in:
+\begin{itemize}
+    \item application oriented~\cite{Sammet69},
+    \item special purpose~\cite{Ross78},
+    \item specialized~\cite{Bergin96},
+    \item task specific~\cite{Nardi93}, and
+    \item application languages~\cite{Martin85},
+\end{itemize}
+Application language are called also \textit{fourth-generation languages}~\cite{Martin85}, and an example is SQL~\cite{Codd70} used to query databases.
+
+Domain specific languages (DSLs) are languages that are designed to be used in a specific domain or application area. DSLs are used to express concepts and operations that are specific to a particular domain. DSLs are typically more expressive and easier to use than general-purpose programming languages, making them well-suited for developing software with respect to the problems of a particular application domain~\cite{VanDeursen00}.
+
+According to~\cite{Favalli23}, the usage of DSLs brings several benefits, such as:
+\begin{itemize}
+    \item \textit{encapsulation} -- DSLs allow developers to encapsulate domain-specific knowledge in the language, making it easier to understand and use.
+    \item \textit{productivity} -- DSLs can improve productivity by providing higher-level abstractions that are closer to the problem domain.
+    \item \textit{communication} -- DSLs can improve communication between domain experts and developers by providing a common language for discussing requirements and specifications.
+    \item \textit{quality} -- DSLs provide a way to express domain-specific constraints and requirements, which can help improve the quality of the software.
+\end{itemize}
+
+\subsection{Internal and External DSLs}\label{subsec:background:InternalAndExternalDSLs}
+
+DSLs are classified as internal (or embedded~\cite{Fowler10}) and external. Internal DSLs are an idiomatic way of writing code in a general purpose programming language. They are not require a special parser or compiler, but they are limited by the syntax and semantics of the host language.
+Some programming languages, such as Lisp~\cite{Fowler05}, Ruby~\cite{Fowler10} and Scala~\cite{Artho15}, intrinsically support the development of internal DSLs.
+External DSLs, on the other hand, are standalone languages that require a separate parser and compiler. They are more flexible and expressive than internal DSLs, but they are also more complex to develop and maintain.
 
 
 
@@ -510,18 +535,22 @@ In this context, any language workbenches, such as Neverlang, adopt the LPL appr
 
 Since LPLs are an engineering methodology for creating languages, researchers have also concentrated on assessing the quality of these LPLs. This assessment involves proposing various software metrics~\cite{Cazzola21b}. Additionally, there is an emphasis on mutation operators for mutation testing of LPLs, as outlined in~\cite{Cazzola22b}.
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.9\linewidth]{figs/background/expression_featuremodel.pdf}
-    \caption{Feature Model for the expression language}
-    \label{lst:background:exprfeaturemodel}
-\end{figure}
-
-In Figure~\ref{lst:background:exprfeaturemodel}, we show an example of an FM for a family of expression languages. In the figure are omitted the \textit{cross-tree constraints} for the sake of simplicity, for more details see~\cite{Cazzola15f}.
-
 \begin{Listing}[t]
     \centering
     \showneverlang*[\textwidth]{AddExpr.nl}
     \caption{Example of a Neverlang module for the addition expression}
     \label{lst:background:addexpr}
 \end{Listing}
+
+Listing~\ref{lst:background:addexpr} shows an example of a Neverlang module for the addition expression. The module defines the syntax and semantics of the addition expression in the \texttt{ExprLang} language. The module contains a reference syntax, which defines the syntax of the addition expression, and a role, which defines the semantics of the addition expression.
+In the reference syntax bock, using the \textbf{provides} keyword, the module defines the features exported by the module. The keyword \textbf{requires}, instead, is used to import features from other modules, defining indirectly the dependencies among modules.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/background/expression_featuremodel.pdf}
+    \caption{Feature Model for the expression language, taken from \cite{Cazzola15f}}
+    \label{lst:background:exprfeaturemodel}
+\end{figure}
+
+In Figure~\ref{lst:background:exprfeaturemodel}, we show an example of an FM for a family of expression languages. In the figure the \textit{cross-tree constraints} are shown as dashed lines connecting the features. The cross-tree constraints are used to define dependencies among features that are not explicitly defined in the FM. For instance, the cross-tree constraint between the \texttt{AddExpr} and \texttt{MulExpr} features states that if the \texttt{AddExpr} feature is selected, then the \texttt{MulExpr} feature must also be selected, for more details see~\cite{Cazzola15f}.
+Anyway, using the code in Listing~\ref{lst:background:addexpr} it it trivial to see the cross-tree constraints from \texttt{AddExpr} node to \texttt{MulExpr}, because of the \texttt{requires} keyword in the reference syntax block.

@@ -102,15 +102,20 @@
   draw colour=darkgray,
   [Expression, concrete, mandatory,
     [ Numbers, abstract, mandatory
-        [ AddExpr, concrete, mandatory ]
-        [ MulExpr, concrete, optional ]
-        [ UnaryExpr, concrete, optional ]
-        [ Numeric, concrete, optional ]
+        [ AddExpr, concrete, mandatory, name=AddExpr ]
+        [ MulExpr, concrete, optional, name=MulExpr ]
+        [ UnaryExpr, concrete, optional, name=UnaryExpr ]
+        [ Numeric, concrete, optional, name=Numeric ]
     ]
     [ Primaries, abstract, optional
-        [ PrimaryExpr, concrete, optional]
-        [ Primary, concrete, optional ]
+        [ Primary, concrete, optional, name=Primary ]
+        [ PrimaryExpr, concrete, optional, name=PrimaryExpr ]
     ]
   ]
+  \draw[dashed, -{stealth}] (AddExpr)   to[out=280, in=260] (MulExpr);
+  \draw[dashed, -{stealth}] (MulExpr)   to[out=280, in=260] (UnaryExpr);
+  \draw[dashed, -{stealth}] (UnaryExpr) to[out=280, in=260] (Primary);
+  \draw[dashed, -{stealth}] (Primary)   to[out=280, in=260] (PrimaryExpr);
+  \draw[dashed, -{stealth}] (Primary)   to[out=280, in=260] (Numeric);
 \end{forest}
 \end{document}

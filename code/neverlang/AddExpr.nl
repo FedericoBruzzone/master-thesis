@@ -16,7 +16,7 @@ slice AddExprSlice {
     concrete syntax from AddExpr
     module AddExpr with role evaluation
 }
-language TinyLang {
+language ExprLang {
     slices AddExprSlice UnaryExprSlice
            /* ... */
     roles syntax < evaluation
