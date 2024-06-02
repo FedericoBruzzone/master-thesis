@@ -481,11 +481,29 @@ According to~\cite{Favalli23}, the usage of DSLs brings several benefits, such a
 
 \subsection{Internal and External DSLs}\label{subsec:background:InternalAndExternalDSLs}
 
+\begin{Listing}[t]
+    \centering
+    \showscala*[\textwidth]{calc_internal.scala}
+    \caption{An internal DSL for arithmetic expressions in Scala}
+    \label{lst:background:addexpr-internal}
+\end{Listing}
+
 DSLs are classified as internal (or embedded~\cite{Fowler10}) and external. Internal DSLs are an idiomatic way of writing code in a general purpose programming language. They are not require a special parser or compiler, but they are limited by the syntax and semantics of the host language.
 Some programming languages, such as Lisp~\cite{Fowler05}, Ruby~\cite{Fowler10} and Scala~\cite{Artho15}, intrinsically support the development of internal DSLs.
 External DSLs, on the other hand, are standalone languages that require a separate parser and compiler. They are more flexible and expressive than internal DSLs, but they are also more complex to develop and maintain.
 
+In figure~\ref{lst:background:addexpr-internal} we show an example of an internal DSL for arithmetic expressions in Scala. The DSL uses the Scala syntax to define arithmetic expressions, such as addition, subtraction, multiplication, and division. The DSL is embedded in the Scala programming language, allowing developers to write code that looks like a domain-specific language but is actually valid Scala code.
+It can be seen that no special parser or compiler is required to use the DSL, as it is written in Scala and can be executed using the Scala interpreter.
+Line 10 in ~\ref{lst:background:addexpr-internal} shows an example of using the DSL to define an arithmetic expression; the expression is syntact sugar for the Scala code \inlinescala{calc.add(5).multiply(3).subtract(1).divide(2)}.
 
+In contrast, in figure~\ref{lst:background:addexpr-external} we show an example of an external DSL for arithmetic expressions in Scala. The DSL implementation is more complex than the internal DSL, as it requires a separate parser and compiler to process the DSL code. The DSL uses a custom syntax to define arithmetic expressions, such as \texttt{add}, \texttt{subtract}, \texttt{multiply}, and \texttt{divide}. The DSL is defined using a parser combinator library in Scala, which allows developers to define the syntax and semantics of the DSL in a declarative way.
+
+\begin{Listing}[t]
+    \centering
+    \showscala*[0.9\textwidth]{calc_external.scala}
+    \caption{An external DSL for arithmetic expressions in Scala}
+    \label{lst:background:addexpr-external}
+\end{Listing}
 
 \section{Software and Language Product Lines}\label{sec:background:SoftwareAndLanguageProductLines}
 
@@ -530,17 +548,18 @@ Implicit and explicit dependencies among features can lead to issues such as dea
 \textit{Language Product Lines} (LPLs)~\cite{Mendez-Acuna16, Cazzola16i, Cazzola15f, Cazzola13g} are a specialization of SPLs that focus on the variability of programming languages. Researchers and practitioners have gained interest in LPLs~\cite{Cazzola17, Ghosh11b, Kuehn14} due to the increasing complexity of software systems and the need for more efficient and effective ways to manage variability in programming languages.
 LPLs are used to manage the variability in the syntax and semantics of programming languages. In particular, a family of programming languages can be defined using an LPL, where each language in the family is a member of the software family. The variability in the family is managed using features, which represent the different syntax and semantics of the languages in the family.
 
+\begin{Listing}[t]
+    \centering
+    \showneverlang*[0.9\textwidth]{AddExpr.nl}
+    \caption{Example of a Neverlang module for the addition expression}
+    \label{lst:background:addexpr}
+\end{Listing}
+
 LPLs enable developers to efficiently generate and maintain multiple language variants within a coherent framework.
 In this context, any language workbenches, such as Neverlang, adopt the LPL approach to manage the variability~\cite{Klint09b, Cazzola13g} and the modularization of the syntax and semantics of programming languages.
 
 Since LPLs are an engineering methodology for creating languages, researchers have also concentrated on assessing the quality of these LPLs. This assessment involves proposing various software metrics~\cite{Cazzola21b}. Additionally, there is an emphasis on mutation operators for mutation testing of LPLs, as outlined in~\cite{Cazzola22b}.
 
-\begin{Listing}[t]
-    \centering
-    \showneverlang*[\textwidth]{AddExpr.nl}
-    \caption{Example of a Neverlang module for the addition expression}
-    \label{lst:background:addexpr}
-\end{Listing}
 
 Listing~\ref{lst:background:addexpr} shows an example of a Neverlang module for the addition expression. The module defines the syntax and semantics of the addition expression in the \texttt{ExprLang} language. The module contains a reference syntax, which defines the syntax of the addition expression, and a role, which defines the semantics of the addition expression.
 In the reference syntax bock, using the \textbf{provides} keyword, the module defines the features exported by the module. The keyword \textbf{requires}, instead, is used to import features from other modules, defining indirectly the dependencies among modules.
@@ -554,3 +573,5 @@ In the reference syntax bock, using the \textbf{provides} keyword, the module de
 
 In Figure~\ref{lst:background:exprfeaturemodel}, we show an example of an FM for a family of expression languages. In the figure the \textit{cross-tree constraints} are shown as dashed lines connecting the features. The cross-tree constraints are used to define dependencies among features that are not explicitly defined in the FM. For instance, the cross-tree constraint between the \texttt{AddExpr} and \texttt{MulExpr} features states that if the \texttt{AddExpr} feature is selected, then the \texttt{MulExpr} feature must also be selected, for more details see~\cite{Cazzola15f}.
 Anyway, using the code in Listing~\ref{lst:background:addexpr} it it trivial to see the cross-tree constraints from \texttt{AddExpr} node to \texttt{MulExpr}, because of the \texttt{requires} keyword in the reference syntax block.
+
+
