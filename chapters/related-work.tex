@@ -30,6 +30,9 @@ A visitor pattern is written in Java to define the semantics of the language.
 
 \subsection{Spoofax}\label{subsec:related-work:spoofax}
 
+% SPLASH
+% PLDI
+
 \textit{Spoofax}~\cite{Visser10} is a language workbench developed at the Delft University of Technology. It is an Eclipse based solution that provides support that use \textit{Syntax Definition Formalism 3} (SDF3)~\cite{Heering89c} for defining grammars.
 In Spoofax, the semantics is defined using the \textit{Stratego}~\cite{Visser01} language, which is a term rewriting language.Spoofax, the sew
 
@@ -38,6 +41,7 @@ In Spoofax, the semantics is defined using the \textit{Stratego}~\cite{Visser01}
 \textit{Xtext}~\cite{Bettini13b} is a language workbench developed by the Eclipse Foundation. The grammar is written in Xtext language, which is capable of generating both the ANTLR-based~\cite{Parr95} parser and EMF~\cite{Steinberg08} model used to represent the AST.  Semantics is in fact defined by implementing a code generator; this integrates \textit{out of the box} with Eclipse's built-in system.system. Xtext is distributed with \textit{Xtend}~\cite{Bettini13b}, a Java-like language that can be used to define the semantics of the language.
 
 \section{Modularization and Composition in Language Workbenches}\label{sec:related-work:modularization}
+
 
 Finding and working with the right abstractions for describing a problem or its solution is one of the central pillars of software engineering~\cite{Voelter12}. Modularization and composition are critical and advanced features in language workbenches, enabling developers to define a language by combining multiple features. Each feature can be developed independently and then integrated to create a new language, enhancing flexibility and reuse.
 
