@@ -2,7 +2,7 @@ module AddExpr {
     reference syntax {
         provides { AddExpr: expression, numbers, sum, sub; }
         requires { MulExpr; }
-        [ADD_0] AddExpr <- MulExpr;
+        `\PYG{k+kd}{[ADD\_0] AddExpr}` <- MulExpr;
         [ADD_1] AddExpr <- AddExpr "+" MulExpr;
         [ADD_2] AddExpr <- AddExpr "-" MulExpr;
     }
@@ -22,4 +22,3 @@ language ExprLang {
     roles syntax < evaluation
     rename { MulExpr -> UnaryExpr; }
 }
-

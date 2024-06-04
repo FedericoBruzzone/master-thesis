@@ -1,3 +1,34 @@
 \chapter{Concept}\label{chap:Concept}
 
+\bfcomment{Talk about the importance of modularity}
+
+\section{The type system}\label{sec:concept:TypeSystem}
+
+In \ref{subsec:background:TypeSystems}, we introduce the concept of type systems and we give a brief overview of \textit{type checking} and \textit{type inference}. Our goal is to have solid \textit{application programming interfaces} (APIs) to build type systems for each language.
+In this section, we will discuss the importance of the type system for our concept.
+What we are looking for in our type system is:
+\begin{itemize}
+    \item \textbf{modularization}, that allows the definition of custom types and operations on these types, and the ability to combine them in a modular way;
+    \item \textbf{flexibility}, since the type system is not known \textit{a priori}, we need the ability to adapt the type system to the specific needs;
+    \item \textbf{easy-to-use}, extending the default implementation of the type system with a new type, or implementing a new type from scratch should be easy and straightforward.
+\end{itemize}
+
+It is trivial to remember that the type system should also provide the basic functionalities of a type system, such as \textbf{type inference}, that allows the compiler to infer the type of an expression without the need to explicitly specify it; and \textbf{type checking}, that allows the compiler to check if the types of the expressions are correct.
+
+\subsection{The relevance of the type system in the LSP design}\label{subsec:concept:RelevanceOfTheTypeSystem}
+
+The type system is the core of the LSP design. We illustrate the need of having a type system by focusing on the ability to respond to requests from a \textit{Language Client}.
+
+In the reminder of this section, we will evaulate the relevance for three of the most important LSP feautre introduced in \ref{subsec:bacground:KeyMethodsOverview}.
+
+
+
+
+
+\subsection{Towards a modular type system}\label{sec:concept:TowardsAModularTypeSystem}
+
+\subsection{Type inference}\label{sec:concept:type-inference}
+
+\section{Toward a number of combinations equal to $\mathcal{O}(\ell)$ from $\mathcal{O}(\ell + \mathit{e})$}
+
 

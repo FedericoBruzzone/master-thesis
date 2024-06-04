@@ -291,7 +291,6 @@ Plase see \cite{Cazzola15c} for a more detailed explanation of the \texttt{Never
 Static code analysis is a software verification technique refers to the process of examining the code without executing it in order to capture the defects in the code early avoiding costly later fixations \cite{Aurum02}. Static code analysis has two main approaches: manual and automated \cite{Ilyas16}.
 Manual code analysis is a time-consuming process that requires human expertise to review the code and identify defects. Automated code analysis, on the other hand, uses tools to analyze the code and identify defects automatically. Automated code analysis tools can be used to analyze the code for defects such as syntax errors, type errors, and logic errors. These tools can also be used to enforce coding standards and best practices, such as naming conventions, code formatting, and code complexity.
 
-
 \subsection{Type Systems}\label{subsec:background:TypeSystems}
 
 \textit{Type systems} are a fundamental part of static code analysis. A type system~\cite{Pierce02} is a set of rules that define how types are used in a programming language. The type system defines the types of variables, functions, and expressions, as well as the rules for type compatibility and type inference.
@@ -496,14 +495,14 @@ In figure~\ref{lst:background:addexpr-internal} we show an example of an interna
 It can be seen that no special parser or compiler is required to use the DSL, as it is written in Scala and can be executed using the Scala interpreter.
 Line 10 in ~\ref{lst:background:addexpr-internal} shows an example of using the DSL to define an arithmetic expression; the expression is syntact sugar for the Scala code \inlinescala{calc.add(5).multiply(3).subtract(1).divide(2)}.
 
-In contrast, in figure~\ref{lst:background:addexpr-external} we show an example of an external DSL for arithmetic expressions in Scala. The DSL implementation is more complex than the internal DSL, as it requires a separate parser and compiler to process the DSL code. The DSL uses a custom syntax to define arithmetic expressions, such as \texttt{add}, \texttt{subtract}, \texttt{multiply}, and \texttt{divide}. The DSL is defined using a parser combinator library in Scala, which allows developers to define the syntax and semantics of the DSL in a declarative way.
-
 \begin{Listing}[t]
     \centering
     \showscala*[0.9\textwidth]{calc_external.scala}
     \caption{An external DSL for arithmetic expressions in Scala}
     \label{lst:background:addexpr-external}
 \end{Listing}
+
+In contrast, in figure~\ref{lst:background:addexpr-external} we show an example of an external DSL for arithmetic expressions in Scala. The DSL implementation is more complex than the internal DSL, as it requires a separate parser and compiler to process the DSL code. The DSL uses a custom syntax to define arithmetic expressions, such as \texttt{add}, \texttt{subtract}, \texttt{multiply}, and \texttt{divide}. The DSL is defined using a parser combinator library in Scala, which allows developers to define the syntax and semantics of the DSL in a declarative way.
 
 \section{Software and Language Product Lines}\label{sec:background:SoftwareAndLanguageProductLines}
 
@@ -559,7 +558,6 @@ LPLs enable developers to efficiently generate and maintain multiple language va
 In this context, any language workbenches, such as Neverlang, adopt the LPL approach to manage the variability~\cite{Klint09b, Cazzola13g} and the modularization of the syntax and semantics of programming languages.
 
 Since LPLs are an engineering methodology for creating languages, researchers have also concentrated on assessing the quality of these LPLs. This assessment involves proposing various software metrics~\cite{Cazzola21b}. Additionally, there is an emphasis on mutation operators for mutation testing of LPLs, as outlined in~\cite{Cazzola22b}.
-
 
 Listing~\ref{lst:background:addexpr} shows an example of a Neverlang module for the addition expression. The module defines the syntax and semantics of the addition expression in the \texttt{ExprLang} language. The module contains a reference syntax, which defines the syntax of the addition expression, and a role, which defines the semantics of the addition expression.
 In the reference syntax bock, using the \textbf{provides} keyword, the module defines the features exported by the module. The keyword \textbf{requires}, instead, is used to import features from other modules, defining indirectly the dependencies among modules.
