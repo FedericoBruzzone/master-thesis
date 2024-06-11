@@ -21,14 +21,41 @@ The type system is the core of the LSP design. We illustrate the need of having 
 
 In the reminder of this section, we will evaulate the relevance for three of the most important LSP feautre introduced in \ref{subsec:bacground:KeyMethodsOverview}.
 
+\subsubsection{Diagnostic Analysis}\label{subsubsec:concept:DiagnosticAnalysis}
 
+Currently, the LSP provides the ability to perform \textit{diagnostic analysis} on the code. This feature is useful to provide feedback to the user about the correctness of the code.
+In compilers design, a \textit{Diagnostic} can be produced by different phases of compilation, such as the \textit{lexical analysis}, \textit{syntax analysis}, and \textit{semantic analysis}.
+The \textbf{Syntax Errors} are detected by the \textit{lexical analysis} and \textit{syntax analysis}, usually during the \textit{parsing} phase. The \textbf{Semantic Errors} are detected by the \textit{semantic analysis}, usually during the \textit{type checking} phase.
+In modern compilers, an additional phases can be added to the compilation process, \textit{data flow analysis} and \textit{control flow analysis}, that can be used to detect more complex errors, such as \textit{unreachable code} or \textit{dead code}.
 
+In Language Workbenches world, usually it is common to have an instance of a \textbf{Language} and a \textbf{Source Code} that should be parsed and analyzed by the Language.
+Taking into account the \textbf{Syntax Errors}, assuming that the \textbf{Language} is able to parse the \textbf{Source Code} and the \textbf{Language} is able to provide errors and warnings during the \textit{parsing} phase, should be easy to provide the \textit{Syntax Errors} to the \textit{Language Client} (see Listing \ref{lst:concept:SyntaxError}).
 
+\begin{Listing}[t]
+    \centering
+    \showjava*[1\textwidth]{SyntaxError.java}
+    \caption{Example of catching a Syntax Error in Java}
+    \label{lst:concept:SyntaxError}
+\end{Listing}
+
+The \textbf{Semantic Errors} and \textbf{Data Flow Analysis} are more complex to implement. In fact, in order to detect a \textit{Semantic Error}, the \textbf{Language} should be able to perform \textit{type checking} on the \textbf{Source Code} in order to verify that the code can be executed without any unexpected errors. The \textit{Data Flow Analysis} is necessary to understand if the code is reachable, and to do this, the \textbf{Language} should be able to perform static analysis on the \textbf{Source Code}.
+
+\subsubsection{Jump to Definition}\label{subsubsec:concept:JumpToDefinition}
+The ability to access the definition of a symbol, such as a function or a variable, is a common feature in modern IDEs.
+To enable this functionality, a \textbf{Symbol Table} is required and should be able to map a given row and column position in the source code to the corresponding symbol and its definition.
+During this phase, the typechecking is required to bind the symbol to its type. This is necessary to provide the correct definition of the symbol to the user.
+In addition to the symbol table, the \textbf{Language} should be able to provide the \textit{Scope} of the symbol, in order to understand if the symbol is visible in the current context.
+
+\subsubsection{Code Completion}\label{subsubsec:concept:CodeCompletion}
+
+To effectively handle this kind of request, such as the one depicted in figure~\ref{fig:completion}, the language server needs to comprehend the type of symbol for which suggestions are to be provided. Once the type is determined, returning relevant suggestions becomes straightforward. However, a challenge arises when suggestions must be presented to the user while they are still writing, as the source code may be syntactically incorrect during the writing process. To address this issue, a parser with error detection and recovery~\cite{Graham79} capabilities is required to enable effective suggestion generation despite the presence of syntax errors.
 
 \subsection{Towards a modular type system}\label{sec:concept:TowardsAModularTypeSystem}
 
+
+
 \subsection{Type inference}\label{sec:concept:type-inference}
 
-\section{Toward a number of combinations equal to $\mathcal{O}(\ell)$ from $\mathcal{O}(\ell + \mathit{e})$}
+\section{Reduce to $\mathcal{L} \times 1$ the number of combinations to support $\mathcal{L}$ languages}
 
 

@@ -4,7 +4,7 @@
     \centering
     \includegraphics[width=0.9\linewidth]{figs/background/lsp_diagram.pdf}
     \caption{LSP approach to language support. Borrowed from~\cite{Rodriguez-Echeverria18a}}
-    \label{lst:background:featuremodel}
+    \label{lst:lsp}
 \end{figure}
 
 In this chapter, we provide an overview of the concepts and technologies that are relevant to the work presented in this thesis. We start by introducing the concept of language servers and the Language Server Protocol (LSP) in Section~\ref{sec:background:LanguageServerProtocol}. We then discuss language workbenches in Section~\ref{sec:bckgnd:language-workbenches}, static analysis and type systems in Section~\ref{sec:background:StaticAnalysisAndTypeSystems}, and software and language product lines in Section~\ref{sec:background:SoftwareAndLanguageProductLines}.
@@ -19,6 +19,8 @@ Usually, the LSP Clients are developed as plugins for popular editors or IDEs de
 Language servers are \textit{de facto} standard for providing language-specific features in editors and IDEs. The LSP is supported by a wide range of editors and IDEs, including Noevim\footnote{\url{https://neovim.io/doc/user/lsp.html}}, Visual Studio Code\footnote{\url{https://code.visualstudio.com/api/language-extensions/language-server-extension-guide}}, Eclipse\footnote{\url{https://www.eclipse.org/community/eclipse_newsletter/2017/may/article1.php}}, and IntelliJ IDEA\footnote{\url{https://plugins.jetbrains.com/docs/intellij/language-server-protocol.html}}. There are several language servers available for popular programming languages, including Rust, TypeScript, Python, and Java and most of them are open-source\footnote{\url{https://microsoft.github.io/language-server-protocol/implementors/servers}}.
 
 The LSP is initiated by Microsoft and is now an open standard that is maintained by the Language Server Protocol Working Group. It was designed for the use with the Visual Studio Code editor, but it has since been adopted by other editors and IDEs. The LSP is under open-source license and is available on GitHub\footnote{\url{https://github.com/microsoft/language-server-protocol}}.
+
+Before the advent of LSP and DAP, developers had to implement language support for each editor separately, having the number of combinations to support $\mathcal{L}$ languages in $\mathcal{L} \times \mathcal{E}$, where $\mathcal{E}$ is the number of editors. Currently, the number of combinations to support $\mathcal{L}$ languages is $\mathcal{L} + \mathcal{E}$~\cite{Rodriguez-Echeverria18a}, as the Microsoft LSP and DAP are editor-agnostic, as shown in Figure~\ref{lst:lsp}.
 
 \subsection{JSON-RPC}\label{subsec:background:JSONRPC}
 The LSP uses JSON-RPC to communicate between a language server and an editor. JSON-RPC (v2)\footnote{\url{https://www.jsonrpc.org/specification}} is a stateless, light-weight remote procedure call (RPC) \cite{Birrell84} protocol that uses JSON as the data format.
