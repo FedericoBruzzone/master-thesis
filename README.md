@@ -4,7 +4,7 @@ This repository contains the report of my master thesis at [ADAPT Lab](https://c
 
 ## Info
 
-- **Title**:
+- **Title**: Toward a modular approach for type systems and LSP generation
 - **Author**: Federico Cristiano Bruzzone
 - **Supervisor**: Prof. Walter Cazzola
 - **Co-Advisor**: Dr. Luca Favalli

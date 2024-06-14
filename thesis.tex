@@ -27,9 +27,9 @@
 \tcbset{
     myboxstyle/.style={
         enhanced, breakable,
-        sharp corners,(or I was
+        sharp corners,
         % left skip=8mm,
-        attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+        % attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
         boxed title style={colframe=#1!40, height=6mm, bean arc, boxrule=1pt},
         colback=#1!10, colframe=#1!30, boxrule=1pt,
         coltitle=black, colbacktitle=#1!10,
@@ -43,15 +43,35 @@
 \hypersetup{
     colorlinks = true
 }
+
+\tcbuselibrary{theorems}
+\newtcbtheorem{mydefinition}{Definition}%
+{myboxstyle=yellow}{def}
+% \newtcbtheorem[number within=section]{mytheo}{My Theorem}%
+% {colback=green!5,colframe=green!35!black,fonttitle=\bfseries}{th}
+
+\RequirePackage{xspace}
+\RequirePackage[tikz]{bclogo}
+\definecolor{bgblue}{RGB}{245,243,253}
+\definecolor{ttblue}{RGB}{91,194,224}
+\renewcommand\bcStyleTitre[1]{\large\textcolor{ttblue}{#1}}
+\newenvironment{Caveats}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcbombe, barre=none,noborder=true]{Caveats}}{\end{bclogo}}
+\newenvironment{Tips}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bclampe, barre=none,noborder=true]{Tips \& Tricks}}{\end{bclogo}}
+\newenvironment{Info}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcinfo, barre=none,noborder=true]{Info}}{\end{bclogo}}
+\newenvironment{Warning}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcattention, barre=none,noborder=true]{Warning}}{\end{bclogo}}
+
+
+\newtheorem{definition}{Formal Definition}
 % =================================
 
 \begin{document}
 
+% \title{Code Less to Code More}
 % \subtitle{Streamlining LSP Development for \\ Language Families \vspace{2cm}}
-\title{Toward a modular approach for type systems and LSP \\ generation}
 % \title{Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages}
-\title{Code Less to Code More}
 % \subtitle{\vspace{3pt}\small Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages}
+\title{Toward a modular approach for type systems and LSP \\ generation \\}
+% \subtitle{Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages \\}
 \author{Federico Cristiano Bruzzone}
 \matricola{27427A}
 \ayear{2023-2024}
