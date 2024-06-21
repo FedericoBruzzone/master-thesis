@@ -1,1 +1,86 @@
 \chapter{Implementation}\label{chap:Implementation}
+
+All implementations in this chapter will be implemented in the \texttt{Java} programming language.
+
+\section{Towards a modular type system implementation}
+
+In this section, we describe the implementation of the modular type system described in~\ref{sec:concept:TowardsAModularTypeSystem} step by step.
+
+\subsection{Type implementation: the basic building block}\label{sec:impl:Type}
+
+\begin{Listing}[tb]
+    \centering
+    \showjava*[1\textwidth]{Type.java}
+    \caption{The \texttt{Type} interface.}
+    \label{lst:impl:Type}
+\end{Listing}
+
+The \texttt{Type} interface is the basic building block of the type system. As shown in Listing~\ref{lst:impl:Type}, the \texttt{Type} interface has four methods:
+\begin{itemize}
+    \item \texttt{String id()} that returns the unique identifier of the type.
+    \item \texttt{boolean isAssignableFrom(Type other, Variance variance)} that returns \texttt{true} if the type is assignable from the \texttt{other} type with the given \texttt{variance}.
+    \item \texttt{boolean matchSignature(Signature signature)} that returns \texttt{true} if the type matches the given \texttt{signature}.
+    \item \texttt{Type bind(List<Type> neededTypes)} that returns the type bound to the given \texttt{neededTypes}.
+\end{itemize}
+
+The method \texttt{bind} could be used to bind a type to its generic parameters. For instance, the type \texttt{List<String>} is bound to the type \texttt{List<T>} with \texttt{neededTypes} being \texttt{String}. Another usage of the \texttt{bind} method is to bind a type function to its arguments. For instance, the type function \texttt{concat(T, U)} could be bound to the type function \texttt{concat(String, Integer)} with \texttt{neededTypes} being \texttt{String} and \texttt{Integer}.
+
+Note that, the \texttt{Type} interface does not have a method to create a new type. This is because the type system is immutable. Once a type is created, it cannot be changed. This is to ensure that the type system is consistent and that the type system is thread-safe.
+
+Additionally, the \texttt{Type} interface does not have a method to compare two types. This is because the type system is based on the \textbf{structural type system}~\cite{Cardelli88, Cook89}. Two types are equal if they have the same structure. For instance, the type \texttt{List<String>} is equal to the type \texttt{List<String>}. However, note that it is trivial pass to a \textbf{nominal type system}~\cite{Pierce02} by adding a method to compare two types based on their unique identifier.
+
+\subsection{Scope implementation: the context of the type}\label{subsec:impl:Scope}
+
+\begin{Listing}[tb]
+    \centering
+    \showjava*[1\textwidth]{Scope.java}
+    \caption{The \texttt{Scope} interface.}
+    \label{lst:impl:Scope}
+\end{Listing}
+
+The \texttt{Scope} interface is the context of the type. It is a generic interface that allows to the implementer to define the \textit{Java Type} of the identifier (\texttt{IDENTIFIER} in Line 1 of~\ref{lst:impl:Scope}).
+
+As shown in Listing~\ref{lst:impl:Scope}, the \texttt{Scope} interface has seven main methods:
+
+\begin{itemize}
+    \item \texttt{TypingEnvironment<IDENTIFIER> getTypingEnvironment()} that returns the typing environment of the scope.
+    \item \texttt{IDENTIFIER identifierFromToken(Token token)} that returns the identifier from the given \texttt{token}.
+    \item \texttt{void setParent(Scope<IDENTIFIER> parent)} that sets the parent scope of the scope.
+    \item \texttt{Optional<Scope<IDENTIFIER>> getParent()} that returns the parent scope of the scope.
+    \item \texttt{void applyBinding(IDENTIFIER variable, SymbolTableEntry entry)} that applies the binding of the given \texttt{variable} to the given \texttt{symbol table entry}.
+    \item \texttt{Stream<SymbolTableEntry> streamSymbolTableEntries()} that returns a stream of the symbol table entries of the scope.
+    \item \texttt{InferenceResult inferFromSignature(Token token, Signature signature)} that infers the type of the given \texttt{token} from the given \texttt{signature}.
+\end{itemize}
+
+The \texttt{Scope} extends the \texttt{Type} interface~\ref{sec:impl:Type} to allow the scope to be used as a type. Reinforcing what was said in Section~\ref{subsec:concept:ScopeTheContextOfTheType}, we would like to keep the scope as generic as possible. This is to allow the scope to be used in different contexts. In addition, every scope has a typing environment that is a map of types (see Section~\ref{subsec:concept:TypingEnvironmentAMapOfTypes}).
+In order to apply the binding of a variable to a \texttt{SymbolTableEntry}~\ref{subsec:impl:SymbolTableEntry}, the scope has the \texttt{applyBinding} method. This method is used to bind a variable to a \texttt{SymbolTableEntry} in the scope. The \texttt{streamSymbolTableEntries} method is used to stream the symbol table entries of the scope. The \texttt{inferFromSignature} method is used to infer the type of a token from a signature.
+
+\subsection{Signature implementation: the definition of a type}\label{subsec:impl:Signature}
+
+\begin{Listing}[tb]
+    \centering
+    \showjava*[1\textwidth]{Signature.java}
+    \caption{The \texttt{Signature} class.}
+    \label{lst:impl:Signature}
+\end{Listing}
+
+The \texttt{Signature} class is the definition of a type. As shown in Listing~\ref{lst:impl:Signature}, the \texttt{Signature} class has one main method:
+\begin{itemize}
+    \item \texttt{SymbolTableEntry typeResolution(SymbolTableEntry entryType)} that returns the type resolution of the given \texttt{entryType}.
+\end{itemize}
+
+\subsection{Symbol Table Entry Implementation: an entry in the Typing Environment}\label{subsec:impl:SymbolTableEntry}
+\texttt{SymbolTableEntry} is a class that represents an entry in the \texttt{TypingEnvironment}~\ref{lst:impl:TypingEnvironment} (Symbol Table).
+A \texttt{SymbolTableEntry} has several methods and they are basically extracted from the \textbf{Token} of a \textbf{Parser}.
+
+\begin{Listing}[tbh]
+    \centering
+    \showjava*[1\textwidth]{SymbolTableEntry.java}
+    \caption{The \texttt{SymbolTableEntry} class.}
+    \label{lst:impl:SymbolTableEntry}
+\end{Listing}
+
+\subsection{Typing Environment implementation: a map of types}\label{subsec:impl:TypingEnvironment}
+
+\subsection{Entry Type Binder: an helper to bind types}\label{subsec:impl:EntryTypeBinder}
+

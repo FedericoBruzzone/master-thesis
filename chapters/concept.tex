@@ -73,6 +73,7 @@ Basically, each type should be answer to the following questions:
     \item What is its \textbf{identifier}?
     \item Can it be \textbf{assignable from} another type with a specific kind of \textbf{variance}?
     \item Can it match a specific \textbf{signature}?
+    \item Does it need other types to be \textbf{bound}?
 \end{enumerate}
 
 The second question is used to \textbf{type check} the \textit{item} in the \textbf{Type System}. The type of \textbf{variance} is used to define the relationship between two types. The variance can be \textit{covariant}, \textit{contravariant}, or \textit{invariant}.
@@ -89,33 +90,94 @@ The second question is used to \textbf{type check} the \textit{item} in the \tex
 \end{definition}
 
 The third question is used to \textbf{type inference} the \textit{item} in the \textbf{Type System}, simply answering to the question: can the type of the \textit{item} match a specific \textbf{signature}?
+Finally, the last question is used to \textbf{bind} the type to its generic parameters. For example, the type \textit{List<String>} is bound to the type \textit{List<T>} with \textit{needed types} being \textit{String}.
 
 
 \subsection{Scope: the context of the type}\label{subsec:concept:ScopeTheContextOfTheType}
 
-
 \begin{mydefinition}{Scope}{concept:scope}
-The \textbf{Scope} is the context in which the type is defined, more precisely, where the binding between the type and the item is defined in the \textbf{Type System}. It is used to define the visibility and the lifetime of the type and its operations. The \textbf{Scope} can be, for example, a \textit{local scope}, a \textit{global scope}, or a \textit{module scope}.
+The \textbf{Scope} is the context in which the type or an identifier is defined, more precisely, where the binding between the type or an identifier and the item is defined in the \textbf{Type System}. It is used to define the visibility and the lifetime of the type or identifier and its operations. The \textbf{Scope} can be, for example, a \textit{local scope}, a \textit{global scope}, or a \textit{module scope}.
 \end{mydefinition}
+
+In our concept, a \textbf{Scope} can be see as a \textbf{Type}~\ref{subsec:concept:TypeTheBasicBuildingBlock} that defines the visibility and the lifetime of the type or identifier and its operations. At this point, the \textbf{Scope} is not universal. In fact, for instance, \textit{Java} do not categorize the \textbf{Scope}, such as \textit{Block Scope}, as a \textbf{Type}. However, in order to achieve a representation of a \textit{Block Scope} as a \textbf{Type}, we can define a \textbf{Scope} where at the questions
+
+\begin{itemize}
+    \item Can it be assignable from another type with a specific kind of variance?
+    \item Can it match a specific signature?
+\end{itemize}
+
+will answer \textit{false}.
+
+Using a \textbf{Scope} as a \textbf{Type} allows the definition of new types on demand, and the ability to combine them in a modular way.
+
+So, a \textbf{Scope} should be able to answer to the following questions, in addition to the questions that a \textbf{Type} should be able to answer:
+
+\begin{enumerate}
+    \item What types are \textbf{visible} in the \textbf{Scope}?
+    \item Can a type be bound to the \textbf{Scope}?
+    \item If exists, what is the \textbf{parent Scope}?
+    \item Can a \textbf{Scope} be marked as \textbf{external visible} and what items exported?
+\end{enumerate}
+\\
+The first question is used to define the visibility of the type in the \textbf{Scope} and knowing what types are visible in the \textbf{Scope}. ~\ref{subsec:concept:TypingEnvironmentAMapOfTypes} will be used to answer this question.
+The second question is used to bind a type to the Scope. Every scope should have a set of rules that allow to determine if a type can be bound to the Scope. ~\ref{subsec:concept:EntryTypeBinderAnHelperToBindTypes} will be used to answer this question.
+The third question is used to define the hierarchy of the Scopes. Trivially, this is represented as a tree.
+Finally, the last question is used to define the visibility of the Scope and its items. A \textbf{Scope} marked as \textit{external visible} should be able to export some its items. This is useful during \textit{type inference} phase, because whan searching for a type if a Scope (type) is marked as \textit{external visible} the search should be performed recursively in all \textbf{items} exported by the \textbf{Scope}.
+
+Now, we propose some examples of scopes in the world of object-oriented programming (OOP) languages.
+In OOP there are several types of scopes that determine the visibility and lifetime of items. The most common scopes are:
+\begin{itemize}
+    \item \textbf{Class scope}:  A class is a collection of variables and methods. Variables declared inside a class have class scope, and they can be accessed within that class and its instances. Methods declared inside a class also have class scope and can be accessed within that class and its instances.
+    \item \textbf{Instance scope}: An instance is an object created from a class. Instance variables are declared inside a class, but outside any method, and have instance scope. They can be accessed within that class’s methods and any instance of that class.
+    \item \textbf{Method scope}: Variables declared inside a method have method scope, and they can only be accessed within that method.
+    \item \textbf{Block scope}: A block is a section of code enclosed in curly braces. Variables declared inside a block have block scope, and they can only be accessed within that block. This includes loops, conditional statements, and code enclosed in curly braces.
+    \item \textbf{Static scope}: Static variables and methods belong to a class, not to an instance of that class. Static variables and methods have class scope and can be accessed using the class name without creating an instance of the class.
+\end{itemize}
+
+\subsection{Signature: the definition of the type}\label{subsec:concept:SignatureTheDefinitionOfTheType}
+
+A \textbf{Signature} is the definition of the type. It is used to define the structure of the type and to support \textit{static typing} and \textit{type checking}. In our type system, \textbf{each type} should have a Signature that defines the structure of the type.
+
+\begin{mydefinition}{Signature}{concept:signature}
+    The \textbf{Signature} in \textbf{structural type system}~\cite{Cardelli88, Cook89} or in \textbf{nominal type system}~\cite{Pierce02} is the definition of the type. In a \textbf{structural type system}, the \textbf{Signature} is the structure of the type, while in a \textbf{nominal type system}, the \textbf{Signature} is the name of the type. The \textbf{Signature} is used also to support \textit{static typing} and \textit{type checking}.
+\end{mydefinition}
+
+A \textbf{structural type system} is a major class of type systems in which type compatibility and equivalence are determined by the type's actual structure or definition and not by other characteristics such as its name or place of declaration. A type system is \textbf{nominal} if compatibility and equivalence of data types is determined by explicit declarations and/or the name of the types.
+
+A \textbf{Signature} should be able to answer to one question:
+
+\begin{enumerate}
+    \item Can a type match the \textbf{Signature}?
+\end{enumerate}
+
+This question can be simple or complex, depending on the type we would like to match with the \textbf{Signature}. For example, a type can be a primitive type, such as \textit{int}, \textit{float}, \textit{string}, or a custom type, such as a \textit{method} inside a \textit{class}.
+For instance, a \textbf{Signature} is often used to define the type of a function. In this case, the \textbf{Signature} is the definition of the function in terms of its parameters and return type. The \textbf{Signature} is used to determine if a type can match the definition of the function or method.
+
+\subsection{Symbol Table Entry: an entry in the Typing Environment}\label{subsec:concept:SymbolTableEntryAnEntryInTheTypingEnvironment}
+
+\subsection{Typing Environment: a map of types}\label{subsec:concept:TypingEnvironmentAMapOfTypes}
+
+
+\subsection{Entry Type Binder: an helper to bind types}\label{subsec:concept:EntryTypeBinderAnHelperToBindTypes}
 
 
 
 \section{Modular implementation of LSP and DAP}\label{sec:concept:ModularImplementationOfLSPAndDAP}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.9\linewidth]{figs/concept/module_with_lsp.pdf}
-    \caption{Proposed approach to modular implementation of LSP and DAP.}
-    \label{lst:concept:module_with_lsp}
-\end{figure}
+% \begin{figure}[t]
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{figs/concept/module_with_lsp.pdf}
+%     \caption{Proposed approach to modular implementation of LSP and DAP.}
+%     \label{lst:concept:module_with_lsp}
+% \end{figure}
 
 
 \section{Reduce to $\mathcal{L} \times 1$ the number of combinations to support $\mathcal{L}$ languages}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.9\linewidth]{figs/concept/lsp_combinations.pdf}
-    \caption{Traditional approach vs LSP/DAP approach to language support.}
-    \label{lst:conept:lsp_combinations}
-\end{figure}
+% \begin{figure}[t]
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{figs/concept/lsp_combinations.pdf}
+%     \caption{Traditional approach vs LSP/DAP approach to language support.}
+%     \label{lst:conept:lsp_combinations}
+% \end{figure}
 
