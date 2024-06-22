@@ -1,8 +1,9 @@
 \chapter{Concept}\label{chap:Concept}
 
-\section{The type system}\label{sec:concept:TypeSystem}
+\section{The type system}\label{sec:concept:TheTypeSystem}
 
 In \ref{subsec:background:TypeSystems}, we introduce the concept of type systems and we give a brief overview of \textit{type checking} and \textit{type inference}. Our goal is to have solid \textit{application programming interfaces} (APIs) to build type systems for each language.
+
 In this section, we will discuss the importance of the type system for our concept.
 What we are looking for in our type system is:
 \begin{itemize}
@@ -13,44 +14,6 @@ What we are looking for in our type system is:
 
 It is trivial to remember that the type system should also provide the basic functionalities of a type system, such as \textbf{type inference}, that allows the compiler to infer the type of an expression without the need to explicitly specify it; and \textbf{type checking}, that allows the compiler to check if the types of the expressions are correct.
 
-\subsection{The relevance of the type system in the LSP design}\label{subsec:concept:RelevanceOfTheTypeSystem}
-
-The type system is the core of the LSP design. We illustrate the need of having a type system by focusing on the ability to respond to requests from a \textit{Language Client}.
-
-In the reminder of this section, we will evaulate the relevance for three of the most important LSP feautre introduced in \ref{subsec:bacground:KeyMethodsOverview}.
-
-\subsubsection{Diagnostic Analysis}\label{subsubsec:concept:DiagnosticAnalysis}
-
-Currently, the LSP provides the ability to perform \textit{diagnostic analysis} on the code. This feature is useful to provide feedback to the user about the correctness of the code.
-In compilers design, a \textit{Diagnostic} can be produced by different phases of compilation, such as the \textit{lexical analysis}, \textit{syntax analysis}, and \textit{semantic analysis}.
-The \textbf{Syntax Errors} are detected by the \textit{lexical analysis} and \textit{syntax analysis}, usually during the \textit{parsing} phase. The \textbf{Semantic Errors} are detected by the \textit{semantic analysis}, usually during the \textit{type checking} phase.
-In modern compilers, an additional phases can be added to the compilation process, \textit{data flow analysis} and \textit{control flow analysis}, that can be used to detect more complex errors, such as \textit{unreachable code} or \textit{dead code}.
-
-In Language Workbenches world, usually it is common to have an instance of a \textbf{Language} and a \textbf{Source Code} that should be parsed and analyzed by the Language.
-Taking into account the \textbf{Syntax Errors}, assuming that the \textbf{Language} is able to parse the \textbf{Source Code} and the \textbf{Language} is able to provide errors and warnings during the \textit{parsing} phase, should be easy to provide the \textit{Syntax Errors} to the \textit{Language Client} (see Listing \ref{lst:concept:SyntaxError}).
-
-\begin{Listing}[t]
-    \centering
-    \showjava*[1\textwidth]{SyntaxError.java}
-    \caption{Example of catching a Syntax Error in Java}
-    \label{lst:concept:SyntaxError}
-\end{Listing}
-
-The \textbf{Semantic Errors} and \textbf{Data Flow Analysis} are more complex to implement. In fact, in order to detect a \textit{Semantic Error}, the \textbf{Language} should be able to perform \textit{type checking} on the \textbf{Source Code} in order to verify that the code can be executed without any unexpected errors. The \textit{Data Flow Analysis} is necessary to understand if the code is reachable, and to do this, the \textbf{Language} should be able to perform static analysis on the \textbf{Source Code}.
-
-\subsubsection{Jump to Definition}\label{subsubsec:concept:JumpToDefinition}
-The ability to access the definition of a symbol, such as a function or a variable, is a common feature in modern IDEs.
-To enable this functionality, a \textbf{Symbol Table} is required and should be able to map a given row and column position in the source code to the corresponding symbol and its definition.
-During this phase, the typechecking is required to bind the symbol to its type. This is necessary to provide the correct definition of the symbol to the user.
-In addition to the symbol table, the \textbf{Language} should be able to provide the \textit{Scope} of the symbol, in order to understand if the symbol is visible in the current context.
-
-\subsubsection{Code Completion}\label{subsubsec:concept:CodeCompletion}
-
-To effectively handle this kind of request, such as the one depicted in figure~\ref{fig:completion}, the language server needs to comprehend the type of symbol for which suggestions are to be provided. Once the type is determined, returning relevant suggestions becomes straightforward. However, a challenge arises when suggestions must be presented to the user while they are still writing, as the source code may be syntactically incorrect during the writing process. To address this issue, a parser with error detection and recovery~\cite{Graham79} capabilities is required to enable effective suggestion generation despite the presence of syntax errors.
-
-\section{Towards a modular type system}\label{sec:concept:TowardsAModularTypeSystem}
-
-In this section, we will discuss the importance of having a modular type system for the LSP design. In particular, we will focus on the ability to define custom types and operations on these types, and the ability to combine them in a modular way.
 
 \begin{mydefinition}{Type system item}{concept:itemdefinition}
   % This is the text of the theorem. The counter is automatically assigned and,
@@ -96,7 +59,7 @@ Finally, the last question is used to \textbf{bind} the type to its generic para
 \subsection{Scope: the context of the type}\label{subsec:concept:ScopeTheContextOfTheType}
 
 \begin{mydefinition}{Scope}{concept:scope}
-The \textbf{Scope} is the context in which the type or an identifier is defined, more precisely, where the binding between the type or an identifier and the item is defined in the \textbf{Type System}. It is used to define the visibility and the lifetime of the type or identifier and its operations. The \textbf{Scope} can be, for example, a \textit{local scope}, a \textit{global scope}, or a \textit{module scope}.
+The \textbf{Scope} is the context in which an identifier is defined, more precisely, where the binding between the type and an identifier is defined in the \textbf{Type System}. It is used to define the visibility and the lifetime of the identifier and its operations. The \textbf{Scope} can be, for example, a \textit{local scope}, a \textit{global scope}, or a \textit{module scope}.
 \end{mydefinition}
 
 In our concept, a \textbf{Scope} can be see as a \textbf{Type}~\ref{subsec:concept:TypeTheBasicBuildingBlock} that defines the visibility and the lifetime of the type or identifier and its operations. At this point, the \textbf{Scope} is not universal. In fact, for instance, \textit{Java} do not categorize the \textbf{Scope}, such as \textit{Block Scope}, as a \textbf{Type}. However, in order to achieve a representation of a \textit{Block Scope} as a \textbf{Type}, we can define a \textbf{Scope} where at the questions
@@ -108,19 +71,17 @@ In our concept, a \textbf{Scope} can be see as a \textbf{Type}~\ref{subsec:conce
 
 will answer \textit{false}.
 
-Using a \textbf{Scope} as a \textbf{Type} allows the definition of new types on demand, and the ability to combine them in a modular way.
-
 So, a \textbf{Scope} should be able to answer to the following questions, in addition to the questions that a \textbf{Type} should be able to answer:
 
 \begin{enumerate}
     \item What types are \textbf{visible} in the \textbf{Scope}?
-    \item Can a type be bound to the \textbf{Scope}?
+    \item Can a type be bound to an identifier in the \textbf{Scope}?
     \item If exists, what is the \textbf{parent Scope}?
     \item Can a \textbf{Scope} be marked as \textbf{external visible} and what items exported?
 \end{enumerate}
-\\
-The first question is used to define the visibility of the type in the \textbf{Scope} and knowing what types are visible in the \textbf{Scope}. ~\ref{subsec:concept:TypingEnvironmentAMapOfTypes} will be used to answer this question.
-The second question is used to bind a type to the Scope. Every scope should have a set of rules that allow to determine if a type can be bound to the Scope. ~\ref{subsec:concept:EntryTypeBinderAnHelperToBindTypes} will be used to answer this question.
+
+The first question is used to define the visibility of the type in the \textbf{Scope} and knowing what types are visible in the \textbf{Scope}.~\ref{subsec:concept:TypingEnvironmentTheSymbolTable} will be used to answer this question.
+The second question is used to bind a type to the Scope. Every scope should have a set of rules that allow to determine if a type can be bound to the Scope.~\ref{subsubsec:concept:EntryTypeBinderAnHelperToBindTypes} will be used to answer this question.
 The third question is used to define the hierarchy of the Scopes. Trivially, this is represented as a tree.
 Finally, the last question is used to define the visibility of the Scope and its items. A \textbf{Scope} marked as \textit{external visible} should be able to export some its items. This is useful during \textit{type inference} phase, because whan searching for a type if a Scope (type) is marked as \textit{external visible} the search should be performed recursively in all \textbf{items} exported by the \textbf{Scope}.
 
@@ -148,21 +109,113 @@ A \textbf{Signature} should be able to answer to one question:
 
 \begin{enumerate}
     \item Can a type match the \textbf{Signature}?
+    \item Can I resolve the type of an identifier from the \textbf{Signature}?
 \end{enumerate}
 
-This question can be simple or complex, depending on the type we would like to match with the \textbf{Signature}. For example, a type can be a primitive type, such as \textit{int}, \textit{float}, \textit{string}, or a custom type, such as a \textit{method} inside a \textit{class}.
-For instance, a \textbf{Signature} is often used to define the type of a function. In this case, the \textbf{Signature} is the definition of the function in terms of its parameters and return type. The \textbf{Signature} is used to determine if a type can match the definition of the function or method.
+Answering to this question can be simple or complex, depending on the type we would like to match with the \textbf{Signature}. For example, a type can be a primitive type, such as \textit{int}, \textit{float}, \textit{string}, or a custom type, such as a \textit{method} inside a \textit{class}.
+For instance, a \textbf{Signature} is often used to define the type of a function. In this case, the \textbf{Signature} is the definition of the function in terms of its parameters and return type.
+Usually, every \texttt{Type} should have a \texttt{Signature} that defines the structure of the type.
+Additionally, to perform \textit{type inference}, the \textbf{Signature} is used to infer the type of an expression.
 
 \subsection{Symbol Table Entry: an entry in the Typing Environment}\label{subsec:concept:SymbolTableEntryAnEntryInTheTypingEnvironment}
 
-\subsection{Typing Environment: a map of types}\label{subsec:concept:TypingEnvironmentAMapOfTypes}
+A \textbf{Symbol Table Entry} is an entry in the \textbf{Typing Environment} (Symbol Table). It is used to store a informations associated to a symbol in the \textbf{Type System}.
+
+\begin{mydefinition}{Symbol}{concept:symbol}
+    A \textbf{Symbol} is a name that represents a value, a variable, a function, or any other item in a program. In the \textbf{Type System}, a \textbf{Symbol} is used to represent a type, a variable, a function, or any other item in the program.
+    Usually, symbols are collected during the \textit{parsing} phase of the compilation process and stored in a \textbf{Symbol Table}.
+    A symbol can be a \textit{nonterminal symbol} or a \textit{terminal symbol}. A \textit{nonterminal symbol} is a symbol that can be expanded into other symbols, while a \textit{terminal symbol} is a symbol that cannot be expanded further.
+\end{mydefinition}
 
 
-\subsection{Entry Type Binder: an helper to bind types}\label{subsec:concept:EntryTypeBinderAnHelperToBindTypes}
+The \textbf{Symbol Table Entry} should be able to answer, at least, to the following questions:
+\begin{enumerate}
+    \item What is the \textbf{Type} of of the associated symbol?
+    \item What is the \textbf{Kind} of of the associated symbol?
+    \item What is the \textbf{Location} of of the associated symbol?
+    \item What are the \textbf{Details} of of the associated symbol?
+\end{enumerate}
+
+As one can guess, the \textbf{Symbol Table Entry} is used to store the information associated with a symbol in the \textbf{Type System}.
+Note that to answer the first question, the \textbf{Symbol Table Entry} should have a \textbf{Type} associated with it. The answer to the second question of~\ref{subsec:concept:SignatureTheDefinitionOfTheType} can help to infer the \textbf{Type} of the associated symbol if the \textbf{Type} is not explicitly defined.
+The second question is used to define the \textbf{Kind} of the associated symbol. The \textbf{Kind} can be, for example, a \textit{declaration}, a \textit{definition}, a \textit{use} or an \textit{import}.
+The third question is used to define the \textbf{Location} of the associated symbol. The \textbf{Location} can be, for example, a \textit{line number} or a \textit{column number}.
+Finally, the last question is used to define the \textbf{Details} of the associated symbol. The \textbf{Details} can be, for example, a \textit{description} or \textit{extra information} about the symbol.
+
+\subsubsection{Entry Type Binder: an helper to perform type binding}\label{subsubsec:concept:EntryTypeBinderAnHelperToBindTypes}
+
+The \textbf{Entry Type Binder} is an helper to perform type binding in the \textbf{Type System}. It is used to bind a type to an identifier in the \textbf{Scope}.
+The \textbf{Entry Type Binder} should be able to answer to the following questions:
+\begin{enumerate}
+    \item Is this identifier already bound to the \textbf{Scope}?
+    \item Can I bind an identifier to a \texttt{SymbolTableEntry} in this \textbf{Scope}?
+\end{enumerate}
+
+The first question is used to determine if the identifier is already bound to the \textbf{Scope}. If the identifier is already bound to the \textbf{Scope}, the \textbf{Entry Type Binder} should return an error.
+The second question is used to determine if the identifier can be bound to a \texttt{SymbolTableEntry} in the \textbf{Scope}. If the identifier can be bound to a \texttt{SymbolTableEntry} in the \textbf{Scope}, the \textbf{Entry Type Binder} should bind the identifier to the \texttt{SymbolTableEntry}.
+
+\subsection{Typing Environment: the symbol table}\label{subsec:concept:TypingEnvironmentTheSymbolTable}
+
+The \textbf{Typing Environment} is the symbol table in the \textbf{Type System}. It is used to store the information associated with the symbols in the \textbf{Type System}.
+Basically, the \textbf{Typing Environment} is a map between symbol or identifier and \texttt{SymbolTableEntry}.
+
+The \textbf{Typing Environment} should be able to answer to the following questions:
+\begin{enumerate}
+    \item What are the symbols in the \textbf{Typing Environment}?
+    \item Can I get the \texttt{SymbolTableEntry} associated with a symbol in the \textbf{Typing Environment}?
+    \item Can I add a symbol to the \textbf{Typing Environment}?
+    \item Can I remove a symbol from the \textbf{Typing Environment}?
+\end{enumerate}
+
+In section~\ref{subsec:concept:ScopeTheContextOfTheType}, we defined the \textbf{Scope}. Combining the \textbf{Scope} with the \textbf{Typing Environment}, we can define the visibility of the types in the \textbf{Scope} and the lifetime of the types in the \textbf{Scope}.
+Answering to the first question, the \textbf{Typing Environment} should be able to return the symbols in the \textbf{Typing Environment}; it it like answering to the question: what are the types or identifiers visible in the \textbf{Scope}?
+The second question is used to get the \texttt{SymbolTableEntry} associated with a symbol in the \textbf{Typing Environment}. This is useful to get the information associated with the symbol.
+The third question is used to add a symbol to the \textbf{Typing Environment}. This is useful to add a new symbol to the \textbf{Scope}.
+Finally, the last question is used to remove a symbol from the \textbf{Typing Environment}. This is useful to remove a symbol from the \textbf{Scope}.
+
+\section{Towards a modular type system}\label{sec:concept:TowardsAModularTypeSystem}
+
+In this section, we will discuss the importance of having a modular type system. In particular, we will focus on the ability to define custom types and operations on these types, and the ability to combine them in a modular way.
 
 
 
 \section{Modular implementation of LSP and DAP}\label{sec:concept:ModularImplementationOfLSPAndDAP}
+
+\subsection{The relevance of the type system in the LSP design}\label{subsec:concept:RelevanceOfTheTypeSystem}
+
+The type system is the core of the LSP design. We illustrate the need of having a type system by focusing on the ability to respond to requests from a \textit{Language Client}.
+
+In the reminder of this section, we will evaulate the relevance for three of the most important LSP feautre introduced in \ref{subsec:bacground:KeyMethodsOverview}.
+
+\subsubsection{Diagnostic Analysis}\label{subsubsec:concept:DiagnosticAnalysis}
+
+Currently, the LSP provides the ability to perform \textit{diagnostic analysis} on the code. This feature is useful to provide feedback to the user about the correctness of the code.
+In compilers design, a \textit{Diagnostic} can be produced by different phases of compilation, such as the \textit{lexical analysis}, \textit{syntax analysis}, and \textit{semantic analysis}.
+The \textbf{Syntax Errors} are detected by the \textit{lexical analysis} and \textit{syntax analysis}, usually during the \textit{parsing} phase. The \textbf{Semantic Errors} are detected by the \textit{semantic analysis}, usually during the \textit{type checking} phase.
+In modern compilers, an additional phases can be added to the compilation process, \textit{data flow analysis} and \textit{control flow analysis}, that can be used to detect more complex errors, such as \textit{unreachable code} or \textit{dead code}.
+
+In Language Workbenches world, usually it is common to have an instance of a \textbf{Language} and a \textbf{Source Code} that should be parsed and analyzed by the Language.
+Taking into account the \textbf{Syntax Errors}, assuming that the \textbf{Language} is able to parse the \textbf{Source Code} and the \textbf{Language} is able to provide errors and warnings during the \textit{parsing} phase, should be easy to provide the \textit{Syntax Errors} to the \textit{Language Client} (see Listing \ref{lst:concept:SyntaxError}).
+
+\begin{Listing}[t]
+    \centering
+    \showjava*[1\textwidth]{SyntaxError.java}
+    \caption{Example of catching a Syntax Error in Java}
+    \label{lst:concept:SyntaxError}
+\end{Listing}
+
+The \textbf{Semantic Errors} and \textbf{Data Flow Analysis} are more complex to implement. In fact, in order to detect a \textit{Semantic Error}, the \textbf{Language} should be able to perform \textit{type checking} on the \textbf{Source Code} in order to verify that the code can be executed without any unexpected errors. The \textit{Data Flow Analysis} is necessary to understand if the code is reachable, and to do this, the \textbf{Language} should be able to perform static analysis on the \textbf{Source Code}.
+
+\subsubsection{Jump to Definition}\label{subsubsec:concept:JumpToDefinition}
+The ability to access the definition of a symbol, such as a function or a variable, is a common feature in modern IDEs.
+To enable this functionality, a \textbf{Symbol Table} is required and should be able to map a given row and column position in the source code to the corresponding symbol and its definition.
+During this phase, the typechecking is required to bind the symbol to its type. This is necessary to provide the correct definition of the symbol to the user.
+In addition to the symbol table, the \textbf{Language} should be able to provide the \textit{Scope} of the symbol, in order to understand if the symbol is visible in the current context.
+
+\subsubsection{Code Completion}\label{subsubsec:concept:CodeCompletion}
+
+To effectively handle this kind of request, such as the one depicted in figure~\ref{fig:completion}, the language server needs to comprehend the type of symbol for which suggestions are to be provided. Once the type is determined, returning relevant suggestions becomes straightforward. However, a challenge arises when suggestions must be presented to the user while they are still writing, as the source code may be syntactically incorrect during the writing process. To address this issue, a parser with error detection and recovery~\cite{Graham79} capabilities is required to enable effective suggestion generation despite the presence of syntax errors.
+
 
 % \begin{figure}[t]
 %     \centering
