@@ -20,7 +20,7 @@ Language servers are \textit{de facto} standard for providing language-specific 
 
 The LSP is initiated by Microsoft and is now an open standard that is maintained by the Language Server Protocol Working Group. It was designed for the use with the Visual Studio Code editor, but it has since been adopted by other editors and IDEs. The LSP is under open-source license and is available on GitHub\footnote{\url{https://github.com/microsoft/language-server-protocol}}.
 
-Before the advent of LSP and DAP, developers had to implement language support for each editor separately, having the number of combinations to support $\mathcal{L}$ languages in $\mathcal{L} \times \mathcal{E}$, where $\mathcal{E}$ is the number of editors. Currently, the number of combinations to support $\mathcal{L}$ languages is $\mathcal{L} + \mathcal{E}$~\cite{Rodriguez-Echeverria18a}, as the Microsoft LSP and DAP are editor-agnostic, as shown in Figure~\ref{lst:lsp}.
+Before the advent of LSP and DAP, developers had to implement language support for each editor separately, having the number of combinations to support $\mathbf{L}$ languages in $\mathbf{L} \times \mathbf{E}$, where $\mathbf{E}$ is the number of editors. Currently, the number of combinations to support $\mathbf{L}$ languages is $\mathbf{L} + \mathbf{E}$~\cite{Rodriguez-Echeverria18a}, as the Microsoft LSP and DAP are editor-agnostic, as shown in Figure~\ref{lst:lsp}.
 
 \subsection{JSON-RPC}\label{subsec:background:JSONRPC}
 The LSP uses JSON-RPC to communicate between a language server and an editor. JSON-RPC (v2)\footnote{\url{https://www.jsonrpc.org/specification}} is a stateless, light-weight remote procedure call (RPC) \cite{Birrell84} protocol that uses JSON as the data format.

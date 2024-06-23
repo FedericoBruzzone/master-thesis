@@ -110,12 +110,21 @@ In our idea, a \texttt{SymbolTableEntry} should have a \texttt{SymbolTableEntry}
 
 \subsection{Typing Environment implementation: the symbol table}\label{subsec:impl:TypingEnvironment}
 
-\bfcomment{HERE}
-
 \begin{Listing}[tb]
     \centering
     \showjava*[1\textwidth]{TypingEnvironment.java}
     \caption{The \texttt{TypingEnvironment} class.}
     \label{lst:impl:TypingEnvironment}
 \end{Listing}
+
+The \texttt{TypingEnvironment} class is the symbol table of the type system. As shown in Listing~\ref{lst:impl:TypingEnvironment}, the \texttt{TypingEnvironment} class has three main methods:
+
+\begin{itemize}
+    \item \texttt{TypingEnvironment<IDENTIFIER> bindTypeToIdentifier(IDENTIFIER variable, SymbolTableEntry anyType)} that binds the given \texttt{variable} to the given \texttt{anyType}.
+    \item \texttt{Stream<SymbolTableEntry> getTypesBoundedWith(IDENTIFIER t)} that returns a stream of the types bounded with the given \texttt{t}.
+    \item \texttt{void removeIf(Predicate<SymbolTableEntry> predicate)} that removes the entries that satisfy the given \texttt{predicate}.
+\end{itemize}
+
+The \texttt{TypingEnvironment} class contains a map (\texttt{HashMap<IDENTIFIER, EntryTypeBinder>}) from identifiers to \texttt{EntryTypeBinder}. One of the most important concepts is that the \texttt{EntryTypeBinder} can change, in fact in the constructor must be passed the class that extends \texttt{EntryTypeBinder} interface. This is to allow different kind of binding.
+Hence, the first method \texttt{bindTypeToIdentifier} is used to bind the given \texttt{variable} to the given \texttt{SymbolTableEntry}. This method could fail if the \texttt{variable} is already bounded. The second method \texttt{getTypesBoundedWith} is used to get the types bounded with the given \texttt{t}. The third method \texttt{removeIf} is used to remove the entries that satisfy the given \texttt{predicate}.
 

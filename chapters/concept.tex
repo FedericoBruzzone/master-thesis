@@ -173,13 +173,59 @@ The second question is used to get the \texttt{SymbolTableEntry} associated with
 The third question is used to add a symbol to the \textbf{Typing Environment}. This is useful to add a new symbol to the \textbf{Scope}.
 Finally, the last question is used to remove a symbol from the \textbf{Typing Environment}. This is useful to remove a symbol from the \textbf{Scope}.
 
+\subsection{Example: a simple C program}\label{subsec:concept:ExampleASimpleCProgram}
+
+Now, we propose an example where putting all the concepts together. In Listing~\ref{lst:concept:Example}, we have a simple C program that defines a global variable \texttt{const\_one} and a function \texttt{main} that prints (using the \texttt{printf} function) the value of the variable \texttt{const\_one} and the value of the variable \texttt{two}.
+
+\begin{Listing}[t]
+    \centering
+    \showc*[0.75\textwidth]{Example.c}
+    \caption{Example of a simple C program}
+    \label{lst:concept:Example}
+\end{Listing}
+
+After parsing the program, the \textbf{Typing Environment} should contain the following information:
+
+\begin{table}[t]
+    \rowcolors{2}{gray!25}{white}
+    % \setlength\arrayrulewidth{0pt}
+    \centering
+    \begin{tabular}{ c c c c c c }
+        \toprule  \textbf{Scope} & \textbf{Identifier} & \textbf{Type} & \textbf{Kind} & \textbf{Location} & \textbf{Details} \\
+        \midrule
+        \textbf{Global} & \texttt{stdio.h} & \texttt{header} & \texttt{import} & \texttt{1:1 - 1:18} &  \\
+        \textbf{Global} & \texttt{const\_one} & \texttt{int} & \texttt{declaration} & \texttt{3:11 - 3:19} & \texttt{const} \\
+        \textbf{Global} & \texttt{main} & \texttt{function} & \texttt{declaration} & \texttt{5:5 - 5:8} &  \\
+        \textbf{main} & \texttt{two} & \texttt{int} & \texttt{declaration} & \texttt{6:9 - 6:11} & \\
+        \textbf{main} & \texttt{printf} & \texttt{function} & \texttt{use} & \texttt{7:5 - 7:10} & \texttt{external} \\
+        \textbf{main} & \texttt{const\_one} & \texttt{int} & \texttt{use} & \texttt{7:25 - 7:33} &  \\
+        \textbf{main} & \texttt{+} & \texttt{function} & \texttt{use} & \texttt{7:35 - 7:35} &  \\
+        \textbf{main} & \texttt{two} & \texttt{int} & \texttt{use} & \texttt{7:37 - 7:39} &  \\
+        \bottomrule
+    \end{tabular}
+    \caption{Language Workbenches Supporting Modularization, Composition and Precompiled Features}
+    \label{tab:concept:Example}
+\end{table}
+
+\begin{itemize}
+    \item The \texttt{stdio.h} header is imported in the \textbf{Global Scope}.
+    \item The \texttt{const\_one} variable is declared in the \textbf{Global Scope} as a constant integer.
+    \item The \texttt{main} function is declared in the \textbf{Global Scope}.
+    \item The \texttt{two} variable is declared in the \texttt{main Scope} as an integer.
+    \item The \texttt{printf} function is used in the \texttt{main Scope} and is marked as external.
+    \item The \texttt{const\_one} variable is used in the \texttt{main Scope}.
+    \item The \texttt{+} operator is used in the \texttt{main Scope}.
+    \item The \texttt{two} variable is used in the \texttt{main Scope}.
+\end{itemize}
+
+Note that in table~\ref{tab:concept:Example}, we have the \textbf{Scope} as first column, but in reality, is the \textbf{Scope} that defines the visibility and the lifetime of the types in the \textbf{Typing Environment}. In fact, in our explanation in section~\ref{subsec:concept:ScopeTheContextOfTheType}, we defined the \textbf{Scope} as the context in which an identifier is defined, more precisely, where the binding between the type and an identifier is defined in the \textbf{Type System}. So, ideally, every \textbf{Scope} should have a \textbf{Typing Environment} associated with it.
+As we can see, these information will be used also to perform the \textbf{modularization} of the LSP (see section~\ref{sec:concept:TowardsAModularTypeSystem}).
+
+
 \section{Towards a modular type system}\label{sec:concept:TowardsAModularTypeSystem}
 
-In this section, we will discuss the importance of having a modular type system. In particular, we will focus on the ability to define custom types and operations on these types, and the ability to combine them in a modular way.
+In this section, we will discuss the importance of having a modular type system. In particular, we will focus on the ability to define types and operations on these types in a modular way and the ability to combine them.
 
-
-
-\section{Modular implementation of LSP and DAP}\label{sec:concept:ModularImplementationOfLSPAndDAP}
 
 \subsection{The relevance of the type system in the LSP design}\label{subsec:concept:RelevanceOfTheTypeSystem}
 
@@ -217,6 +263,8 @@ In addition to the symbol table, the \textbf{Language} should be able to provide
 To effectively handle this kind of request, such as the one depicted in figure~\ref{fig:completion}, the language server needs to comprehend the type of symbol for which suggestions are to be provided. Once the type is determined, returning relevant suggestions becomes straightforward. However, a challenge arises when suggestions must be presented to the user while they are still writing, as the source code may be syntactically incorrect during the writing process. To address this issue, a parser with error detection and recovery~\cite{Graham79} capabilities is required to enable effective suggestion generation despite the presence of syntax errors.
 
 
+\section{LSP: a modular approach}\label{sec:concept:LSPAModularApproach}
+
 % \begin{figure}[t]
 %     \centering
 %     \includegraphics[width=0.9\linewidth]{figs/concept/module_with_lsp.pdf}
@@ -224,6 +272,7 @@ To effectively handle this kind of request, such as the one depicted in figure~\
 %     \label{lst:concept:module_with_lsp}
 % \end{figure}
 
+\section{A \textit{modular} DSL for semplifying the LSP and type system development}\label{sec:concept:AModularDSLForSemplifyingTheLSPAndTypeSystemDevelopment}
 
 \section{Reduce to $\mathcal{L} \times 1$ the number of combinations to support $\mathcal{L}$ languages}
 
