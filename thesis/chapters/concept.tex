@@ -173,11 +173,20 @@ The second question is used to get the \texttt{SymbolTableEntry} associated with
 The third question is used to add a symbol to the \textbf{Typing Environment}. This is useful to add a new symbol to the \textbf{Scope}.
 Finally, the last question is used to remove a symbol from the \textbf{Typing Environment}. This is useful to remove a symbol from the \textbf{Scope}.
 
+In Figure~\ref{lst:concept:type_system}, we have a final representation of the type system.
+
+\begin{figure}[tbh]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/concept/type_system.pdf}
+    \caption{A final representation of the type system}
+    \label{lst:concept:type_system}
+\end{figure}
+
 \subsection{Example: a simple C program}\label{subsec:concept:ExampleASimpleCProgram}
 
 Now, we propose an example where putting all the concepts together. In Listing~\ref{lst:concept:Example}, we have a simple C program that defines a global variable \texttt{const\_one} and a function \texttt{main} that prints (using the \texttt{printf} function) the value of the variable \texttt{const\_one} and the value of the variable \texttt{two}.
 
-\begin{Listing}[t]
+\begin{Listing}[tbh]
     \centering
     \showc*[0.75\textwidth]{Example.c}
     \caption{Example of a simple C program}
@@ -225,9 +234,28 @@ As we can see, these information will be used also to perform the \textbf{modula
 \section{Towards a modular type system}\label{sec:concept:TowardsAModularTypeSystem}
 
 In this section, we will discuss the importance of having a modular type system. In particular, we will focus on the ability to define types and operations on these types in a modular way and the ability to combine them.
+In the context of language workbenches, the ability to define types and operations on these types in a modular way is crucial. In fact, the language workbenches should be able to support different languages and paradigms, and the ability to define types and operations on these types in a modular way is crucial to achieve this goal.
 
+The \textbf{modularization} of the type system is important for several reasons:
+\begin{itemize}
+    \item \textbf{Reusability}: The ability to define types and operations on these types in a modular way allows to reuse the types and operations in different contexts.
+    \item \textbf{Extensibility}: The ability to define types and operations on these types in a modular way allows to extend the types and operations with new types and operations.
+    \item \textbf{Flexibility}: The ability to define types and operations on these types in a modular way allows to adapt the types and operations to the specific needs.
+\end{itemize}
 
-\subsection{The relevance of the type system in the LSP design}\label{subsec:concept:RelevanceOfTheTypeSystem}
+In the context of language workbenches and Language Product Lines (SPLs), we are trying to aswer to the following research questions:
+\begin{itemize}
+    \item[RQ1] How can we define types and operations on these types in a modular way?
+    \item[RQ2] How can we combine types and operations on these types in a modular way?
+    \item[RQ3] Can we achieve the type checking and type inference in a modular way?
+\end{itemize}
+
+\bfcomment{TODO}
+Possiamo disabilitare per uno specifico tipo il type checking e il type inference
+Dato un linguaggio possiamo avere diversi sistemi di tipi per questo linguaggio
+Parliamo di famiglia di sistemi di tipi
+
+\section{The relevance of the type system in the LSP design}\label{sec:concept:RelevanceOfTheTypeSystem}
 
 The type system is the core of the LSP design. We illustrate the need of having a type system by focusing on the ability to respond to requests from a \textit{Language Client}.
 
@@ -265,12 +293,23 @@ To effectively handle this kind of request, such as the one depicted in figure~\
 
 \section{LSP: a modular approach}\label{sec:concept:LSPAModularApproach}
 
-% \begin{figure}[t]
-%     \centering
-%     \includegraphics[width=0.9\linewidth]{figs/concept/module_with_lsp.pdf}
-%     \caption{Proposed approach to modular implementation of LSP and DAP.}
-%     \label{lst:concept:module_with_lsp}
-% \end{figure}
+LSP and DAP are protocols that describes a common \textit{Application Programming Interface} (API) that the \textbf{language server} (LS) should implement, with the benefit of having only one implementation of the LS and multiple clients (IDEs and SCEs) that can consume it, essentially establishing a \textit{client-server} relationship through a communication channel (e.g., \textit{pipes} or \textit{sockets}).
+However, the implementation of an LS and its integration with an IDE/SCEs is still a complex task, as it requires the knowledge of the LSP specification and the implementation of the language support.
+The implementation~\cite{Gunasinghe22} of an LS is done entirely manually and it is a \textit{top-down} activity, where most of the time is spent on the design and implementation data structures and algorithms.
+Since 1990s~\cite{Kang90}, researchers have started talking about the \textit{Software Product Lines} (SPLs) \cite{Cazzola23d, Cazzola20} to move towards a more modular world, where the implementation of a software system can be done in a compositional way, by composing the features of the SPL.
+When a SPL is applied to the implementation of a programming language, each product corresponds to a language variant \cite{Cazzola15f} taking the name of \textit{Language Product Lines} (LPLs) \cite{Cazzola15f}. LPLs have been successfully used in both GPLs \cite{Cazzola16, Cazzola16i, Cazzola15f} and DSLs \cite{Haugen08, Cazzola14e, White09}.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/concept/module_with_lsp.pdf}
+    \caption{Proposed approach to modular implementation of LSP and DAP.}
+    \label{lst:concept:module_with_lsp}
+\end{figure}
+
+What I want to prove with this thesis is that the implementation of an LS could be a \textit{bottom-up} activity, where each LSP or DAP functionality can be seen as a separate \textit{feature module} \cite{Batory04, Kastner11} splitted across the language artifacts, where each artifacts can be part of one or more \textit{language features} (see Figure~\ref{lst:concept:module_with_lsp}). These units can be composed to provide a modular implementation of the LS. This approach is supported by the fact that the LSP and the DAP are \textit{language-agnostic} protocols~\cite{Niephaus20, Rodriguez-Echeverria18} (see Fig.~\ref{lst:lsp}), which means that it does not impose any restrictions on the implementation of the LS, as long as it respects the specification of the protocol.
+In \textit{feature-oriented programming} (FOP) \cite{Apel13, Czarnecki04, Prehofer01}, a feature module is a unit of composition that encapsulates a specific functionality, and it is a first-class entity that can be composed with other feature modules to form a software system; similar to an aspect module that encapsulates a crosscutting concern in \textit{aspect-oriented programming} \cite{Kiczales01, Kiczales97, Laddad03}. Using FOP in language development, a family of languages~\cite{Liebig13} can be defined by composing feature modules~\cite{Wende09}, and a language can be seen as a product of the family.
+In this way, the implementation of the LS is a \textit{bottom-up} activity, where each artifact has attached a part of LSP and DAP feature module that implements the LS functionality for that \textit{language fragment}, and these units can be composed to provide a modular implementation having \textbf{variants} of the LS.
+
 
 \section{A \textit{modular} DSL for semplifying the LSP and type system development}\label{sec:concept:AModularDSLForSemplifyingTheLSPAndTypeSystemDevelopment}
 

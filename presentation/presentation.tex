@@ -1,0 +1,95 @@
+\documentclass[9pt,xcolor=table,svgnames]{beamer}
+\usepackage{showcode}
+% \usetheme{adapt-lab}
+\usetheme{customadapt-lab}
+
+
+\author{Federico Cristiano Bruzzone}
+\title[]{Toward a Modular Approach for Type Systems and LSP generation}
+\date{July 15\textsuperscript{th} 2024}
+\institute{Università degli Studi di Milano \\
+           Facoltà di Scienze e Tecnologie \\
+           Corso di Laurea Magistrale in Informatica \\ [5pt]\vspace{15pt}
+           {\normalsize Advisor: Prof. Walter Cazzola} \\ [1pt]\vspace{5pt}
+           {\normalsize Co-Advisor: Dr. Luca Favalli}}
+
+\tolerance=10
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\begin{document}
+
+% \setbeamertemplate{title page}[default][colsep=-4bp,rounded=true,shadow=\beamer@themerounded@shadow]
+% \usebackgroundtemplate{
+%   \begin{tikzpicture}
+%     \path [outer color = white, inner color = blue!1]
+%       (0,0) rectangle (\paperwidth,\paperheight);
+%   \end{tikzpicture}
+% }
+
+
+
+
+% \title[Micro-Languages Variability]{Language Product Lines\\and the Variability of Micro-Languages}
+% \date{January 9\textsuperscript{th} 2023}
+% \institute{Università degli Studi di Milano\\
+%            Facoltà di Scienze e Tecnologie\\\vspace{5pt}
+% 		   Bando ID: 5506 - Prof. Cazzola}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section[DSL]{Domain Specific Languages (DSLs)}
+\subsection{Introduction}
+\begin{frame}{\secname}
+	\framesubtitle{Introduction}
+	A {\color{BloodRed} DSL} is a programming language that mimics the terms, idioms and expressions used among the experts in the target domain
+	\medskip
+
+	\begin{itemize}
+		\item problem-tailored solutions
+		\begin{itemize}
+			\item i.e., solutions more concise and clear
+		\end{itemize}
+		\item domain-oriented solutions
+		\begin{itemize}
+			\item ideally, a domain expert, with no experience in programming, can read, understand and validate such code
+		\end{itemize}
+	\end{itemize}
+	\bigskip\pause
+
+	The final aim is to increase \alert{productivity} and \alert{software quality} while reducing development costs and \alert{time-to-market}
+	\bigskip
+
+	Especially in \alert{pervasive} systems, such as IoT applications
+\end{frame}
+
+
+\section{Problem}
+\subsection{Test}
+
+\begin{frame}{\secname}
+\framesubtitle{\subsecname}
+    Management of {\color{BloodRed} variability} in language product lines is an open problem in software engineering research.\bigskip
+
+    Language variants can be used to customize a base language.
+    \begin{itemize}
+        %\item Language {\color{BloodRed} features} description.
+        %\item Leveraging {\color{BloodRed} similarities}.
+        %\item Improve {\color{BloodRed} reuse}.
+        \item Switching language syntax and/or semantics.
+            \begin{itemize}
+                \item Localization.
+                \item Sequential vs parallel execution.
+                \item Local vs Client-Server.
+            \end{itemize}
+        \item Support for additional data types.
+        \item Enforcing input sanitization.
+        \item Additional constructs from other languages.
+    \end{itemize}
+\end{frame}
+
+\end{document}
+
