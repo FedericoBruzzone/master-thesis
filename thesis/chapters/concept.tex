@@ -15,14 +15,14 @@ What we are looking for in our type system is:
 It is trivial to remember that the type system should also provide the basic functionalities of a type system, such as \textbf{type inference}, that allows the compiler to infer the type of an expression without the need to explicitly specify it; and \textbf{type checking}, that allows the compiler to check if the types of the expressions are correct.
 
 
-\begin{mydefinition}{Type system item}{concept:itemdefinition}
-  % This is the text of the theorem. The counter is automatically assigned and,
-  % in this example, prefixed with the section number. This theorem is numbered with
+\begin{mydefinition}{type system item}{concept:itemdefinition}
+  % this is the text of the theorem. the counter is automatically assigned and,
+  % in this example, prefixed with the section number. this theorem is numbered with
   %   \ref{def:concept:itemdefinition} and is given on page \pageref{def:concept:itemdefinition}.
-    Given that the specifics of the target language for the reference type system are not predetermined (i.e., the language is not known \textit{a priori}), we cannot assume the presence of standard programming constructs such as variables, functions, or objects. Therefore, to maintain a broad and adaptable approach, we will use the term \textbf{item} to refer to any of these potential constructs or elements within the system. This ensures that our discussion remains relevant regardless of the particular features and paradigms of the target language.
+    given that the specifics of the target language for the reference type system are not predetermined (i.e., the language is not known \textit{a priori}), we cannot assume the presence of standard programming constructs such as variables, functions, or objects. therefore, to maintain a broad and adaptable approach, we will use the term \textbf{item} to refer to any of these potential constructs or elements within the system. this ensures that our discussion remains relevant regardless of the particular features and paradigms of the target language.
 \end{mydefinition}
 
-\subsection{Type: the basic building block}\label{subsec:concept:TypeTheBasicBuildingBlock}
+\subsection{type: the basic building block}\label{subsec:concept:typethebasicbuildingblock}
 
 The \textbf{Type} is the basic building block of the type system. It is used to represent the type of an expression, such as a variable, a function, or an object. The \textbf{Type} can be a primitive type, such as \textit{int}, \textit{float}, \textit{string} or a custom type, such as a \textit{class}, \textit{interface}, or \textit{enum}.
 
@@ -182,6 +182,40 @@ In Figure~\ref{lst:concept:type_system}, we have a final representation of the t
     \label{lst:concept:type_system}
 \end{figure}
 
+\subsection{Type Inference: the ability to infer the type of an expression}\label{subsec:concept:TypeInferenceTheAbilityToInferTheTypeOfAnExpression}
+
+As already mentioned in~\ref{subsubsec:background:TypeInferenceInProgrammingLanguages}, \textbf{Type Inference} is the ability to infer the type of an expression without the need to explicitly specify it. It is used to determine the type of an expression based on the context in which it appears.
+In our concept, \textbf{Type Inference} is used to infer the type of an expression in the \textbf{Type System}.
+The \textbf{Type Inference} should be able to answer to the following questions:
+\begin{enumerate}
+    \item Can I infer the type of an expression?
+    \item Can I resolve the type of an identifier from the \textbf{Typing Environment}?
+\end{enumerate}
+
+The first question is used to determine if the type of an expression can be inferred. If the type of an expression can be inferred, the \textbf{Type Inference} should infer the type of the expression. The second question is used to resolve the type of an identifier from the \textbf{Typing Environment}. This is useful to infer the type of an expression based on the context in which it appears.
+
+There are multiple algorithms to perform \textbf{Type Inference}, such as \textit{Hindley-Milner}~\cite{Hindley69, Milner78}, \textit{unification-based}~\cite{Robinson65}, and \textit{constraint-based}~\cite{Pierce02} algorithms. In our concept, we will use a \texttt{Strategy Pattern} to define the \textbf{Type Inference} algorithm.
+In order to perform \textbf{Type Inference}, we should have a list of all possibile candidates for the type of the expression. This list creation is performed by the \textbf{Type Lookup} algorithm~\ref{alg:typelookup}.
+
+\begin{algorithm}[h]
+\caption{Pseudocode to show how type lookup is performed\label{alg:typelookup}}
+\begin{algorithmic}
+\Require $I$ identifier, $SIG$ signature, $S$ scope
+\Ensure$L$ list of all candidates
+\State $L\gets\emptyset$ \Comment{Initialize $L$ with an empty list}
+\State $CS \gets S$
+\While{$CS \neq \emptyset$}
+\ForEach {$Type$ in $CS$ with identifier $I$}
+\If {$Type$ match signature $SIG$}
+\State $L \gets L\cup\{Type\}$
+\EndIf
+\EndFor
+\State $CS \gets$ parent of $CS$ \Comment{parent could be $\emptyset$}
+\EndWhile
+\State\Return $L$
+\end{algorithmic}
+\end{algorithm}
+
 \subsection{Example: a simple C program}\label{subsec:concept:ExampleASimpleCProgram}
 
 Now, we propose an example where putting all the concepts together. In Listing~\ref{lst:concept:Example}, we have a simple C program that defines a global variable \texttt{const\_one} and a function \texttt{main} that prints (using the \texttt{printf} function) the value of the variable \texttt{const\_one} and the value of the variable \texttt{two}.
@@ -250,10 +284,195 @@ In the context of language workbenches and Language Product Lines (SPLs), we are
     \item[RQ3] Can we achieve the type checking and type inference in a modular way?
 \end{itemize}
 
-\bfcomment{TODO}
-Possiamo disabilitare per uno specifico tipo il type checking e il type inference
-Dato un linguaggio possiamo avere diversi sistemi di tipi per questo linguaggio
-Parliamo di famiglia di sistemi di tipi
+Thus, everything we have seen so far is very abstract, in the following sections we will see how the following APIs are adapted to an AST.
+
+Consider the simple JavaScript program in Listing~\ref{lst:concept:sum}, which defines two functions to sum two numbers.
+\begin{Listing}[tbh]
+    \centering
+    \showjs*[0.9\textwidth]{sum.js}
+    \caption{A simple JavaScript program that defines two functions to sum two numbers.}
+    \label{lst:concept:sum}
+\end{Listing}
+
+The AST of the program in Listing~\ref{lst:concept:sum} is shown in Figure~\ref{lst:concept:ast_sum}.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/concept/simple_ast.pdf}
+    \caption{AST of source code~\ref{lst:concept:sum}.}
+    \label{lst:concept:ast_sum}
+\end{figure}
+
+\subsection{Compilation Unit: a logical unit of source code}\label{subsec:concept:CompilationUnitALogicalUnitOfSourceCodeo}
+
+Usually, a \textbf{compilation unit} is a logical unit of source code that is processed by the compiler as a single entity. It typically consists of a single source code file and any header files that it includes. In some programming languages, such as C and C++, each compilation unit (also kwown as translation unit) must have a unique name and can contain multiple functions or variables. Other programming languages, such as Java~\cite{javacompilationunits},  use a different approach where each compilation unit corresponds to a single class definition.
+
+\begin{mydefinition}{compilation unit}{concept:compilationunit}
+    In this particular concept, a \textbf{compilation unit} is responsibile for a specific portion of the code, which includes a set of subtrees within the abstract syntax tree (AST). It is responsible for traversing the nodes of the AST that pertain to its assigned portion through a compilation unit task (see more~\ref{subsec:concept:CompilationUnitTaskATaskToPerformCompilation}). Additionally, it serves as a supportive tool for semantic actions, where the compilation unit is utilized to execute detailed analysis for performing certain actions, as explained in further detail below.
+\end{mydefinition}
+
+The operations for which a compilation unit is used are:
+\begin{itemize}
+    \item \textbf{enter or leave a scope}, when a new compilation unit is created, it has a stack with a scope that represents the initial scope.
+        \begin{itemize}
+            \item when \textit{entering} a scope it is pushed onto the stack and the old scope becomes the parent of the new scope (e.g. when transitioning from a global scope to a function scope, the global scope becomes the parent of the function scope. This enables all the entities that exist within the global scope to still be inferred from the function scope).
+            \item when \textit{exiting} the current scope is popped from the stack.
+        \end{itemize}
+    \item \textbf{bind an identifier to an entity} on the current scope
+    \item perform \textbf{type inferences} on the current scope
+\end{itemize}
+
+There are several actions that are performed during the traversal of the AST.
+Supposing we have the AST~\ref{lst:concept:ast_sum}, the sequence of events during its preorder traversal would be as follows:
+\begin{enumerate}
+    \item creating a new compilation unit with \texttt{global} scope as initial
+    \item binding a new function with identifier \textit{sum1} in the current scope
+    \item entering in scope of the function \textit{sum1}
+    \item \label{itm:ast-node-eval} evaluating ast node \textit{params} and \textit{body}
+    \item exit from scope of the function \textit{sum1} and returning inside global scope
+    \item binding a new function with identifier \textit{sum} in the current scope
+    \item entering in scope of the function \textit{sum}
+    \item evaluating ast node \textit{params} and \textit{body}
+    \item exit from scope of the function \textit{sum} and returning inside global scope
+\end{enumerate}
+When the body of the sum1 function (\inlinejs{return sum(x,1)}) is evaluated at point 4, it will performed the following operations:
+\begin{itemize}
+    \item infer the type of x and 1
+    \item and then infer the type of sum given type of x and type of 1 as signature
+\end{itemize}
+
+In the first case the inference is \textbf{successful} because $x$ has been defined before (in the ast node params) and $1$ is a primitive type known a priori in this case it will be up to the developer to find a way to store the entities that make up the base of the language.
+
+On the other hand, the inference of the $sum$ type \textbf{fails} because the relevant node, which defines the function, has not yet been visited.
+To address this issue, two potential solutions are available:
+\begin{itemize}
+    \item one option is to mandate that users define functions before using them, potentially through the introduction of concepts similar to C function prototypes,
+    \item another solution involves altering the order of visits, ensuring that all functions are defined before entering their respective bodies.
+\end{itemize}
+The choice that was made to maintain the flexibility of the API was to modify the visit order of the AST, the next section explains how the visit order is managed.
+
+
+\subsection{Compilation Unit Task: a task to perform compilation}\label{subsec:concept:CompilationUnitTaskATaskToPerformCompilation}
+
+As discussed in the earlier section, the preorder visit approach may encounter challenges when trying to infer types that have not been defined yet. To address this issue, the programmer can determine the order of node visitation. This allows the option to either visit a node immediately or create a compilation unit task that will execute the visit only when authorized (further details to follow).
+
+The programmer has the flexibility to determine the sequence of node visits in the following ways:
+\begin{itemize}
+    \item  Immediate node visit: The programmer can choose to visit other nodes without delay.
+    \item Compilation unit task creation: The programmer can create a compilation unit task that visits associated nodes only when permitted.
+\end{itemize}
+
+These operations can coexist, allowing the programmer to visit certain nodes immediately while deferring others as compilation unit tasks. Each task has its own dependency and priority, which are crucial factors in determining the execution order. For instance, while at node "function sum1" in tree~\ref{lst:concept:ast_sum}, the programmer can opt to visit the "params" node right away, while creating a compilation unit task for the "body" node.
+
+The programmer specifies points in the code where a compilation unit task is created, enabling deferred traversal of specific nodes in the Abstract Syntax Tree (AST). To ensure smooth traversal, the compilation unit task must adhere to the following properties:
+\begin{itemize}
+    \item It must be associated with exactly one Compilation Unit.
+    \item Multiple unit tasks cannot visit the same node simultaneously.
+    \item Each task can only be executed once during compilation.
+\end{itemize}
+
+Remarking, each compilation unit task must be associated with a single compilation unit, meaning that whenever a task is created, a corresponding compilation unit must also be created.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/concept/simple_ast_annotated.pdf}
+    \caption{AST with \textbf{task} and \textbf{priority} annotations.}
+    \label{lst:concept:ast_sum_annotated}
+\end{figure}
+
+After introducing the concept of a compilation unit task, the visit order of the AST nodes can be reviewed as follows (see figure~\ref{lst:concept:ast_sum_annotated}):
+
+\begin{enumerate}
+    \item When the root node is visited, a task (\#0) associated with the root of the AST node is created.
+    \item Task \#0, when executed, performs a preorder visit of the children nodes (function sum1 and function sum). The only difference compared to before (the visit done in~\ref{subsec:compunit}) is that the body node is not executed immediately. Instead, another task is created for the body node, which will be executed subsequently.
+    \item Tasks \#1 and \#2 are executed only after task \#0 has finished, ensuring that the inference of "sum" can be correctly performed because it happens after the definition of the function "sum".
+\end{enumerate}
+
+However, the method for managing the order of task execution has not been clarified yet. In the next section, we will discuss how this will be accomplished.
+
+\subsection{Compilation Helper: an helper to perform compilation}\label{subsec:concept:CompilationHelperAnHelperToPerformCompilation}
+
+A compilation unit is associated with a piece of code, whereas a compilation helper is shared among all the compilation phases. The compilation helper is responsible for creating and registering new compilation units, along with their associated tasks. Later, the registered tasks can be executed by the compilation helper.
+
+\subsubsection{Root type and root compilation unit}
+
+To initialize the compilation helper, it is required to define a root type that represents the global scope of the entire source set being compiled. Using this global scope, the compilation unit root is created, and its associated task will be the first one to be executed.
+
+\subsubsection{Hooks}
+
+Compilation Helper provides the capability to define custom hooks that are executed at specific phases during the execution process.
+The available hooks currently include:
+
+\begin{itemize}
+    \item \inlinejava{beforeAll}: which is executed prior to the initialization of all roots
+    \item \inlinejava{beforeEach}: which is executed before the initialization of each individual root in every file
+\end{itemize}
+These hooks can be easily implemented by overriding the default methods provided by the Compilation Helper.
+
+\subsubsection{Task creation}
+
+In order to generate a task, it is imperative to establish a compilation unit.
+When you are creating a compilation unit the following situations can arise:
+\begin{itemize}
+    \item \textit{Creating a new scope}: This necessitates the generation of a new compilation unit that is linked to the newly created scope.
+    \item \textit{Utilizing the current scope}:
+    \begin{itemize}
+        \item If the current scope is the root scope, the root task is updated with additional nodes to visit.
+        \item If the current scope is not the root, a fresh compilation unit is generated.
+    \end{itemize}
+\end{itemize}
+When a new compilation unit is generated, a corresponding task is also created with two key pieces of information: its dependency and execution priority. In our case, each task is dependent on the task from which it was generated, ensuring that it is executed only after its parent task has completed. The execution priority is a class \inlinejava{T} that extends \inlinejava{Comparable<T>}, allowing for custom prioritization of tasks.
+
+Both the dependency and priority information are utilized by the executor to effectively manage the order in which the tasks are executed, as we will see in the next section.
+\begin{algorithm}[h]
+\caption{The algorithm used for compilation task execution}\label{alg:executor}
+\begin{algorithmic}
+\Require $X$ list of all prioritized tasks
+\While{$X \neq \emptyset$}
+\State $N \gets$ collect tasks with highest priority in $X$
+\State $X \gets X \setminus N$
+\State create a DAG from $N$
+\State execute the DAG \Comment{DAG execution could populate $X$ with new tasks}
+\State wait for completion
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Task execution}
+
+The tasks are executed following the algorithm shown in ~\ref{alg:executor}.
+Tasks that are independent of each other can run in parallel.
+
+\subsection{A family of type systems}\label{subsec:concept:AFamilyOfTypeSystems}
+In the context of language workbenches and Software Product Lines (SPLs), the modularization of type systems enables the creation of a family of type systems. This is particularly advantageous for supporting various languages and paradigms. By constructing the type system in a modular fashion, each component or "artifact" of the type system can be activated or deactivated as needed, resulting in a tailored type system for specific language requirements. This section explores how such modularity facilitates flexibility, reusability, and extensibility in language development.
+
+\subsubsection{Modular Type Systems in Language Workbenches}
+
+Language workbenches aim to provide tools and frameworks to define and manipulate programming languages. One of the core aspects of a language is its type system, which encompasses the rules and operations for type checking and type inference. A modular type system allows the language designer to define these rules and operations in separate, interchangeable modules.
+
+\noindent \textbf{Key Benefits}:
+\begin{itemize}
+    \item \textbf{Reusability}: Modular type systems enable the reuse of type definitions and operations across different languages and contexts. For example, a module that defines numeric types and arithmetic operations can be reused in multiple languages without modification.
+    \item \textbf{Extensibility}: New types and operations can be added to the system without altering the existing modules. This is particularly useful in evolving languages or when creating domain-specific languages (DSLs) that require specialized types.
+    \item\textbf{ Flexibility}: Modules can be selectively activated or deactivated, allowing for the customization of the type system to meet specific needs. This is essential for supporting multiple paradigms or language variants within the same framework.
+\end{itemize}
+
+\noindent \textbf{Language Product Lines (LPLs)}
+
+In SPLs, the concept of modular type systems aligns with the idea of product families. Each "product" in the line can be seen as a specific configuration of the language, with certain type system features enabled or disabled.
+Creating a Family of Type Systems
+
+\begin{itemize}
+    \item \textbf{Type System Artifacts}: Each component of the type system (such as type definitions, type checking rules, and type inference mechanisms) is treated as an artifact. These artifacts can be independently developed, maintained, and combined.
+    \item \textbf{Configuration Management}: The language workbench provides mechanisms to manage configurations, allowing language designers to specify which artifacts are included in a particular language instance. This can be achieved through configuration files, annotations, or a graphical interface.
+    \item \textbf{Dependency Management}: Dependencies between artifacts are managed to ensure that the activation of one artifact automatically includes any required dependencies. For instance, enabling a type inference module may also require certain type definitions to be included.
+    \item \textbf{Dynamic Activation}: During compilation or interpretation, the system dynamically activates the relevant type system artifacts based on the configuration. This allows the same underlying infrastructure to support different language features as needed.
+\end{itemize}
+
+\noindent Example: Type Checking and Inference in Action
+
+Consider a scenario where a language product line includes multiple variants of a programming language, each with different type-checking requirements. One variant might require strict type checking for all variables, while another might allow more lenient type inference for certain constructs. Using a modular type system, these variants can be configured by selectively activating the appropriate type-checking and inference modules.
+
+For instance, the type-checking module for strict type enforcement can be activated for the strict variant, ensuring that all variables must be explicitly typed. In contrast, the lenient variant can activate a module that implements type inference rules, allowing the system to deduce types where explicit annotations are missing. Additionally, common modules that handle basic type definitions and generic type operations can be shared across both variants, promoting reuse and reducing redundancy.
 
 \section{The relevance of the type system in the LSP design}\label{sec:concept:RelevanceOfTheTypeSystem}
 
@@ -298,7 +517,6 @@ However, the implementation of an LS and its integration with an IDE/SCEs is sti
 The implementation~\cite{Gunasinghe22} of an LS is done entirely manually and it is a \textit{top-down} activity, where most of the time is spent on the design and implementation data structures and algorithms.
 Since 1990s~\cite{Kang90}, researchers have started talking about the \textit{Software Product Lines} (SPLs) \cite{Cazzola23d, Cazzola20} to move towards a more modular world, where the implementation of a software system can be done in a compositional way, by composing the features of the SPL.
 When a SPL is applied to the implementation of a programming language, each product corresponds to a language variant \cite{Cazzola15f} taking the name of \textit{Language Product Lines} (LPLs) \cite{Cazzola15f}. LPLs have been successfully used in both GPLs \cite{Cazzola16, Cazzola16i, Cazzola15f} and DSLs \cite{Haugen08, Cazzola14e, White09}.
-
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figs/concept/module_with_lsp.pdf}
