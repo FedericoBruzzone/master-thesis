@@ -14,7 +14,6 @@ What we are looking for in our type system is:
 
 It is trivial to remember that the type system should also provide the basic functionalities of a type system, such as \textbf{type inference}, that allows the compiler to infer the type of an expression without the need to explicitly specify it; and \textbf{type checking}, that allows the compiler to check if the types of the expressions are correct.
 
-
 \begin{mydefinition}{type system item}{concept:itemdefinition}
   % this is the text of the theorem. the counter is automatically assigned and,
   % in this example, prefixed with the section number. this theorem is numbered with
@@ -527,6 +526,46 @@ When a SPL is applied to the implementation of a programming language, each prod
 What I want to prove with this thesis is that the implementation of an LS could be a \textit{bottom-up} activity, where each LSP or DAP functionality can be seen as a separate \textit{feature module} \cite{Batory04, Kastner11} splitted across the language artifacts, where each artifacts can be part of one or more \textit{language features} (see Figure~\ref{lst:concept:module_with_lsp}). These units can be composed to provide a modular implementation of the LS. This approach is supported by the fact that the LSP and the DAP are \textit{language-agnostic} protocols~\cite{Niephaus20, Rodriguez-Echeverria18} (see Fig.~\ref{lst:lsp}), which means that it does not impose any restrictions on the implementation of the LS, as long as it respects the specification of the protocol.
 In \textit{feature-oriented programming} (FOP) \cite{Apel13, Czarnecki04, Prehofer01}, a feature module is a unit of composition that encapsulates a specific functionality, and it is a first-class entity that can be composed with other feature modules to form a software system; similar to an aspect module that encapsulates a crosscutting concern in \textit{aspect-oriented programming} \cite{Kiczales01, Kiczales97, Laddad03}. Using FOP in language development, a family of languages~\cite{Liebig13} can be defined by composing feature modules~\cite{Wende09}, and a language can be seen as a product of the family.
 In this way, the implementation of the LS is a \textit{bottom-up} activity, where each artifact has attached a part of LSP and DAP feature module that implements the LS functionality for that \textit{language fragment}, and these units can be composed to provide a modular implementation having \textbf{variants} of the LS.
+
+\subsection{Index Tree}\label{subsec:concept:IndexTree}
+
+The \textit{Index Tree} is a data structure that is used to store the information about the source code, such as the symbols, the types, and the references. It is used by the LS to provide the \textit{Jump to Definition} and the \textit{Code Completion} features.
+
+ In addition, it is designed to efficiently \textit{locate symbols} based on their positions within a text file. The tree follows a specific structure:
+\begin{itemize}
+    \item Each node is represented by a SymbolTableEntry.
+    \item Internal nodes must have a folding range, within which all child nodes are contained.
+\end{itemize}
+With this tree structure, the symbol search algorithm becomes straightforward and is detailed in the algorithm \ref{alg:lookup}.
+
+\begin{algorithm}[tbh]
+\caption{The algorithm used to get a symbol from IndexTree}\label{alg:lookup}
+\begin{algorithmic}
+\Require $(row, col)$ a position on the file, $N$ the node of the index tree
+\Ensure A set of SymbolTableEntry entries
+\State $S \gets$ the SymbolTableEntry entry associated with $N$
+\If{$(row, col)$ is within the selection range of $N$}
+\State \Return $\{S\}$
+\ElsIf{$(row, col)$ is within the folding range of $N$}
+\ForEach {$C$ in $N$'s children}
+\State $Result\gets$call this algorithm with $(row, col)$ and $C$
+\If {$Result$ is not empty}
+\Return $Result$
+\EndIf
+\EndFor
+\Else
+\State \Return $\emptyset$
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+The \textbf{selection range} is the range of the node that contains exactly the symbol, while the \textbf{folding range} is the range of the node that contains all the symbols that are contained in the node.
+
+The \textit{index tree} is the first step to modularize the LSP. It is populated by the \textit{Language} and it is used by the LS to provide the \textit{Jump to Definition} and the \textit{Code Completion} features. The \textit{index tree} is a \textit{language feature} that can be composed with other features to provide a modular implementation of the LS.
+Each \textit{artifact} will add a part of the \textit{index tree} that contains the information about the symbols, the types, and the references of the source code. The \textit{index tree} is a \textit{language feature} that can be composed with other features to provide a modular implementation of the LS.
+
+\subsection{Symbol Dependency Graph}\label{subsec:concept:SymbolDependencyGraph}
+
 
 
 \section{A \textit{modular} DSL for semplifying the LSP and type system development}\label{sec:concept:AModularDSLForSemplifyingTheLSPAndTypeSystemDevelopment}
