@@ -56,9 +56,9 @@ define compile_fig
 	$(call pdflatex_cmd, $1)
 endef
 
+# $(call bibtex_cmd, $1)
 define compile_main
 	$(call pdflatex_cmd, $1)
-	$(call bibtex_cmd, $1)
 	$(call pdflatex_cmd, $1)
 	$(call pdflatex_cmd, $1)
 endef
