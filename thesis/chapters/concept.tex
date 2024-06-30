@@ -61,7 +61,7 @@ Finally, the last question is used to \textbf{bind} the type to its generic para
 The \textbf{Scope} is the context in which an identifier is defined, more precisely, where the binding between the type and an identifier is defined in the \textbf{Type System}. It is used to define the visibility and the lifetime of the identifier and its operations. The \textbf{Scope} can be, for example, a \textit{local scope}, a \textit{global scope}, or a \textit{module scope}.
 \end{mydefinition}
 
-In our concept, a \textbf{Scope} can be see as a \textbf{Type}~\ref{subsec:concept:TypeTheBasicBuildingBlock} that defines the visibility and the lifetime of the type or identifier and its operations. At this point, the \textbf{Scope} is not universal. In fact, for instance, \textit{Java} do not categorize the \textbf{Scope}, such as \textit{Block Scope}, as a \textbf{Type}. However, in order to achieve a representation of a \textit{Block Scope} as a \textbf{Type}, we can define a \textbf{Scope} where at the questions
+In our concept, a \textbf{Scope} can be see as a \textbf{Type}~\ref{subsec:concept:typethebasicbuildingblock} that defines the visibility and the lifetime of the type or identifier and its operations. At this point, the \textbf{Scope} is not universal. In fact, for instance, \textit{Java} do not categorize the \textbf{Scope}, such as \textit{Block Scope}, as a \textbf{Type}. However, in order to achieve a representation of a \textit{Block Scope} as a \textbf{Type}, we can define a \textbf{Scope} where at the questions
 
 \begin{itemize}
     \item Can it be assignable from another type with a specific kind of variance?
@@ -382,7 +382,7 @@ After introducing the concept of a compilation unit task, the visit order of the
 
 \begin{enumerate}
     \item When the root node is visited, a task (\#0) associated with the root of the AST node is created.
-    \item Task \#0, when executed, performs a preorder visit of the children nodes (function sum1 and function sum). The only difference compared to before (the visit done in~\ref{subsec:compunit}) is that the body node is not executed immediately. Instead, another task is created for the body node, which will be executed subsequently.
+    \item Task \#0, when executed, performs a preorder visit of the children nodes (function sum1 and function sum). The only difference compared to before (the visit done in~\ref{lst:concept:ast_sum}) is that the body node is not executed immediately. Instead, another task is created for the body node, which will be executed subsequently.
     \item Tasks \#1 and \#2 are executed only after task \#0 has finished, ensuring that the inference of "sum" can be correctly performed because it happens after the definition of the function "sum".
 \end{enumerate}
 
@@ -529,53 +529,275 @@ In this way, the implementation of the LS is a \textit{bottom-up} activity, wher
 
 \subsection{Index Tree}\label{subsec:concept:IndexTree}
 
-The \textit{Index Tree} is a data structure that is used to store the information about the source code, such as the symbols, the types, and the references. It is used by the LS to provide the \textit{Jump to Definition} and the \textit{Code Completion} features.
-
- In addition, it is designed to efficiently \textit{locate symbols} based on their positions within a text file. The tree follows a specific structure:
-\begin{itemize}
-    \item Each node is represented by a SymbolTableEntry.
-    \item Internal nodes must have a folding range, within which all child nodes are contained.
-\end{itemize}
-With this tree structure, the symbol search algorithm becomes straightforward and is detailed in the algorithm \ref{alg:lookup}.
-
 \begin{algorithm}[tbh]
-\caption{The algorithm used to get a symbol from IndexTree}\label{alg:lookup}
-\begin{algorithmic}
-\Require $(row, col)$ a position on the file, $N$ the node of the index tree
-\Ensure A set of SymbolTableEntry entries
-\State $S \gets$ the SymbolTableEntry entry associated with $N$
-\If{$(row, col)$ is within the selection range of $N$}
-\State \Return $\{S\}$
-\ElsIf{$(row, col)$ is within the folding range of $N$}
-\ForEach {$C$ in $N$'s children}
-\State $Result\gets$call this algorithm with $(row, col)$ and $C$
-\If {$Result$ is not empty}
-\Return $Result$
-\EndIf
-\EndFor
-\Else
-\State \Return $\emptyset$
-\EndIf
-\end{algorithmic}
+    \caption{The algorithm used to get a symbol from IndexTree}\label{alg:lookup}
+    \begin{algorithmic}
+        \Require $(row, col)$ a position on the file, $N$ the node of the index tree
+        \Ensure A set of SymbolTableEntry entries
+        \State $S \gets$ the SymbolTableEntry entry associated with $N$
+        \If{$(row, col)$ is within the selection range of $N$}
+        \State \Return $\{S\}$
+        \ElsIf{$(row, col)$ is within the folding range of $N$}
+        \ForEach {$C$ in $N$'s children}
+        \State $Result\gets$call this algorithm with $(row, col)$ and $C$
+        \If {$Result$ is not empty}
+        \Return $Result$
+        \EndIf
+        \EndFor
+        \Else
+        \State \Return $\emptyset$
+        \EndIf
+    \end{algorithmic}
 \end{algorithm}
 
-The \textbf{selection range} is the range of the node that contains exactly the symbol, while the \textbf{folding range} is the range of the node that contains all the symbols that are contained in the node.
+The Index Tree is a sophisticated data structure specifically designed to store and manage information about the source code, such as symbols, types, and references. This structure is pivotal for Language Servers (LS) to efficiently provide essential features like "Jump to Definition" and "Code Completion." Its design facilitates rapid and accurate symbol location based on their positions within a text file, making it an integral component of modern code editors and development environments. In figure~\ref{lst:conept:lsp_combinations}, we illustrate the structure of the Index Tree and its key components; as example, we consider the source code in Listing~\ref{lst:concept:sum}.
 
-The \textit{index tree} is the first step to modularize the LSP. It is populated by the \textit{Language} and it is used by the LS to provide the \textit{Jump to Definition} and the \textit{Code Completion} features. The \textit{index tree} is a \textit{language feature} that can be composed with other features to provide a modular implementation of the LS.
-Each \textit{artifact} will add a part of the \textit{index tree} that contains the information about the symbols, the types, and the references of the source code. The \textit{index tree} is a \textit{language feature} that can be composed with other features to provide a modular implementation of the LS.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/concept/index_tree.pdf}
+    \caption{Index Tree structure for the source code in Listing~\ref{lst:concept:sum}.}
+    \label{lst:conept:lsp_combinations}
+\end{figure}
+
+
+The Index Tree is structured as follows:
+\begin{itemize}
+    \item \textbf{Nodes and SymbolTableEntry:} Each node in the Index Tree is represented by a \texttt{SymbolTableEntry}. This entry encapsulates all relevant information about a particular symbol in the source code, including its type, position, and references.
+    \item \textbf{Internal Nodes and Folding Range:} Internal nodes in the tree must possess a folding range. This range is a continuous segment within the source code that encompasses all the symbols contained within the node. The folding range ensures that related symbols are grouped together logically.
+    \item \textbf{Selection Range:} The selection range refers to the exact range within a node that contains a specific symbol. It is more precise than the folding range and is used for pinpointing the location of a symbol within the node.
+\end{itemize}
+
+The Index Tree supports several critical functionalities for the Language Server:
+\begin{itemize}
+\item \textbf{Efficient Symbol Search:} The tree structure allows for straightforward symbol searches. Given a position in the text file, the tree can be traversed to locate the corresponding node, thanks to the hierarchical organization of folding ranges and selection ranges.
+\item \textbf{Jump to Definition:} By leveraging the Index Tree, the Language Server can quickly locate the definition of a symbol when a user invokes the "Jump to Definition" feature.
+\item \textbf{Code Completion:} The tree also aids in code completion by providing a structured and easily navigable repository of all symbols and types within the source code.
+\end{itemize}
+
+One of the key advantages of the Index Tree is its modularity:
+
+\begin{itemize}
+    \item \textbf{Language-Specific Populations:} The tree is populated by the specific programming language, meaning each language can add its own symbols, types, and references to the tree.
+    \item \textbf{Composition with Other Features:} The Index Tree serves as a foundational component that can be composed with other language features. This modular approach allows for a more flexible and scalable implementation of the Language Server, enabling it to support a wide range of languages and features.
+\end{itemize}
+
+The efficiency of the Index Tree lies in its hierarchical structure and the way it organizes symbols within ranges. The time complexity for inserting a symbol into the tree or searching for a symbol generally depends on the depth of the tree. In the average case, both operations can be expected to run in \(O(\log n)\) time, where \(n\) is the number of symbols in the source code. This logarithmic complexity ensures that the Index Tree can handle large codebases efficiently, providing quick access to symbols even as the size of the source code grows.
+
+In summary, the Index Tree is a highly efficient and modular data structure that plays a crucial role in modern Language Servers. Its ability to store and organize symbols, types, and references, combined with its efficient search and retrieval capabilities, makes it an indispensable tool for providing advanced code navigation and completion features.
 
 \subsection{Symbol Dependency Graph}\label{subsec:concept:SymbolDependencyGraph}
 
+The symbol dependency graph serves as a vital data structure within the language server framework, designed to interconnect symbols in a manner that facilitates efficient responses to client queries. In essence, it's a graph where nodes represent SymbolTableEntry instances, and edges are annotated with labels denoting the type of relationship. Currently, the primary relationship label is "usage," indicating that one symbol uses another.
 
+This graph plays a crucial role in several key functionalities of the language server:
+
+\begin{itemize}
+    \item \textbf{Calculating Symbol References}: By traversing the graph, the server can determine all references to a specific symbol throughout the codebase. This is essential for tasks like finding where a symbol is used or referenced.
+    \item \textbf{Navigating to Symbol Definitions}: Utilizing the graph, the server can pinpoint the exact location within the code where a symbol is defined. This capability is crucial for enabling developers to quickly navigate to the declaration of a symbol.
+\end{itemize}
+
+\subsubsection{Diagnostic Handling}\label{subsubsec:concept:DiagnosticHandling}
+During the parsing and static analysis phases, the language server gathers diagnostics, which are issues or potential problems identified in the code. These diagnostics are collected and presented to the client at the end of compilation. Custom diagnostics can be registered through exceptions or specialized data structures like \textbf{TypesystemException} or \texttt{LogRecord}.
+
+\subsubsection{Definition, References, and Hover Features}\label{subsubsec:concept:DefinitionReferencesAndHoverFeatures}
+
+When a user requests information about a specific position in a file—such as the definition, references, or details on hover—the server follows these steps:
+
+\begin{itemize}
+    \item \textbf{Index Tree Lookup}: Using an index tree, the server identifies the symbol associated with the requested position, if it exists.
+    \item \textbf{Graph Traversal}: For definition and reference queries, the server traverses the symbol dependency graph to retrieve all relevant definitions or references of that symbol. This traversal is guided by the relationships defined in the graph.
+    \item \textbf{Hover Information}: For hover queries, the server executes methods annotated with @Hover to provide detailed contextual information about the symbol at the specified position.
+\end{itemize}
+
+\subsubsection{Document Symbol, Semantic Token, Inlay Hint, and Folding Range}\label{subsubsec:concept:DocumentSymbolSemanticTokenInlayHintAndFoldingRange}
+
+These capabilities involve listing and presenting symbols and structural elements within a file:
+
+\begin{itemize}
+    \item \textbf{Document Symbol}: Lists all symbols present in a file using the index tree.
+    \item \textbf{Semantic Token}: Provides structured information about tokens in the code for language-specific operations.
+    \item \textbf{Inlay Hint}: Displays subtle UI hints, annotations, or metadata within the editor.
+    \item \textbf{Folding Range}: Enables collapsing and expanding regions of code based on predefined folding ranges associated with symbols.
+\end{itemize}
+
+\subsubsection{Additional Capabilities}\label{subsubsec:concept:AdditionalCapabilities}
+Other functionalities, though not implemented by default, can be achieved by leveraging data structures obtained during static analysis. These capabilities include advanced tasks such as semantic analysis, type checking, and code optimization, which benefit from the comprehensive understanding of code structure and dependencies provided by the symbol dependency graph.
+
+In summary, the symbol dependency graph is pivotal in enabling precise navigation, comprehensive symbol analysis, and the delivery of rich contextual information within the language server ecosystem. Its structured representation of symbol relationships forms the backbone for many essential IDE features, enhancing developer productivity and code comprehension.
 
 \section{A \textit{modular} DSL for semplifying the LSP and type system development}\label{sec:concept:AModularDSLForSemplifyingTheLSPAndTypeSystemDevelopment}
 
-\section{Reduce to $\mathcal{L} \times 1$ the number of combinations to support $\mathcal{L}$ languages}
+\begin{Listing}
+\begin{bnf*}
+  \bnfprod{program}
+    {\bnfpn{type definition} \bnftd{*} \bnfpn{scope definition} \bnftd{*}  \bnfpn{type inferencing} \bnftd{*}}\\
+    \bnfmore{\bnfpn{type checking} \bnftd{*} \bnfpn{error catching} \bnftd{*}}\\
+    \bnfmore{\bnfpn{generic op} \bnftd{*}}\\
+  \bnfprod{type definition}
+    {\bnfts{define } \bnfpn{type definition or} \bnftd{ [} \bnfpn{callback} \bnftd{]}}\\
+  \bnfprod{scope definition}
+    {\bnfts{define scope } \bnfpn{scope} \bnfpn{nlg token} \bnftd{ [} \bnfpn{range} \bnftd{]}}\\
+  \bnfprod{range}
+    {\bnfts{from } \bnfpn{nlg term} \bnfts{ to } \bnfpn{nlg t} \bnftd{ [} \bnfpn{priority} \bnftd{]}}\\
+  \bnfprod{priority}
+    {\bnfts{[ run } \bnfpn{nlg nt} \bnfts{ priority } \bnfpn{scope} \bnftd{ [} \bnfpn{callback} \bnftd{]} \bnfts{ ]}}\\
+  \bnfprod{callback}
+    {\bnfts{ then } \bnfpn{callback}}\\
+  \bnfprod{type definition or}
+    {\bnfpn{nlg type} \bnfpn{nlg token} \bnfor \bnfpn{type} \bnfpn{nlg token}}\\
+  \bnfprod{type inferencing}
+    {\bnfts{infer } \bnfpn{signature} \bnfts{ : } \bnfpn{nlg token}} \bnftd{ [} \bnfpn{type inferencing opt} \bnftd{]}\\
+  \bnfprod{type inferencing opt}
+    {\bnfts{=> } \bnfpn{nlg type} \bnfor \bnfts{with [} \bnfpn{nlg type} \bnfts{*]}}\\
+  \bnfprod{type checking}
+    {\bnfts{check } \bnfpn{nlg token} \bnfts{ : } \bnfpn{nlg type} \bnfpn{variance} \bnfpn{nlg type}}\\
+  \bnfprod{generic op}
+    {\bnfts{enter scope} \bnfor \bnfts{exit scope} \bnfor \bnfts{initRoot}}\\
+  \bnfprod{error catching}
+    {\bnfts{try \{ } \bnfpn{program} \bnfts{ \}} \bnftd{ [} \bnfts{on } \bnfpn{nlg exeption}  \bnfts{ \{ } \bnfpn{program} \bnfts{ \}} \bnftd{]}}\\
+  \bnfprod{variance}
+    {\bnfts{covariant} \bnfor \bnfts{contravariant} \bnfor \bnfts{invariant}}\\
+  \bnfprod{nlg token}
+    {\bnfpn{nlg nt} \bnfts{.token}}\\
+  \bnfprod{nlg type}
+    {\bnfpn{nlg nt} \bnfts{.type}}\\
+  \bnfprod{nlg nt}
+    {\bnfts{\$} \bnfpn{digit}}\\
+  \bnfprod{nlg t}
+    {\bnfts{\#} \bnfpn{digit}}\\
+  \bnfprod{digit}
+    {\bnfts{[0-9]}}\\
+  \bnfprod{scope}
+    {\bnftd{the name of the scopes defined in the language}}\\
+  \bnfprod{type}
+    {\bnftd{the name of the types defined in the language}}\\
+  \bnfprod{signature}
+    {\bnftd{the name of the signatures defined in the language}}\\
+  \bnfprod{callback}
+    {\bnftd{the name of the callbacks defined in the language}}
+\end{bnf*}
+  \caption{Grammar for the TypeLang DSL.}
+  \label{lst:concept:typelang_grammar}
+\end{Listing}
 
-% \begin{figure}[t]
-%     \centering
-%     \includegraphics[width=0.9\linewidth]{figs/concept/lsp_combinations.pdf}
-%     \caption{Traditional approach vs LSP/DAP approach to language support.}
-%     \label{lst:conept:lsp_combinations}
-% \end{figure}
+\begin{Listing}
+    \centering
+    \showneverlang*[1\textwidth]{FunDeclaratationJava.nl}
+    \caption{A Neverlang module that defines a function declaration.}
+    \label{lst:concept:fun_declaration_java}
+\end{Listing}
+
+
+In Section~\ref{subsec:concept:CompilationUnitTaskATaskToPerformCompilation}, we discussed effective techniques for managing the traversal of an Abstract Syntax Tree (AST) in code. Listing~\ref{lst:concept:fun_declaration_java} provides a concrete example of how the semantic action linked to the production for the declaration of a javascript function can be implemented. The portion enclosed in \texttt{0.{}.} corresponds to the semantic action associated with the FunDeclaration node. When the AST in Y is referenced, this code is executed when the sum1~\ref{lst:concept:sum} function is visited.
+
+Key points about this code include the following: Lines 27-39 detail the creation of a new symbol table entry for the function identifier symbol, which is associated with the TypeFunction type; a specific implementation of the Type interface. In lines 31-47, a new task is registered to visit the body of the function when executed. Lines 51-51 involve evaluating the params node within the scope of the newly created function. In line 53, a TypesystemException exception is caught and forwarded on a shared communication channel, confining the error to a specific code region and allowing the AST visit to continue.
+
+Further explanation of the code is typically unnecessary, as programmers usually write Java code using a Domain-Specific Language (DSL) called TypeLang for ease of use. Upcoming sections will provide detailed information on the functionalities of this DSL.
+
+
+Every terminal symbol can be used as an identifier. In addition to the associated string, the token also contains the position of the identifier, given by the URI of the file and the range of the token. To create a token from a Neverlang nonterminal, use the syntax \texttt{Token.fromASTNode(n, 0)}, where 0 represents the index of the nonterminal, corresponding to \texttt{\#0} in Neverlang-stylish syntax.
+
+The basics of grammar and documentation are outlined in Listing~\ref{lst:concept:typelang_grammar}, which lists all the constructs that make up TypeLang.
+The provided grammar defines various constructs and operations related to type binding, type scoping, task definition, callback execution, type inferencing, and type checking within a hypothetical language or system. The goal of this grammar is to facilitate the creation and management of types, tasks, and error handling in a structured and automated way.
+
+The first set of rules deals with type binding. By using \texttt{define \$1.type \$2.token}, we establish a new type binding where the content of the \texttt{\$2} token attribute becomes the identifier, and the content of the \texttt{\$1} type attribute is the type. Additionally, \texttt{define \$1 \$2} translates to \texttt{\$1.type \$2.token} by default, allowing for more straightforward type binding definitions. The rule \texttt{define customType \$2.token} optionally adds a token attribute for custom types, indicating flexibility in how types are defined.
+
+Next, the grammar introduces the concept of type scope definition. By defining \texttt{scope module \$1.token}, a new type scope module is bound to the token of \texttt{\$1}. This scope is further elaborated by \texttt{define scope module \$1.token from \#0 to \#1}, which sets a folding range from \texttt{\#0} to \texttt{\#1}. This range likely indicates the span within the source code where this scope is applicable.
+
+In the context of task definition, the rule \texttt{define scope module \$1.token from \#0 to \#1} followed by \texttt{[ run \$1 priority module ]} specifies a new compilation unit task. This task is designed to visit node \texttt{\$1} with the priority set to \texttt{module}. The inclusion of square brackets denotes the encapsulation of the task definition within a specific scope and range.
+
+Callbacks are handled through two primary rules. The first, \texttt{define customType \$2.token then customCallback}, ensures that a callback function named \texttt{customCallback} is executed at the end of binding a custom type. The second rule, \texttt{define scope module \$1.token from \#0 to \#1 [ run \$1 priority module then customCallback ]}, integrates a callback execution at the end of a task, ensuring custom behavior post-task execution.
+
+Type inferencing rules provide mechanisms to infer types based on specific signatures and tokens. The rule \texttt{infer customSignature \$1.token} infers a type with a signature named \texttt{customSignature} and token \texttt{\$1.token}. Furthermore, \texttt{infer customSignature \$1.token => \$1.type} stores the inferred type in \texttt{\$1.type}. The rule \texttt{infer function \$1.token with [\$1 \$2]} infers a function type, passing \texttt{\$1.type} and \texttt{\$2.type} as parameters to the function constructor signature.
+
+Type checking ensures that types remain consistent. The rule \texttt{check \$0.token : \$0.type is invariant \$1.type} verifies that \texttt{\$0.type} remains invariant when compared to \texttt{\$1.type}, using \texttt{\$0.token} for error location purposes. This step is crucial for maintaining type safety and correctness in the system.
+
+Lastly, error catching is handled similarly to the try-catch construct in general-purpose languages (GPLs). The grammar provides a structure for capturing and managing exceptions, ensuring that any caught errors are submitted to \texttt{CompilationHelper} for processing. This error management framework is essential for robust and reliable system behavior, allowing for graceful handling of unexpected issues during compilation or execution.
+
+In summary, this grammar provides a comprehensive framework for defining and managing types, scopes, tasks, callbacks, type inferencing, type checking, and error handling. Each production rule contributes to a structured approach to system design, ensuring type safety, task prioritization, and robust error management.
+
+Additionally, TypeLang generates code automatically based on the type system of the target language, ensuring that each DSL adheres to its own type system. For instance, the statement \texttt{define customType $1 $2} can be parsed only if the user has associated the keyword customType with a class extending Type. This association is established using the annotations, as documented in Listing~\ref{lst:concept:typelang_annotations}.
+
+We are able to use two different kind of annotations, both of them bring the same result, but the first one is more readable and the second one is more compact.
+
+\begin{Listing}
+    \centering
+    \showjava*[1\textwidth]{TypeLangAnnotations.java}
+    \caption{TypeLang annotations.}
+    \label{lst:concept:typelang_annotations}
+\end{Listing}
+
+Additionally, we have another listing~\ref{lst:concept:typelang_grammar} showing the difference when using the DSL. This listing, which is about 25 lines of code less, highlights the significantly reduced complexity compared to the previous implementations. The complexity of the earlier code is much higher in comparison to the streamlined approach provided by the DSL.
+
+\begin{Listing}
+    \centering
+    \showneverlang*[1\textwidth]{FunDeclarationTypecheck.nl}
+    \caption{A Neverlang module that defines a function declaration using the DSL.}
+    \label{lst:concept:fun_declaration_typecheck}
+\end{Listing}
+
+\section{Reduce to $\mathbf{L} \times 1$ the number of combinations to support $\mathbf{L}$ languages}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/concept/lsp_combinations.pdf}
+    \caption{Traditional approach vs LSP/DAP approach to language support.}
+    \label{lst:concept:lsp_combinations}
+\end{figure}
+
+As shown in Figure~\ref{lst:concept:lsp_combinations}, the traditional approach to language support requires a separate implementation for each language, resulting in a combinatorial explosion of implementations. In contrast, the Language Server Protocol (LSP) and Debug Adapter Protocol (DAP) provide a standardized interface that decouples the language server from the client, allowing a single language server to support multiple languages. This approach significantly reduces the number of required implementations, simplifying the development and maintenance of language servers.
+In our approach, we aim to further reduce the number of required implementations by introducing a \textbf{client generator} that automatically generates client code for a given language bringing the number of required implementations to $\mathcal{L} \times 1$.
+Currently, there are lots of \textit{editor}, such as \textit{Visual Studio Code}, \textit{Vim/Nvim}, \textit{Emacs} and \textit{IntelliJ IDEA}, that support the LSP and DAP protocols. The client generator will be able to generate the client code for these editors, allowing the language server to be used with any of them.
+
+\subsection{Syntax Highlighting Generator}\label{subsec:concept:SyntaxHighlightingGenerator}
+
+One of the key components of a modern code editor is syntax highlighting. Proper syntax highlighting significantly enhances the readability and maintainability of code by visually distinguishing elements such as keywords, operators, strings, and comments. In our approach, we have developed a sophisticated \textbf{Syntax Highlighting Generator} that receive in input the keywords and other syntactic elements from a given language specification and generates the corresponding syntax highlighting configuration for various editors.
+
+By parsing the language's grammar and lexical rules, the parser gets keywords, operators, and other syntactic constructs. The generator then maps these elements to appropriate highlighting rules for each supported editor. This process ensures that syntax highlighting is both accurate and consistent across different editors.
+
+Our generator supports a wide range of editors, including Visual Studio Code, Vim/Nvim, Emacs. For each editor, the generator produces a configuration file or plugin that can be easily integrated into the editor's ecosystem. This automation not only saves significant development time but also ensures that the syntax highlighting is always up-to-date with the latest language specifications.
+
+Moreover, the Syntax Highlighting Generator is highly customizable. Developers can specify additional highlighting rules or override the default behavior to accommodate specific needs. This flexibility makes our generator suitable for both general-purpose programming languages and domain-specific languages (DSLs).
+
+In summary, our Syntax Highlighting Generator streamlines the process of creating and maintaining syntax highlighting configurations. By automating this task, we ensure that developers can focus on writing code rather than manually configuring their editors. The result is a more efficient and enjoyable coding experience, regardless of the chosen editor.
+
+\subsection{LSP Generation}\label{subsec:concept:LSPGeneration}
+
+The Language Server Protocol (LSP) has revolutionized the way code editors and IDEs provide language-specific features such as auto-completion, go-to-definition, and refactoring. However, creating an LSP server from scratch for each language can still be a daunting task. To address this challenge, we have developed a comprehensive \textbf{LSP Generation} framework that simplifies the creation of LSP servers.
+
+Our LSP Generation framework leverages the language specification to automatically generate the boilerplate code required for an LSP server. This includes setting up the communication protocol, handling initialization, and managing language-specific requests and notifications. By automating these aspects, our framework significantly reduces the amount of manual coding required to implement an LSP server.
+
+The core of our LSP Generation framework is a set of templates and code generation tools that can be customized for different languages. These templates include common LSP server components such as text document synchronization, hover information, and diagnostics. Developers can extend these templates to support additional language features or integrate with existing tools and libraries.
+
+Our framework also includes a comprehensive test suite to ensure the generated LSP server is compliant with the LSP specification and performs reliably. This suite includes unit tests for individual components as well as integration tests that simulate common usage scenarios. By providing a robust testing infrastructure, we help developers deliver high-quality LSP servers with confidence.
+
+One of the key advantages of our LSP Generation framework is its extensibility. Developers can easily add support for new languages or customize existing templates to meet their specific requirements. This flexibility ensures that our framework can evolve with the ever-changing landscape of programming languages and development tools.
+
+Overall, our LSP Generation framework represents a significant advancement in the development of language servers. By automating much of the boilerplate code and providing a robust testing infrastructure, we enable developers to quickly and efficiently create high-quality LSP servers. This reduces the overall development effort and accelerates the adoption of the LSP across different languages and editors.
+
+\subsection{Client Generator}\label{subsec:concept:ClientGenerator}
+
+The heart of our innovative approach lies in the \textbf{Client Generator}, a powerful tool designed to automatically generate client code for various editors, thereby reducing the number of required implementations to $\mathbf{L} \times 1$. This remarkable reduction in effort and complexity is achieved through a combination of advanced templating, code analysis, and generation techniques.
+
+\begin{enumerate}
+\item The Client Generator works by taking a language specification as input and producing the necessary client code for editors that support the LSP and DAP protocols. This process involves several steps:
+\item Language Analysis: The generator analyzes the language specification to identify key constructs such as syntax rules, semantic rules, and debugging capabilities. This information is used to tailor the generated client code to the specific needs of the language.
+\item Template Customization: Based on the language analysis, the generator customizes a set of pre-defined templates for each supported editor. These templates include code for initializing the client, handling LSP and DAP requests, and integrating with the editor's ecosystem.
+\item Code Generation: The customized templates are then used to generate the client code. This code is structured to be easily maintainable and extensible, allowing developers to further customize it if needed.
+\item Integration and Testing: The generated client code is integrated with the target editors and subjected to a rigorous testing process. This includes both automated tests and manual verification to ensure the generated code works seamlessly with the language server and provides a smooth user experience.
+\end{enumerate}
+
+By automating the generation of client code, our Client Generator dramatically reduces the time and effort required to support new languages in multiple editors. This not only simplifies the development process but also ensures a consistent and high-quality experience for users across different editors.
+
+\subsection{Modular Reuse and Reduction to $N \times 1$} \label{subsec:concept:ModularReuseAndReductionToNtimes1}
+
+An even more groundbreaking aspect of our approach is the shift from $\mathbf{L} \times 1$ to $\mathbf{N} \times 1$, where $\mathbf{N}$ is significantly less than $\mathbf{L}$. This incredible reduction is made possible by the modular design of our tools, which allows components developed for one language to be reused across multiple other languages.
+
+This modularity is a game-changer. Components such as syntax highlighting rules, LSP implementations, and debugging configurations can be shared and reused, drastically cutting down the number of unique implementations needed. When a new language is introduced, it can often leverage existing components, requiring only minor modifications or extensions. This reuse is facilitated by the interoperability of our generated modules, ensuring that the core functionalities are consistent and reliable across different languages and editors.
+
+For example, if a new language shares similar syntactic or semantic structures with an existing one, the syntax highlighting and LSP components from the existing language can be quickly adapted and reused. This reuse extends beyond mere code copying; our system is designed to recognize and integrate these components seamlessly, ensuring that updates and improvements to shared components propagate across all languages that use them.
+
+This modular reuse also means that the effort to introduce and support a new language is significantly reduced. Instead of starting from scratch, developers can build on a robust foundation of existing components, focusing their efforts on the unique aspects of the new language. This not only accelerates the development process but also ensures a high level of quality and consistency.
+
+In conclusion, the combination of our Syntax Highlighting Generator, LSP Generation framework, Client Generator, and the modular reuse of components represents a transformative approach to language support. By reducing the number of required implementations from $\mathbf{L} \times 1$ to $\mathbf{N} \times 1$, we achieve unparalleled efficiency and flexibility. This innovative approach allows us to rapidly support new languages, maintain high standards of quality, and provide a seamless and consistent user experience across different editors. Our work is not just a technical achievement but a significant step forward in the evolution of development tools, setting new standards for efficiency and modularity in the software industry.
 

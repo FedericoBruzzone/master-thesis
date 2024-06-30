@@ -8,7 +8,7 @@ In this section, we describe the implementation of the modular type system descr
 
 \subsection{Type implementation: the basic building block}\label{sec:impl:Type}
 
-\begin{Listing}[tb]
+\begin{Listing}[tbh]
     \centering
     \showjava*[1\textwidth]{Type.java}
     \caption{The \texttt{Type} interface.}
@@ -31,7 +31,7 @@ Additionally, the \texttt{Type} interface does not have a method to compare two 
 
 \subsection{Scope implementation: the context of the type}\label{subsec:impl:Scope}
 
-\begin{Listing}[tb]
+\begin{Listing}[tbh]
     \centering
     \showjava*[1\textwidth]{Scope.java}
     \caption{The \texttt{Scope} interface.}
@@ -57,7 +57,7 @@ In order to apply the binding of a variable to a \texttt{SymbolTableEntry}~\ref{
 
 \subsection{Signature implementation: the definition of a type}\label{subsec:impl:Signature}
 
-\begin{Listing}[tb]
+\begin{Listing}[tbh]
     \centering
     \showjava*[1\textwidth]{Signature.java}
     \caption{The \texttt{Signature} class.}
@@ -72,7 +72,7 @@ The \texttt{Signature} class is the definition of a type. As shown in Listing~\r
 As mentioned in Section~\ref{subsec:concept:SignatureTheDefinitionOfTheType}, in order to perform \textit{type inference}, the \texttt{typeResolution} method can be used to do some operations on the type. For instance, the \texttt{typeResolution} method could be used to resolve the type of a variable. Another usage of the \texttt{typeResolution} method is to resolve the type of a function. For instance, immagine a varbiable that during the \textbf{parse} phase its type is marked as \textit{unknown}, because the type could be omitted. During the \textbf{resolve} phase, the type of the variable is resolved to a specific type.
 
 \subsection{Symbol Table Entry Implementation: an entry in the Typing Environment}\label{subsec:impl:SymbolTableEntry}
-\begin{Listing}[tb]
+\begin{Listing}[tbh]
     \centering
     \showjava*[1\textwidth]{SymbolTableEntry.java}
     \caption{The \texttt{SymbolTableEntry} interface.}
@@ -93,7 +93,7 @@ The \texttt{location} method is used to get the location of the entry, the locat
 
 \subsubsection{Entry Type Binder Implementation: an helper to perform type binding}\label{subsec:impl:EntryTypeBinder}
 
-\begin{Listing}[tb]
+\begin{Listing}[tbh]
     \centering
     \showjava*[1\textwidth]{EntryTypeBinder.java}
     \caption{The \texttt{EntryTypeBinder} interface.}
@@ -164,3 +164,92 @@ The \texttt{InferenceResult} class is used to represent the result of the type i
 \end{Listing}
 
 \end{itemize}
+
+\section{Towards a modular type system implementation}\label{sec:impl:ModularTypeSystem}
+
+In this section, we describe the implementation of the modular type system described in~\ref{sec:concept:ModularTypeSystem} step by step.
+
+\subsection{Compilation Unit Implementation: a logical unit of source code}\label{subsec:impl:CompilationUnit}
+
+\begin{Listing}[tbh]
+    \centering
+    \showjava*[1\textwidth]{CompilationUnit.java}
+    \caption{The \texttt{CompilationUnit} abstract class.}
+    \label{lst:impl:CompilationUnit}
+\end{Listing}
+
+The \texttt{CompilationUnit} class is a logical unit of source code. As shown in Listing~\ref{lst:impl:CompilationUnit}, the \texttt{CompilationUnit} class has seven main fields:
+\begin{itemize}
+    \item \texttt{Scope<IDENTIFIER> scope} that is the scope of the compilation unit.
+    \item \texttt{AbstractCompilationUnit<IDENTIFIER> compilationUnitParent} that is the parent compilation unit of the compilation unit.
+    \item \texttt{Stack<Scope<IDENTIFIER>> stack} that is the stack of the scopes of the compilation unit.
+    \item \texttt{InferencingStrategy inferencingStrategy} that is the inferencing strategy of the compilation unit.
+    \item \texttt{Location location} that is the location of the compilation unit.
+    \item \texttt{CompilationUnitTask task} that is the task of the compilation unit.
+    \item \texttt{String id} that is the unique identifier of the compilation unit.
+\end{itemize}
+
+Additionally, the \texttt{CompilationUnit} class has three main methods:
+\begin{itemize}
+    \item \texttt{bindTypeToIdentifier(IDENTIFIER typeId, SymbolTableEntry type)} that binds the given \texttt{type} to the given \texttt{typeId}.
+    \item \texttt{InferenceResult typeInference(Token token, Signature signature, Scope<IDENTIFIER> scope)} that infers the type of the given \texttt{token} from the given \texttt{signature} in the given \texttt{scope}.
+    \item \texttt{Range foldingRange()} that returns the folding range of the compilation unit.
+\end{itemize}
+
+
+\subsection{Compilation Unit Task: a task to perform compilation}\label{subsec:impl:CompilationUnitTask}
+
+\begin{Listing}[tbh]
+    \centering
+    \showjava*[1\textwidth]{CompilationUnitTask.java}
+    \caption{The \texttt{CompilationUnitTask} abstract class.}
+    \label{lst:impl:CompilationUnitTask}
+\end{Listing}
+
+In order to perform the compilation, we need a task that is able to perform the compilation. The \texttt{CompilationUnitTask} class is used to perform the compilation. As shown in Listing~\ref{lst:impl:CompilationUnitTask}, the \texttt{CompilationUnitTask} class has five main fields:
+\begin{itemize}
+    \item \texttt{AtomicReference<CompilationUnitToken> token} that is the token of the compilation unit task.
+    \item \texttt{Consumer<Context> consumer} that is the consumer of the compilation unit task.
+    \item \texttt{Context context} that is the context of the compilation unit task.
+    \item \texttt{Class<? extends AbstractCompilationHelper<?, ?>> aClass} that is the class of the compilation unit task.
+    \item \texttt{PRIORITY priority} that is the priority of the compilation unit task.
+\end{itemize}
+
+Additionally, the \texttt{CompilationUnitTask} class has one main method:
+\begin{itemize}
+    \item \texttt{void run()} that runs the compilation unit task.
+\end{itemize}
+
+\section{Compilation Helper Implementation: an helper to perform compilation}\label{subsec:impl:CompilationHelper}
+
+
+\begin{Listing}[tbh]
+    \centering
+    \showjava*[1\textwidth]{CompilationHelper.java}
+    \caption{The \texttt{CompilationHelper} abstract class.}
+    \label{lst:impl:CompilationHelper}
+\end{Listing}
+
+The \texttt{CompilationHelper} class is an helper class that is used to perform the compilation. As shown in Listing~\ref{lst:impl:CompilationHelper}, the \texttt{CompilationHelper} class has numerous fields and methods. The methods have been omitted for brevity. Meanwhile, the \texttt{CompilationHelper} class has numerous fields:
+
+\begin{itemize}
+  \item \texttt{Class<? extends AbstractCompilationUnit<?>> compilationUnitClass} that is the class of the compilation unit.
+  \item \texttt{Class<? extends LSPGraph> lspGraphClass} that is the class of the LSP graph.
+  \item \texttt{Class<? extends SymbolTableEntryFactory<?, ?>> symbolTableEntryFactoryClass} that is the class of the symbol table entry factory.
+  \item \texttt{Map<String, String> baseTypes} that is the map of the base types.
+  \item \texttt{SubmissionPublisher<Object> publisher} that is the publisher of the compilation helper.
+  \item \texttt{InferencingStrategy inferencingStrategy} that is the inferencing strategy of the compilation helper.
+  \item \texttt{Scope<ID> root} that is the root scope of the compilation helper.
+  \item \texttt{AbstractCompilationUnit<ID> rootCompilationUnit} that is the root compilation unit of the compilation helper.
+  \item \texttt{CompilationUnitExecutor compilationUnitExecutor} that is the compilation unit executor of the compilation helper.
+  \item \texttt{CompilationContext context} that is the context of the compilation helper.
+  \item \texttt{SymbolTableEntryFactory<?, ?> symbolTableEntryFactory} that is the symbol table entry factory of the compilation helper.
+  \item \texttt{AtomicBoolean rootIsInitialized} that is the flag that indicates if the root is initialized.
+  \item \texttt{AtomicInteger incrementalRuns} that is the number of incremental runs.
+  \item \texttt{AtomicReference<CompilationUnitToken> lastToken} that is the last token of the compilation helper.
+  \item \texttt{AtomicReference<LSPGraph> graph} that is the graph of the compilation helper.
+\end{itemize}
+
+Lots of fields are injected in the constructor of the class, this is to allow the class to be as modular as possible. The \texttt{CompilationHelper} class has a lot of methods that are used to perform the compilation.
+
+
