@@ -82,6 +82,29 @@ Workspaces are managed in a particular way, in fact the Language Server for each
     \item if it’s not a gradle project, the Language Server is started for the workspace
 \end{itemize}
 
+\subsubsection{Some Implementation Details}\label{sec:neverlang-implementation-details}
+
+In Neverlang, \textbf{terminal} and \textbf{non-terminal} symbols are treated in a special way. In the Listing~\ref{lst:type-production} the \texttt{TypeProduction} class is used to represent productions in Neverlang. The \texttt{TypeProduction} class has two counter, \texttt{terminalCounter} and \texttt{nonTerminalCounter}, which are used to keep track of the number of terminal and non-terminal symbols in the production. The \texttt{terminalCounter} and \texttt{nonTerminalCounter} are incremented whenever a terminal or non-terminal symbol is added to the production. The \texttt{terminalCounter} and \texttt{nonTerminalCounter} are used to determine the type of the production, which can be either a terminal production, a non-terminal production, or a mixed production.
+
+\begin{Listing}
+    \centering
+    \showjava*[1\textwidth]{TypeProduction.java}
+    \caption{TypeProduction class to represent productions in Neverlang}
+    \label{lst:type-production}
+\end{Listing}
+
+\subsubsection{Different Ways to Referer to the Same Symbol}\label{sec:neverlang-different-ways-referer}
+
+In Neverlang, there are different ways to refer to the same symbol. For example, we can use the position of the symbol in the production to refer to it, or we can use the alias of the symbol to refer to it. The alias of the symbol is a string that is used to refer to the symbol in the production. The alias of the symbol is set when the symbol is added to the production. The alias of the symbol is used to refer to the symbol in the production, and it is used to generate the symbol identifier for the symbol.
+
+\begin{Listing}
+    \centering
+    \showneverlang*[1\textwidth]{ModuleProduction.nl}
+    \caption{Module production in Neverlang}
+    \label{lst:module-production}
+\end{Listing}
+
+Consider the code in Listing~\ref{lst:module-production}. There is the relative typelang code that performs the binding while, it can be noted that when there is no label associated with the production, the production type is bound to the "PRODUCTION" identifier, this identifier will be ignored in the binding phase in~\ref{lst:type-production}.
 
 \subsubsection{Before and After LSP}\label{sec:neverlang-before-after-lsp}
 
@@ -91,12 +114,12 @@ Before the LSP generation, the source code of Neverlang in Visual Studio Code wa
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{./imgs/neverlang-lsp-before.png}
+        \includegraphics[width=\linewidth]{./imgs/neverlang-lsp-before-vim.png}
         \caption{Neverlang source code before the LSP generation}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{./imgs/neverlang-lsp-after.png}
+        \includegraphics[width=\linewidth]{./imgs/neverlang-lsp-after-vim.png}
         \caption{Neverlang source code after the LSP generation}
     \end{minipage}
     \label{fig:neverlang-lsp-before-after}
