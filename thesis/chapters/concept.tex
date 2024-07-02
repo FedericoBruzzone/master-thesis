@@ -1,5 +1,40 @@
 \chapter{Concept}\label{chap:Concept}
 
+\section{The relevance of the type system in the LSP design}\label{sec:concept:RelevanceOfTheTypeSystem}
+
+The type system is the core of the LSP design. We illustrate the need of having a type system by focusing on the ability to respond to requests from a \textit{Language Client}.
+
+In the reminder of this section, we will evaulate the relevance for three of the most important LSP feautres introduced in \ref{subsec:bacground:KeyMethodsOverview}.
+
+\subsubsection{Diagnostic Analysis}\label{subsubsec:concept:DiagnosticAnalysis}
+
+Currently, the LSP provides the ability to perform \textit{diagnostic analysis} on the code. This feature is useful to provide feedback to the user about the correctness of the code.
+In compilers design, a \textit{Diagnostic} can be produced by different phases of compilation, such as the \textit{lexical analysis}, \textit{syntax analysis}, and \textit{semantic analysis}.
+The \textbf{Syntax Errors} are detected by the \textit{lexical analysis} and \textit{syntax analysis}, usually during the \textit{parsing} phase. The \textbf{Semantic Errors} are detected by the \textit{semantic analysis}, usually during the \textit{type checking} phase.
+In modern compilers, an additional phases can be added to the compilation process, \textit{data flow analysis} and \textit{control flow analysis}, that can be used to detect more complex errors, such as \textit{unreachable code} or \textit{dead code}.
+
+In Language Workbenches world, usually it is common to have an instance of a \textbf{Language} and a \textbf{Source Code} that should be parsed and analyzed by the Language.
+Taking into account the \textbf{Syntax Errors}, assuming that the \textbf{Language} is able to parse the \textbf{Source Code} and the \textbf{Language} is able to provide errors and warnings during the \textit{parsing} phase, should be easy to provide the \textit{Syntax Errors} to the \textit{Language Client} (see Listing \ref{lst:concept:SyntaxError}).
+
+\begin{Listing}[t]
+    \centering
+    \showjava*[1\textwidth]{SyntaxError.java}
+    \caption{Example of catching a Syntax Error in Java}
+    \label{lst:concept:SyntaxError}
+\end{Listing}
+
+The \textbf{Semantic Errors} and \textbf{Data Flow Analysis} are more complex to implement. In fact, in order to detect a \textit{Semantic Error}, the \textbf{Language} should be able to perform \textit{type checking} on the \textbf{Source Code} in order to verify that the code can be executed without any unexpected errors. The \textit{Data Flow Analysis} is necessary to understand if the code is reachable, and to do this, the \textbf{Language} should be able to perform static analysis on the \textbf{Source Code}.
+
+\subsubsection{Jump to Definition}\label{subsubsec:concept:JumpToDefinition}
+The ability to access the definition of a symbol, such as a function or a variable, is a common feature in modern IDEs.
+To enable this functionality, a \textbf{Symbol Table} is required and should be able to map a given row and column position in the source code to the corresponding symbol and its definition.
+During this phase, the typechecking is required to bind the symbol to its type. This is necessary to provide the correct definition of the symbol to the user.
+In addition to the symbol table, the \textbf{Language} should be able to provide the \textit{Scope} of the symbol, in order to understand if the symbol is visible in the current context.
+
+\subsubsection{Code Completion}\label{subsubsec:concept:CodeCompletion}
+
+To effectively handle this kind of request, such as the one depicted in figure~\ref{fig:completion}, the language server needs to comprehend the type of symbol for which suggestions are to be provided. Once the type is determined, returning relevant suggestions becomes straightforward. However, a challenge arises when suggestions must be presented to the user while they are still writing, as the source code may be syntactically incorrect during the writing process. To address this issue, a parser with error detection and recovery~\cite{Graham79} capabilities is required to enable effective suggestion generation despite the presence of syntax errors.
+
 \section{The type system}\label{sec:concept:TheTypeSystem}
 
 In \ref{subsec:background:TypeSystems}, we introduce the concept of type systems and we give a brief overview of \textit{type checking} and \textit{type inference}. Our goal is to have solid \textit{application programming interfaces} (APIs) to build type systems for each language.
@@ -18,10 +53,10 @@ It is trivial to remember that the type system should also provide the basic fun
   % this is the text of the theorem. the counter is automatically assigned and,
   % in this example, prefixed with the section number. this theorem is numbered with
   %   \ref{def:concept:itemdefinition} and is given on page \pageref{def:concept:itemdefinition}.
-    given that the specifics of the target language for the reference type system are not predetermined (i.e., the language is not known \textit{a priori}), we cannot assume the presence of standard programming constructs such as variables, functions, or objects. therefore, to maintain a broad and adaptable approach, we will use the term \textbf{item} to refer to any of these potential constructs or elements within the system. this ensures that our discussion remains relevant regardless of the particular features and paradigms of the target language.
+    Given that the specifics of the target language for the reference type system are not predetermined (i.e., the language is not known \textit{a priori}), we cannot assume the presence of standard programming constructs such as variables, functions, or objects. therefore, to maintain a broad and adaptable approach, we will use the term \textbf{item} to refer to any of these potential constructs or elements within the system. this ensures that our discussion remains relevant regardless of the particular features and paradigms of the target language.
 \end{mydefinition}
 
-\subsection{type: the basic building block}\label{subsec:concept:typethebasicbuildingblock}
+\subsection{Type: the basic building block}\label{subsec:concept:typethebasicbuildingblock}
 
 The \textbf{Type} is the basic building block of the type system. It is used to represent the type of an expression, such as a variable, a function, or an object. The \textbf{Type} can be a primitive type, such as \textit{int}, \textit{float}, \textit{string} or a custom type, such as a \textit{class}, \textit{interface}, or \textit{enum}.
 
@@ -30,7 +65,7 @@ The name \textbf{type} could be misleading because it does not exactly represent
 \end{mydefinition}
 
 In our concept, during the implementation of the type system, several types will be defined. Each type will have a set of operations that can be performed on it. In abstract terms, we can define a type as a set of operations that can be performed on it.
-Basically, each type should be answer to the following questions:
+Basically, each type should provide an answer to the following questions:
 \begin{enumerate}
     \item What is its \textbf{identifier}?
     \item Can it be \textbf{assignable from} another type with a specific kind of \textbf{variance}?
@@ -123,7 +158,7 @@ A \textbf{Symbol Table Entry} is an entry in the \textbf{Typing Environment} (Sy
 \begin{mydefinition}{Symbol}{concept:symbol}
     A \textbf{Symbol} is a name that represents a value, a variable, a function, or any other item in a program. In the \textbf{Type System}, a \textbf{Symbol} is used to represent a type, a variable, a function, or any other item in the program.
     Usually, symbols are collected during the \textit{parsing} phase of the compilation process and stored in a \textbf{Symbol Table}.
-    A symbol can be a \textit{nonterminal symbol} or a \textit{terminal symbol}. A \textit{nonterminal symbol} is a symbol that can be expanded into other symbols, while a \textit{terminal symbol} is a symbol that cannot be expanded further.
+
 \end{mydefinition}
 
 
@@ -172,12 +207,12 @@ The second question is used to get the \texttt{SymbolTableEntry} associated with
 The third question is used to add a symbol to the \textbf{Typing Environment}. This is useful to add a new symbol to the \textbf{Scope}.
 Finally, the last question is used to remove a symbol from the \textbf{Typing Environment}. This is useful to remove a symbol from the \textbf{Scope}.
 
-In Figure~\ref{lst:concept:type_system}, we have a final representation of the type system.
+In Figure~\ref{lst:concept:type_system}, we have a complete representation of the type system.
 
 \begin{figure}[tbh]
     \centering
     \includegraphics[width=0.9\linewidth]{figs/concept/type_system.pdf}
-    \caption{A final representation of the type system}
+    \caption{A complete representation of the type system}
     \label{lst:concept:type_system}
 \end{figure}
 
@@ -185,7 +220,7 @@ In Figure~\ref{lst:concept:type_system}, we have a final representation of the t
 
 As already mentioned in~\ref{subsubsec:background:TypeInferenceInProgrammingLanguages}, \textbf{Type Inference} is the ability to infer the type of an expression without the need to explicitly specify it. It is used to determine the type of an expression based on the context in which it appears.
 In our concept, \textbf{Type Inference} is used to infer the type of an expression in the \textbf{Type System}.
-The \textbf{Type Inference} should be able to answer to the following questions:
+The \textbf{Type Inference} should provide an answer to the following questions:
 \begin{enumerate}
     \item Can I infer the type of an expression?
     \item Can I resolve the type of an identifier from the \textbf{Typing Environment}?
@@ -193,11 +228,11 @@ The \textbf{Type Inference} should be able to answer to the following questions:
 
 The first question is used to determine if the type of an expression can be inferred. If the type of an expression can be inferred, the \textbf{Type Inference} should infer the type of the expression. The second question is used to resolve the type of an identifier from the \textbf{Typing Environment}. This is useful to infer the type of an expression based on the context in which it appears.
 
-There are multiple algorithms to perform \textbf{Type Inference}, such as \textit{Hindley-Milner}~\cite{Hindley69, Milner78}, \textit{unification-based}~\cite{Robinson65}, and \textit{constraint-based}~\cite{Pierce02} algorithms. In our concept, we will use a \texttt{Strategy Pattern} to define the \textbf{Type Inference} algorithm.
+There are multiple algorithms to perform \textbf{Type Inference}, such as \textit{Hindley-Milner}~\cite{Hindley69, Milner78}, \textit{unification-based}~\cite{Robinson65},\textit{constraint-based}~\cite{Pierce02} algorithms and \textit{Design Patterns}~\cite{Gamma95}. In our concept, we will use a \texttt{Strategy Pattern} to define the \textbf{Type Inference} algorithm.
 In order to perform \textbf{Type Inference}, we should have a list of all possibile candidates for the type of the expression. This list creation is performed by the \textbf{Type Lookup} algorithm~\ref{alg:typelookup}.
 
 \begin{algorithm}[h]
-\caption{Pseudocode to show how type lookup is performed\label{alg:typelookup}}
+\caption{Type Lookup\label{alg:typelookup}}
 \begin{algorithmic}
 \Require $I$ identifier, $SIG$ signature, $S$ scope
 \Ensure$L$ list of all candidates
@@ -245,7 +280,7 @@ After parsing the program, the \textbf{Typing Environment} should contain the fo
         \textbf{main} & \texttt{two} & \texttt{int} & \texttt{use} & \texttt{7:37 - 7:39} &  \\
         \bottomrule
     \end{tabular}
-    \caption{Language Workbenches Supporting Modularization, Composition and Precompiled Features}
+    \caption{Typing Environment of the program in Listing~\ref{lst:concept:Example}}
     \label{tab:concept:Example}
 \end{table}
 
@@ -289,7 +324,7 @@ Consider the simple JavaScript program in Listing~\ref{lst:concept:sum}, which d
 \begin{Listing}[tbh]
     \centering
     \showjs*[0.9\textwidth]{sum.js}
-    \caption{A simple JavaScript program that defines two functions to sum two numbers.}
+    \caption{A simple JavaScript program that defines two functions to sum two numbers}
     \label{lst:concept:sum}
 \end{Listing}
 
@@ -297,7 +332,7 @@ The AST of the program in Listing~\ref{lst:concept:sum} is shown in Figure~\ref{
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figs/concept/simple_ast.pdf}
-    \caption{AST of source code~\ref{lst:concept:sum}.}
+    \caption{AST of source code~\ref{lst:concept:sum}}
     \label{lst:concept:ast_sum}
 \end{figure}
 
@@ -374,7 +409,7 @@ Remarking, each compilation unit task must be associated with a single compilati
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figs/concept/simple_ast_annotated.pdf}
-    \caption{AST with \textbf{task} and \textbf{priority} annotations.}
+    \caption{AST with \textbf{task} and \textbf{priority} annotations}
     \label{lst:concept:ast_sum_annotated}
 \end{figure}
 
@@ -450,15 +485,12 @@ Language workbenches aim to provide tools and frameworks to define and manipulat
 
 \noindent \textbf{Key Benefits}:
 \begin{itemize}
-    \item \textbf{Reusability}: Modular type systems enable the reuse of type definitions and operations across different languages and contexts. For example, a module that defines numeric types and arithmetic operations can be reused in multiple languages without modification.
-    \item \textbf{Extensibility}: New types and operations can be added to the system without altering the existing modules. This is particularly useful in evolving languages or when creating domain-specific languages (DSLs) that require specialized types.
-    \item\textbf{ Flexibility}: Modules can be selectively activated or deactivated, allowing for the customization of the type system to meet specific needs. This is essential for supporting multiple paradigms or language variants within the same framework.
+    \item \textbf{Reusability}: The degree to which a software module or other work product can be used in more than one computer program or software system. In the type system context, a modular type systems enable the reuse of type definitions and operations across different languages and contexts. For example, a module that defines numeric types and arithmetic operations can be reused in multiple languages without modification.
+    \item \textbf{Extensibility}: The ease with which a system or component can be modified to  increase its storage or functional capacity. In the type system context, new types and operations can be added to the system without altering the existing modules. This is particularly useful in evolving languages or when creating domain-specific languages (DSLs) that require specialized types.
+    \item\textbf{ Flexibility}: The ease with which a system or component can be modified for use in applications or environments other than those for which it was specifically designed. In the type system context, the modules can be selectively activated or deactivated, allowing for the customization of the type system to meet specific needs. This is essential for supporting multiple paradigms or language variants within the same framework.
 \end{itemize}
 
-\noindent \textbf{Language Product Lines (LPLs)}
-
-In SPLs, the concept of modular type systems aligns with the idea of product families. Each "product" in the line can be seen as a specific configuration of the language, with certain type system features enabled or disabled.
-Creating a Family of Type Systems
+\subsubsection{Creating a Family of Type Systems}
 
 \begin{itemize}
     \item \textbf{Type System Artifacts}: Each component of the type system (such as type definitions, type checking rules, and type inference mechanisms) is treated as an artifact. These artifacts can be independently developed, maintained, and combined.
@@ -473,40 +505,6 @@ Consider a scenario where a language product line includes multiple variants of 
 
 For instance, the type-checking module for strict type enforcement can be activated for the strict variant, ensuring that all variables must be explicitly typed. In contrast, the lenient variant can activate a module that implements type inference rules, allowing the system to deduce types where explicit annotations are missing. Additionally, common modules that handle basic type definitions and generic type operations can be shared across both variants, promoting reuse and reducing redundancy.
 
-\section{The relevance of the type system in the LSP design}\label{sec:concept:RelevanceOfTheTypeSystem}
-
-The type system is the core of the LSP design. We illustrate the need of having a type system by focusing on the ability to respond to requests from a \textit{Language Client}.
-
-In the reminder of this section, we will evaulate the relevance for three of the most important LSP feautre introduced in \ref{subsec:bacground:KeyMethodsOverview}.
-
-\subsubsection{Diagnostic Analysis}\label{subsubsec:concept:DiagnosticAnalysis}
-
-Currently, the LSP provides the ability to perform \textit{diagnostic analysis} on the code. This feature is useful to provide feedback to the user about the correctness of the code.
-In compilers design, a \textit{Diagnostic} can be produced by different phases of compilation, such as the \textit{lexical analysis}, \textit{syntax analysis}, and \textit{semantic analysis}.
-The \textbf{Syntax Errors} are detected by the \textit{lexical analysis} and \textit{syntax analysis}, usually during the \textit{parsing} phase. The \textbf{Semantic Errors} are detected by the \textit{semantic analysis}, usually during the \textit{type checking} phase.
-In modern compilers, an additional phases can be added to the compilation process, \textit{data flow analysis} and \textit{control flow analysis}, that can be used to detect more complex errors, such as \textit{unreachable code} or \textit{dead code}.
-
-In Language Workbenches world, usually it is common to have an instance of a \textbf{Language} and a \textbf{Source Code} that should be parsed and analyzed by the Language.
-Taking into account the \textbf{Syntax Errors}, assuming that the \textbf{Language} is able to parse the \textbf{Source Code} and the \textbf{Language} is able to provide errors and warnings during the \textit{parsing} phase, should be easy to provide the \textit{Syntax Errors} to the \textit{Language Client} (see Listing \ref{lst:concept:SyntaxError}).
-
-\begin{Listing}[t]
-    \centering
-    \showjava*[1\textwidth]{SyntaxError.java}
-    \caption{Example of catching a Syntax Error in Java}
-    \label{lst:concept:SyntaxError}
-\end{Listing}
-
-The \textbf{Semantic Errors} and \textbf{Data Flow Analysis} are more complex to implement. In fact, in order to detect a \textit{Semantic Error}, the \textbf{Language} should be able to perform \textit{type checking} on the \textbf{Source Code} in order to verify that the code can be executed without any unexpected errors. The \textit{Data Flow Analysis} is necessary to understand if the code is reachable, and to do this, the \textbf{Language} should be able to perform static analysis on the \textbf{Source Code}.
-
-\subsubsection{Jump to Definition}\label{subsubsec:concept:JumpToDefinition}
-The ability to access the definition of a symbol, such as a function or a variable, is a common feature in modern IDEs.
-To enable this functionality, a \textbf{Symbol Table} is required and should be able to map a given row and column position in the source code to the corresponding symbol and its definition.
-During this phase, the typechecking is required to bind the symbol to its type. This is necessary to provide the correct definition of the symbol to the user.
-In addition to the symbol table, the \textbf{Language} should be able to provide the \textit{Scope} of the symbol, in order to understand if the symbol is visible in the current context.
-
-\subsubsection{Code Completion}\label{subsubsec:concept:CodeCompletion}
-
-To effectively handle this kind of request, such as the one depicted in figure~\ref{fig:completion}, the language server needs to comprehend the type of symbol for which suggestions are to be provided. Once the type is determined, returning relevant suggestions becomes straightforward. However, a challenge arises when suggestions must be presented to the user while they are still writing, as the source code may be syntactically incorrect during the writing process. To address this issue, a parser with error detection and recovery~\cite{Graham79} capabilities is required to enable effective suggestion generation despite the presence of syntax errors.
 
 
 \section{LSP: a modular approach}\label{sec:concept:LSPAModularApproach}
@@ -519,18 +517,18 @@ When a SPL is applied to the implementation of a programming language, each prod
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figs/concept/module_with_lsp.pdf}
-    \caption{Proposed approach to modular implementation of LSP and DAP.}
+    \caption{Proposed approach to modular implementation of LSP and DAP}
     \label{lst:concept:module_with_lsp}
 \end{figure}
 
-What I want to prove with this thesis is that the implementation of an LS could be a \textit{bottom-up} activity, where each LSP or DAP functionality can be seen as a separate \textit{feature module} \cite{Batory04, Kastner11} splitted across the language artifacts, where each artifacts can be part of one or more \textit{language features} (see Figure~\ref{lst:concept:module_with_lsp}). These units can be composed to provide a modular implementation of the LS. This approach is supported by the fact that the LSP and the DAP are \textit{language-agnostic} protocols~\cite{Niephaus20, Rodriguez-Echeverria18} (see Fig.~\ref{lst:lsp}), which means that it does not impose any restrictions on the implementation of the LS, as long as it respects the specification of the protocol.
+What we want to prove with this thesis is that the implementation of an LS could be a \textit{bottom-up} activity, where each LSP or DAP functionality can be seen as a separate \textit{feature module} \cite{Batory04, Kastner11} splitted across the language artifacts, where each artifacts can be part of one or more \textit{language features} (see Figure~\ref{lst:concept:module_with_lsp}). These units can be composed to provide a modular implementation of the LS. This approach is supported by the fact that the LSP and the DAP are \textit{language-agnostic} protocols~\cite{Niephaus20, Rodriguez-Echeverria18} (see Fig.~\ref{lst:lsp}), which means that it does not impose any restrictions on the implementation of the LS, as long as it respects the specification of the protocol.
 In \textit{feature-oriented programming} (FOP) \cite{Apel13, Czarnecki04, Prehofer01}, a feature module is a unit of composition that encapsulates a specific functionality, and it is a first-class entity that can be composed with other feature modules to form a software system; similar to an aspect module that encapsulates a crosscutting concern in \textit{aspect-oriented programming} \cite{Kiczales01, Kiczales97, Laddad03}. Using FOP in language development, a family of languages~\cite{Liebig13} can be defined by composing feature modules~\cite{Wende09}, and a language can be seen as a product of the family.
 In this way, the implementation of the LS is a \textit{bottom-up} activity, where each artifact has attached a part of LSP and DAP feature module that implements the LS functionality for that \textit{language fragment}, and these units can be composed to provide a modular implementation having \textbf{variants} of the LS.
 
 \subsection{Index Tree}\label{subsec:concept:IndexTree}
 
 \begin{algorithm}[tbh]
-    \caption{The algorithm used to get a symbol from IndexTree}\label{alg:lookup}
+    \caption{Index Tree Growth}\label{alg:index_tree}
     \begin{algorithmic}
         \Require $(row, col)$ a position on the file, $N$ the node of the index tree
         \Ensure A set of SymbolTableEntry entries
@@ -555,14 +553,14 @@ The Index Tree is a sophisticated data structure specifically designed to store 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figs/concept/index_tree.pdf}
-    \caption{Index Tree structure for the source code in Listing~\ref{lst:concept:sum}.}
+    \caption{Index Tree structure for the source code in Listing~\ref{lst:concept:sum}}
     \label{lst:conept:lsp_combinations}
 \end{figure}
 
 
 The Index Tree is structured as follows:
 \begin{itemize}
-    \item \textbf{Nodes and SymbolTableEntry:} Each node in the Index Tree is represented by a \texttt{SymbolTableEntry}. This entry encapsulates all relevant information about a particular symbol in the source code, including its type, position, and references.
+    \item \textbf{Nodes and SymbolTableEntry:} each node in the Index Tree is represented by a \texttt{SymbolTableEntry}. This entry encapsulates all relevant information about a particular symbol in the source code, including its type, position, and references.
     \item \textbf{Internal Nodes and Folding Range:} Internal nodes in the tree must possess a folding range. This range is a continuous segment within the source code that encompasses all the symbols contained within the node. The folding range ensures that related symbols are grouped together logically.
     \item \textbf{Selection Range:} The selection range refers to the exact range within a node that contains a specific symbol. It is more precise than the folding range and is used for pinpointing the location of a symbol within the node.
 \end{itemize}
@@ -604,8 +602,8 @@ During the parsing and static analysis phases, the language server gathers diagn
 When a user requests information about a specific position in a file—such as the definition, references, or details on hover—the server follows these steps:
 
 \begin{itemize}
-    \item \textbf{Index Tree Lookup}: Using an index tree, the server identifies the symbol associated with the requested position, if it exists.
-    \item \textbf{Graph Traversal}: For definition and reference queries, the server traverses the symbol dependency graph to retrieve all relevant definitions or references of that symbol. This traversal is guided by the relationships defined in the graph.
+    \item \textbf{Index Tree Lookup}: Using an index tree, the server identifies the symbol associated with the requested position, if it exists.~\ref{alg:index_tree}
+    \item \textbf{Graph Traversal}: For definition and reference queries, the server traverses the symbol dependency graph to retrieve all pieces of relevant definitions or references of that symbol. This traversal is guided by the relationships defined in the graph.
     \item \textbf{Hover Information}: For hover queries, the server executes methods annotated with @Hover to provide detailed contextual information about the symbol at the specified position.
 \end{itemize}
 
@@ -616,7 +614,7 @@ These capabilities involve listing and presenting symbols and structural element
 \begin{itemize}
     \item \textbf{Document Symbol}: Lists all symbols present in a file using the index tree.
     \item \textbf{Semantic Token}: Provides structured information about tokens in the code for language-specific operations.
-    \item \textbf{Inlay Hint}: Displays subtle UI hints, annotations, or metadata within the editor.
+    \item \textbf{Inlay Hint}: Displays UI hints, annotations, or metadata within the editor.
     \item \textbf{Folding Range}: Enables collapsing and expanding regions of code based on predefined folding ranges associated with symbols.
 \end{itemize}
 
@@ -624,6 +622,10 @@ These capabilities involve listing and presenting symbols and structural element
 Other functionalities, though not implemented by default, can be achieved by leveraging data structures obtained during static analysis. These capabilities include advanced tasks such as semantic analysis, type checking, and code optimization, which benefit from the comprehensive understanding of code structure and dependencies provided by the symbol dependency graph.
 
 In summary, the symbol dependency graph is pivotal in enabling precise navigation, comprehensive symbol analysis, and the delivery of rich contextual information within the language server ecosystem. Its structured representation of symbol relationships forms the backbone for many essential IDE features, enhancing developer productivity and code comprehension.
+
+\subsection{Modular Implementation}\label{subsec:concept:ModularImplementation}
+
+
 
 \section{A \textit{modular} DSL for semplifying the LSP and type system development}\label{sec:concept:AModularDSLForSemplifyingTheLSPAndTypeSystemDevelopment}
 
@@ -642,7 +644,7 @@ In summary, the symbol dependency graph is pivotal in enabling precise navigatio
   \bnfprod{priority}
     {\bnfts{[ run } \bnfpn{nlg nt} \bnfts{ priority } \bnfpn{scope} \bnftd{ [} \bnfpn{callback} \bnftd{]} \bnfts{ ]}}\\
   \bnfprod{callback}
-    {\bnfts{ then } \bnfpn{callback}}\\
+    {\bnfts{ then } \bnfpn{callback n}}\\
   \bnfprod{type definition or}
     {\bnfpn{nlg type} \bnfpn{nlg token} \bnfor \bnfpn{type} \bnfpn{nlg token}}\\
   \bnfprod{type inferencing}
@@ -668,27 +670,27 @@ In summary, the symbol dependency graph is pivotal in enabling precise navigatio
   \bnfprod{digit}
     {\bnfts{[0-9]}}\\
   \bnfprod{scope}
-    {\bnftd{the name of the scopes defined in the language}}\\
+    {\bnftd{the names of the scopes defined in the language}}\\
   \bnfprod{type}
-    {\bnftd{the name of the types defined in the language}}\\
+    {\bnftd{the names of the types defined in the language}}\\
   \bnfprod{signature}
-    {\bnftd{the name of the signatures defined in the language}}\\
-  \bnfprod{callback}
-    {\bnftd{the name of the callbacks defined in the language}}
+    {\bnftd{the names of the signatures defined in the language}}\\
+  \bnfprod{callback n}
+    {\bnftd{the names of the callbacks defined in the language}}
 \end{bnf*}
-  \caption{Grammar for the TypeLang DSL.}
+  \caption{Grammar for the TypeLang DSL}
   \label{lst:concept:typelang_grammar}
 \end{Listing}
 
 \begin{Listing}
     \centering
     \showneverlang*[1\textwidth]{FunDeclaratationJava.nl}
-    \caption{A Neverlang module that defines a function declaration.}
+    \caption{A Neverlang module that defines a function declaration}
     \label{lst:concept:fun_declaration_java}
 \end{Listing}
 
 
-In Section~\ref{subsec:concept:CompilationUnitTaskATaskToPerformCompilation}, we discussed effective techniques for managing the traversal of an Abstract Syntax Tree (AST) in code. Listing~\ref{lst:concept:fun_declaration_java} provides a concrete example of how the semantic action linked to the production for the declaration of a javascript function can be implemented. The portion enclosed in \texttt{0.{}.} corresponds to the semantic action associated with the FunDeclaration node. When the AST in Y is referenced, this code is executed when the sum1~\ref{lst:concept:sum} function is visited.
+In Section~\ref{subsec:concept:CompilationUnitTaskATaskToPerformCompilation}, we discussed effective techniques for managing the traversal of an Abstract Syntax Tree (AST) in code. Listing~\ref{lst:concept:fun_declaration_java} provides a concrete example of how the semantic action linked to the production for the declaration of a javascript function can be implemented. The portion enclosed in \texttt{0.{}} corresponds to the semantic action associated with the FunDeclaration node. The AST in~\ref{lst:concept:ast_sum} is referenced, this code is executed when the sum1~\ref{lst:concept:sum} function is visited.
 
 Key points about this code include the following: Lines 27-39 detail the creation of a new symbol table entry for the function identifier symbol, which is associated with the TypeFunction type; a specific implementation of the Type interface. In lines 31-47, a new task is registered to visit the body of the function when executed. Lines 51-51 involve evaluating the params node within the scope of the newly created function. In line 53, a TypesystemException exception is caught and forwarded on a shared communication channel, confining the error to a specific code region and allowing the AST visit to continue.
 
@@ -706,7 +708,7 @@ Next, the grammar introduces the concept of type scope definition. By defining \
 
 In the context of task definition, the rule \texttt{define scope module \$1.token from \#0 to \#1} followed by \texttt{[ run \$1 priority module ]} specifies a new compilation unit task. This task is designed to visit node \texttt{\$1} with the priority set to \texttt{module}. The inclusion of square brackets denotes the encapsulation of the task definition within a specific scope and range.
 
-Callbacks are handled through two primary rules. The first, \texttt{define customType \$2.token then customCallback}, ensures that a callback function named \texttt{customCallback} is executed at the end of binding a custom type. The second rule, \texttt{define scope module \$1.token from \#0 to \#1 [ run \$1 priority module then customCallback ]}, integrates a callback execution at the end of a task, ensuring custom behavior post-task execution.
+Callbacks are handled through two primary rules. The first, \texttt{define customType \$2.token then customCallback}, ensures that a callback function named \linebreak \texttt{customCallback} is executed at the end of binding a custom type. The second rule, \texttt{define scope module \$1.token from \#0 to \#1 [ run \$1 priority module then customCallback ]}, integrates a callback execution at the end of a task, ensuring custom behavior post-task execution.
 
 Type inferencing rules provide mechanisms to infer types based on specific signatures and tokens. The rule \texttt{infer customSignature \$1.token} infers a type with a signature named \texttt{customSignature} and token \texttt{\$1.token}. Furthermore, \texttt{infer customSignature \$1.token => \$1.type} stores the inferred type in \texttt{\$1.type}. The rule \texttt{infer function \$1.token with [\$1 \$2]} infers a function type, passing \texttt{\$1.type} and \texttt{\$2.type} as parameters to the function constructor signature.
 
@@ -723,7 +725,7 @@ We are able to use two different kind of annotations, both of them bring the sam
 \begin{Listing}
     \centering
     \showjava*[1\textwidth]{TypeLangAnnotations.java}
-    \caption{TypeLang annotations.}
+    \caption{TypeLang annotations}
     \label{lst:concept:typelang_annotations}
 \end{Listing}
 
@@ -732,7 +734,7 @@ Additionally, we have another listing~\ref{lst:concept:typelang_grammar} showing
 \begin{Listing}
     \centering
     \showneverlang*[1\textwidth]{FunDeclarationTypecheck.nl}
-    \caption{A Neverlang module that defines a function declaration using the DSL.}
+    \caption{A Neverlang module that defines a function declaration using the DSL}
     \label{lst:concept:fun_declaration_typecheck}
 \end{Listing}
 
@@ -741,7 +743,7 @@ Additionally, we have another listing~\ref{lst:concept:typelang_grammar} showing
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figs/concept/lsp_combinations.pdf}
-    \caption{Traditional approach vs LSP/DAP approach to language support.}
+    \caption{Traditional approach vs LSP/DAP approach to language support}
     \label{lst:concept:lsp_combinations}
 \end{figure}
 
@@ -753,9 +755,9 @@ Currently, there are lots of \textit{editor}, such as \textit{Visual Studio Code
 
 One of the key components of a modern code editor is syntax highlighting. Proper syntax highlighting significantly enhances the readability and maintainability of code by visually distinguishing elements such as keywords, operators, strings, and comments. In our approach, we have developed a sophisticated \textbf{Syntax Highlighting Generator} that receive in input the keywords and other syntactic elements from a given language specification and generates the corresponding syntax highlighting configuration for various editors.
 
-By parsing the language's grammar and lexical rules, the parser gets keywords, operators, and other syntactic constructs. The generator then maps these elements to appropriate highlighting rules for each supported editor. This process ensures that syntax highlighting is both accurate and consistent across different editors.
+By parsing the language's grammar and lexical rules, the parser gets keywords, operators, and other syntactic constructs. The generator then maps these elements to appropriate highlighting rules for each compatible editor. This process ensures that syntax highlighting is both accurate and consistent across different editors.
 
-Our generator supports a wide range of editors, including Visual Studio Code, Vim/Nvim, Emacs. For each editor, the generator produces a configuration file or plugin that can be easily integrated into the editor's ecosystem. This automation not only saves significant development time but also ensures that the syntax highlighting is always up-to-date with the latest language specifications.
+Our generator is compatible a wide range of editors, including Visual Studio Code, Vim/Nvim, Emacs. For each editor, the generator produces a configuration file or plugin that can be easily integrated into the editor's ecosystem. This automation not only saves significant development time but also ensures that the syntax highlighting is always up-to-date with the latest language specifications.
 
 Moreover, the Syntax Highlighting Generator is highly customizable. Developers can specify additional highlighting rules or override the default behavior to accommodate specific needs. This flexibility makes our generator suitable for both general-purpose programming languages and domain-specific languages (DSLs).
 
@@ -791,9 +793,9 @@ By automating the generation of client code, our Client Generator dramatically r
 
 \subsection{Modular Reuse and Reduction to $N \times 1$} \label{subsec:concept:ModularReuseAndReductionToNtimes1}
 
-An even more groundbreaking aspect of our approach is the shift from $\mathbf{L} \times 1$ to $\mathbf{N} \times 1$, where $\mathbf{N}$ is significantly less than $\mathbf{L}$. This incredible reduction is made possible by the modular design of our tools, which allows components developed for one language to be reused across multiple other languages.
+An even more aspect of our approach is the shift from $\mathbf{L} \times 1$ to $\mathbf{N} \times 1$, where $\mathbf{N}$ is significantly less than $\mathbf{L}$. This incredible reduction is made possible by the modular design of our tools, which allows components developed for one language to be reused across multiple other languages.
 
-This modularity is a game-changer. Components such as syntax highlighting rules, LSP implementations, and debugging configurations can be shared and reused, drastically cutting down the number of unique implementations needed. When a new language is introduced, it can often leverage existing components, requiring only minor modifications or extensions. This reuse is facilitated by the interoperability of our generated modules, ensuring that the core functionalities are consistent and reliable across different languages and editors.
+This modularity is crucial. Components such as syntax highlighting rules, LSP implementations, and debugging configurations can be shared and reused, drastically cutting down the number of unique implementations needed. When a new language is introduced, it can often leverage existing components, requiring only minor modifications or extensions. This reuse is facilitated by the interoperability of our generated modules, ensuring that the core functionalities are consistent and reliable across different languages and editors.
 
 For example, if a new language shares similar syntactic or semantic structures with an existing one, the syntax highlighting and LSP components from the existing language can be quickly adapted and reused. This reuse extends beyond mere code copying; our system is designed to recognize and integrate these components seamlessly, ensuring that updates and improvements to shared components propagate across all languages that use them.
 

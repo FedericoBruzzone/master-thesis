@@ -16,7 +16,7 @@ The Language Server Protocol\footnote{\url{https://microsoft.github.io/language-
 
 Usually, the LSP Clients are developed as plugins for popular editors or IDEs decresing the effort to support a new language in a given editor. The LSP Clients are responsible for sending requests to the language server and processing the responses. The language server is responsible for providing language-specific features. The LSP defines a set of messages that are used to communicate between the language server and the editor or IDE. These messages include requests for code completion, code navigation, and code analysis, as well as notifications for changes to the document, diagnostics, and progress reports.
 
-Language servers are \textit{de facto} standard for providing language-specific features in editors and IDEs. The LSP is supported by a wide range of editors and IDEs, including Noevim\footnote{\url{https://neovim.io/doc/user/lsp.html}}, Visual Studio Code\footnote{\url{https://code.visualstudio.com/api/language-extensions/language-server-extension-guide}}, Eclipse\footnote{\url{https://www.eclipse.org/community/eclipse_newsletter/2017/may/article1.php}}, and IntelliJ IDEA\footnote{\url{https://plugins.jetbrains.com/docs/intellij/language-server-protocol.html}}. There are several language servers available for popular programming languages, including Rust, TypeScript, Python, and Java and most of them are open-source\footnote{\url{https://microsoft.github.io/language-server-protocol/implementors/servers}}.
+Language servers are \textit{de facto} standard for providing language-specific features in editors and IDEs. The LSP is supported by a wide range of editors and IDEs, including Neovim\footnote{\url{https://neovim.io/doc/user/lsp.html}}, Visual Studio Code\footnote{\url{https://code.visualstudio.com/api/language-extensions/language-server-extension-guide}}, Eclipse\footnote{\url{https://www.eclipse.org/community/eclipse_newsletter/2017/may/article1.php}}, and IntelliJ IDEA\footnote{\url{https://plugins.jetbrains.com/docs/intellij/language-server-protocol.html}}. There are several language servers available for popular programming languages, including Rust, TypeScript, Python, and Java and most of them are open-source.\footnote{\url{https://microsoft.github.io/language-server-protocol/implementors/servers}}
 
 The LSP is initiated by Microsoft and is now an open standard that is maintained by the Language Server Protocol Working Group. It was designed for the use with the Visual Studio Code editor, but it has since been adopted by other editors and IDEs. The LSP is under open-source license and is available on GitHub\footnote{\url{https://github.com/microsoft/language-server-protocol}}.
 
@@ -34,9 +34,11 @@ All messages refer to a \textit{method} that is a string containing the name of 
 The JSON-RPC specification includes the ability for clients to batch multiple requests or notifications by sending them as a list. The server is expected to respond with a corresponding list of results for each request. Additionally, the server has the flexibility to process these requests concurrently.
 
 \subsection{Command Specifications}\label{subsec:background:CommandSpecifications}
-The LSP is defined on top of the JSON-RPC protocol described in section \ref{subsec:background:JSONRPC}. In abstract terms, the LSP defines a set of command that can be sent between a client and a server. In the Language Server Protocol Specification\footnote{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification}, these commands are divided into four categories: \textit{Language Features}, \textit{Text Document Synchronization}, \textit{Workspace Features}, and \textit{Window Features}.
+The LSP is defined on top of the JSON-RPC protocol described in section \ref{subsec:background:JSONRPC}. In abstract terms, the LSP defines a set of command that can be sent between a client and a server. In the Language Server Protocol Specification,\footnote{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification} these commands are divided into four categories: \textit{Language Features}, \textit{Text Document Synchronization}, \textit{Workspace Features}, and \textit{Window Features}.
 
 \subsubsection{Language Features}\label{subsec:background:LanguageFeatures}
+
+In the rest of this work, we will use the term \textit{Language Features} in the context of the Langauge Product Lines (LPLs) to refer to the features that are specific to a language.
 The \textit{Language Features} provide the smarts of the language server. Usually, the client sends a request to the server to get information about the document as a tuple of \texttt{TextDocument} and \texttt{Position}. \textit{Code comprehension} and \textit{Coding Features} are the two main categories of commands in this category.
 
 Here a brief description of the most important commands in this category:
@@ -114,7 +116,7 @@ In the figure \ref{fig:diagnostic} we can see an example of diagnostics in Neovi
 \subsubsection{Workspace/Document Symbols}\label{subsubsec:background:WorkspaceDocumentSymbols}
 
 \fbox{
-    \parbox{\textwidth}{
+    \parbox{0.95\textwidth}{
         \centering
         \textbf{RPC Method}:  \href{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/\#workspace_symbol}{textDocument/workspaceSymbol} or \href{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/\#textDocument_documentSymbol}{textDocument/documentSymbol}
     }
@@ -131,7 +133,7 @@ The difference between \texttt{textDocument/workspaceSymbol} and \texttt{textDoc
 
 \subsubsection{Jump to Definition}\label{subsubsec:background:JumpToDefinition}
 \fbox{
-    \parbox{\textwidth}{
+    \parbox{0.95\textwidth}{
         \centering
         \textbf{RPC Method}:  \href{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/\#textDocument_definition}{textDocument/definition}
     }
@@ -142,11 +144,11 @@ The code navigation is an important feature of the LSP.
 
 The \texttt{textDocument/definition} request is sent from the client to the server to resolve the definition location of a symbol at a given text document position. The server should return the location of the symbol's definition, such as the file path and line number.
 
-In the figure \ref{fig:hover} we can see that at the top of floating window there is the signature of the function \texttt{hello\_world} meaning that the goind to definition will take us to the function definition.
+In the figure \ref{fig:hover} we can see that at the top of floating window there is the signature of the function \texttt{hello\_world} meaning that the jump to definition will take us to the function definition.
 
 \subsubsection{Find References}
 \fbox{
-    \parbox{\textwidth}{
+    \parbox{0.95\textwidth}{
         \centering
         \textbf{RPC Method}:  \href{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/\#textDocument_references}{textDocument/references}
     }
@@ -157,7 +159,7 @@ The retrieval of references is the inverse of the jump to definition explained i
 
 The \texttt{textDocument/references} request is sent from the client to the server to resolve project-wide references for the symbol denoted by the given text document position. The server should return a list of references to the symbol, such as the file path, line number, and the column number.
 
-In the figure \ref{fig:references} we can see that the function \texttt{hello\_world} is being referenced twice in the \texttt{main} function and another occurence is the function definition. In fact, three references are shown in the right window.
+In Figure \ref{fig:references} we can see that the function \texttt{hello\_world} is being referenced twice in the \texttt{main} function and another occurence is the function definition. In fact, three references are shown in the right window.
 
 \begin{figure}[t]
     \centering
@@ -171,7 +173,7 @@ In the figure \ref{fig:references} we can see that the function \texttt{hello\_w
 \subsubsection{Hover Information}\label{subsubsec:background:HoverInformation}
 
 \fbox{
-    \parbox{\textwidth}{
+    \parbox{0.95\textwidth}{
         \centering
         \textbf{RPC Method}:  \href{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/\#textDocument_hover}{textDocument/hover}
     }
@@ -195,7 +197,7 @@ In the figure \ref{fig:hover} we can see that the function \texttt{hello\_world}
 
 \subsubsection{Code Completion}\label{subsubsec:background:CodeCompletion}
 \fbox{
-    \parbox{\textwidth}{
+    \parbox{0.95\textwidth}{
         \centering
         \textbf{RPC Method}:  \href{https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/\#textDocument_completion}{textDocument/completion}
     }
@@ -243,10 +245,10 @@ Language workbenches have been developed for various technological spaces, but t
 
  Some of the most popular language workbenches are:
 \begin{itemize}
-    \item \textbf{JetBrains MPS}\footnote{\url{https://www.jetbrains.com/mps/}}: A powerful language workbench that allows the creation of domain-specific languages and the generation of code from them.
-    \item \textbf{Xtext}\footnote{\url{https://www.eclipse.org/Xtext/}}: A framework for developing domain-specific languages and languages for code generation.
-    \item \textbf{Spoofax}\footnote{\url{https://www.metaborg.org/en/latest/}}: A language workbench for developing textual domain-specific languages.
-    \item \textbf{MontiCore}\footnote{\url{https://www.monticore.de/}}: A language workbench for developing domain-specific languages and language families.
+    \item \textbf{JetBrains MPS}\footnote{\url{https://www.jetbrains.com/mps/}}: A powerful language workbench that allows the creation of domain-specific languages and the generation of code from them.~\cite{Campagne14, Voelter12}
+    \item \textbf{Xtext}\footnote{\url{https://www.eclipse.org/Xtext/}}: A framework for developing domain-specific languages and languages for code generation.~\cite{Zhang23}
+    \item \textbf{Spoofax}\footnote{\url{https://www.metaborg.org/en/latest/}}: A language workbench for developing textual domain-specific languages.~\cite{Visser10, Kats10b, Wachsmuth14}
+    \item \textbf{MontiCore}\footnote{\url{https://www.monticore.de/}}: A language workbench for developing domain-specific languages and language families.~\cite{Krahn08, Gronninger08, Krahn10, Rumpe21}
 \end{itemize}
 
 \texttt{Neverlang} (Sect.~\ref{subsec:background:neverlang}) will be discussed with particular detail, since most of the research discussed in this dissertation will use \texttt{Neverlang} as a running example.
@@ -273,9 +275,9 @@ Language workbenches have been developed for various technological spaces, but t
 	\end{tikzpicture}
 \end{Listing}
 
-The \textit{Neverlang} \cite{Cazzola12c, Cazzola13e, Cazzola15c} framework promote the code reusability and the separation of concerns in the implementation of programming languages, based around the concept of \textit{language-feature}.
+The \textit{Neverlang} \cite{Cazzola12c, Cazzola13e, Cazzola15c} framework promotes the code reusability and the separation of concerns in the implementation of programming languages, based upon the concept of \textit{language-feature}.
 The basic development unit is the \textbf{module}, as shown in line 1 of Listing \ref{lst:backup}.
-A module may contain a \textbf{reference syntax} and could have zero or multiple \textbf{role}s. A role, used to define the semantics, is unit of composition that defines actions that should be executed when some syntax is recognized, as defined by \textit{syntax-directed translation} \cite{Aho86}.
+A module may contain a \textbf{reference syntax} and could have zero or more \textbf{role}s. A role, used to define the semantics, is the unit of composition that defines actions that should be executed when some syntax is recognized, as defined by \textit{syntax-directed translation} \cite{Aho86}.
 Syntax definitions are defined using \textit{Backus–Naur form} (BNF) grammars, represented as sets of \textit{productions} and \textit{terminals}.
 Syntax definitions and semantic \textbf{role}s are tied together using \textit{slice}s.
 Listing \ref{lst:backup} shows a simple example of a Neverlang module implementing a backup task of the \texttt{LogLang} LPL. Reference syntax is defined in lines 2-6; the \textit{categories} (line 5) are used also to generate the syntax highlighting for the IDEs.
@@ -285,17 +287,17 @@ Different semantic actions may be attached to the same production thanks to the 
 In contrast, the \texttt{BackupSlice} (lines 14-18) reveals how the syntax and semantics are tied together; choosing the \texttt{concrete syntax} from the Backup module (line 15), and two \texttt{role}s from two different modules (lines 16-17).
 Finally, the \texttt{language} can be created by composing multiple \textbf{slices} (line 20).
 The composition in Neverlang is twofold \cite{Cazzola20}: between modules and between slices. Thus, the grammars are merged in order to generate the complete language parser. On the other hand, the semantic actions are composed in a pipeline, and each \textbf{role} traverses the syntax tree in the order specified in the \textbf{roles} clause (line 24).
-Plase see \cite{Cazzola15c} for a more detailed explanation of the \texttt{Neverlang} framework.
+Please see \cite{Cazzola15c} for a more detailed explanation of the \texttt{Neverlang} framework.
 
 
 \section{Static Analysis and Type Systems}\label{sec:background:StaticAnalysisAndTypeSystems}
 
-Static code analysis is a software verification technique refers to the process of examining the code without executing it in order to capture the defects in the code early avoiding costly later fixations \cite{Aurum02}. Static code analysis has two main approaches: manual and automated \cite{Ilyas16}.
+Static code analysis is a software verification technique that refers to the process of examining the code without executing it in order to capture the defects in the code early avoiding costly later fixations \cite{Aurum02}. Static code analysis has two main approaches: manual and automated \cite{Ilyas16}.
 Manual code analysis is a time-consuming process that requires human expertise to review the code and identify defects. Automated code analysis, on the other hand, uses tools to analyze the code and identify defects automatically. Automated code analysis tools can be used to analyze the code for defects such as syntax errors, type errors, and logic errors. These tools can also be used to enforce coding standards and best practices, such as naming conventions, code formatting, and code complexity.
 
 \subsection{Type Systems}\label{subsec:background:TypeSystems}
 
-\textit{Type systems} are a fundamental part of static code analysis. A type system~\cite{Pierce02} is a set of rules that define how types are used in a programming language. The type system defines the types of variables, functions, and expressions, as well as the rules for type compatibility and type inference.
+\textit{Type systems} are a fundamental part of static code analysis. A type system~\cite{Pierce02} is a set of rules that defines how types are used in a programming language. The type system defines the types of variables, functions, and expressions, as well as the rules for type compatibility and type inference.
 
 \textit{Type checking} is the process of verifying that the types of variables, functions, and expressions are used correctly in the code. Type checking can be done \textit{statically}, at compile time, or \textit{dynamically}, at runtime. Static type checking is more efficient and catches type errors earlier in the development process, while dynamic type checking is more flexible and allows for more dynamic programming.
 
@@ -333,7 +335,7 @@ Theoretical aspects of type systems are an important research area in computer s
 
 A brief explanation of these properties is given below:
 \begin{itemize}
-    \item A type system is \textbf{sound} if it guarantees that well-typed programs do not produce runtime errors. Soundness is an important property of a type system because it ensures that the type system is correct and that it enforces the correct use of types in the code.
+    \item A type system is \textbf{sound} if it guarantees that well-typed programs do not produce errors. Soundness is an important property of a type system because it ensures that the type system is correct and that it enforces the correct use of types in the code.
     \item A type system is \textbf{complete} if it can infer the type of any expression in the code. Completeness is an important property of a type system because it ensures that the type system can handle all possible expressions in the code.
     \item A type system is \textbf{decidable} if it can determine the type of any expression in a finite amount of time. Decidability is an important property of a type system because it ensures that the type system is efficient and can be used in practice.
 \end{itemize}
@@ -349,7 +351,7 @@ In the following sections, we will discuss the basic concepts of type theory and
 
 \subsubsection{Judgements}\label{subsubsec:background:Judgements}
 
-Martin-L\"of type theory has four basic forms of judgments and is a considerably more complicated system than first-order logic.
+Martin-L\"of type theory has four basic forms of judgment and is a considerably more complicated system than first-order logic.
 
 The four basic forms of judgments are:
 \begin{itemize}
@@ -360,7 +362,7 @@ The four basic forms of judgments are:
 \end{itemize}
 
 In programming languages, the first two judgments are used to define the types of variables and functions, while the last two judgments are used to define equality between types and elements.
-For instance,
+Below, an example showing the usage of each of the four basic forms of judegment.
 $$
 \vdash \texttt{Int} \textrm{ type} \quad \vdash 1 : \texttt{Int} \quad \vdash \texttt{Int} = \texttt{Int} \textrm{ type} \quad \vdash 1 = 1 : \texttt{Int}
 $$
@@ -455,7 +457,7 @@ Given the typing environment $\Gamma$, the type inference algorithm uses the rul
     \label{lst:background:typeinference}
 \end{Listing}
 
-In listing~\ref{lst:background:typeinference} we show an example of type inference in Rust and OCaml. In both examples, thesec:background:software-and-language-product-lines type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code (line 5), the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code (line 3), the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
+In listing~\ref{lst:background:typeinference} we show an example of type inference in Rust and OCaml. In both examples, the type inference algorithm is used to deduce the types of the variables \texttt{z} in the code. In case of Rust code (line 5), the type of \texttt{z} is inferred to be \texttt{i32} because the types of \texttt{x} and \texttt{y} are known to be \texttt{i32}. In case of OCaml code (line 3), the type of \texttt{z} is inferred to be \texttt{int} because the types of \texttt{x} and \texttt{y} are known to be \texttt{int}.
 
 
 \section{Domain-Specific Languages}\label{sec:background:DomainSpecificLanguages}
@@ -534,7 +536,7 @@ Features are \textit{mandatory} -- such as \texttt{Dimension} in Fig~\ref{lst:ba
 Features that are part of a group can be put in an \textit{alternative} or \textit{or} relationship.Or-relationship (children of Logging node in Fig.~\ref{lst:background:featuremodel}) means that only one of the features in the group can be selected, while an alternative relationship (children of Train node in Fig.~\ref{lst:background:featuremodel}) means that at least one of the features in the group must be selected if the parent feature is selected.
 
 Dependencies can be explicitly defined using cross-tree constraints -- i.e., Boolean expression among features of the FM~\cite{Cazzola22c}, where each features represents a term in the expression. Each term is true if the corresponding feature is active in the current configuration and false otherwise. Cross-tree constraints support general Boolean operators such as AND, OR, NOT, IMPLIES, and IFF with their traditional meanings.
-The expressiveness of these constraints allows for defining dependencies that span the entire feature model, rather than being limited to parent-child relationships. A configuration is considered invalid if any cross-tree constraint evaluates to false.
+The expressiveness of these constraints allows for defining dependencies that span the entire feature model, rather than being limited to parent-child relationships. A configuration is considered invalid if any cross-tree constraint evaluates to false or if the transposition of the tree into a prepositional formula is not satisfiable, including the father-son relationships and the mandatory features.
 
 An example of a cross-tree constraint is the following, where $\Rightarrow$ represents the implication operator:
 \begin{equation*}
