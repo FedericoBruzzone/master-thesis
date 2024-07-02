@@ -1,0 +1,14 @@
+\babel@toc {english}{}\relax 
+\beamer@sectionintoc {1}{Problem Statement}{2}{0}{1}
+\beamer@subsectionintoc {1}{1}{Programming Language Implementation}{2}{0}{1}
+\beamer@subsectionintoc {1}{2}{Type Systems and IDEs Support}{5}{0}{1}
+\beamer@sectionintoc {2}{Software Product Lines}{7}{0}{2}
+\beamer@subsectionintoc {2}{2}{Language Product Lines}{9}{0}{2}
+\beamer@subsectionintoc {2}{3}{Language Workbenches and Neverlang}{11}{0}{2}
+\beamer@sectionintoc {3}{Language Server Protocol}{13}{0}{3}
+\beamer@subsectionintoc {3}{1}{The Reduction of Combinations}{13}{0}{3}
+\beamer@subsectionintoc {3}{2}{LSP In a Nutshell}{16}{0}{3}
+\beamer@sectionintoc {4}{Contribution}{18}{0}{4}
+\beamer@subsectionintoc {4}{1}{Type System Components}{18}{0}{4}
+\beamer@sectionintoc {5}{LSP in Action}{23}{0}{5}
+\beamer@sectionintoc {6}{LSP in Action}{24}{0}{6}

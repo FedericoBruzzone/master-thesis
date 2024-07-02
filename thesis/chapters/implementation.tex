@@ -1,5 +1,6 @@
 \chapter{Implementation}\label{chap:Implementation}
 
+In this chapter, we describe the implementation of the type system described in Chapter~\ref{chap:Concept}. The implementation is divided into two main parts: the type system implementation and the modular type system implementation. The type system implementation is the implementation of the type system described in Section~\ref{sec:concept:TheTypeSystem}. The modular type system implementation is the implementation of the modular type system described in Section~\ref{sec:concept:ModularTypeSystem}.
 All implementations in this chapter will be implemented in the \texttt{Java} programming language.
 
 \section{The type system implementation}\label{sec:impl:TypeSystem}
@@ -69,7 +70,7 @@ The \texttt{Signature} class is the definition of a type. As shown in Listing~\r
     \item \texttt{SymbolTableEntry typeResolution(SymbolTableEntry entryType)} that returns the type resolution of the given \texttt{entryType}.
 \end{itemize}
 
-As mentioned in Section~\ref{subsec:concept:SignatureTheDefinitionOfTheType}, in order to perform \textit{type inference}, the \texttt{typeResolution} method can be used to do some operations on the type. For instance, the \texttt{typeResolution} method could be used to resolve the type of a variable. Another usage of the \texttt{typeResolution} method is to resolve the type of a function. For instance, immagine a varbiable that during the \textbf{parse} phase its type is marked as \textit{unknown}, because the type could be omitted. During the \textbf{resolve} phase, the type of the variable is resolved to a specific type.
+As mentioned in Section~\ref{subsec:concept:SignatureTheDefinitionOfTheType}, in order to perform \textit{type inference}, the \texttt{typeResolution} method can be used to do some operations on the type. For instance, the \texttt{typeResolution} method could be used to resolve the type of a variable. Another usage of the \texttt{typeResolution} method is to resolve the type of a function. For instance, imagine a varbiable whose type is marked during the \textbf{parse} phase as \textit{unknown}, because the type could be omitted. When during the \textbf{resolve} phase, the type of the variable is resolved to a specific type.
 
 \subsection{Symbol Table Entry Implementation: an entry in the Typing Environment}\label{subsec:impl:SymbolTableEntry}
 \begin{Listing}[tbh]
@@ -82,12 +83,12 @@ As mentioned in Section~\ref{subsec:concept:SignatureTheDefinitionOfTheType}, in
 \texttt{SymbolTableEntry} is used to represent informations about symbols in the typing environment. As shown in Listing~\ref{subsec:impl:TypingEnvironment}, the \texttt{SymbolTableEntry} class has three main methods:
 
 \begin{itemize}
-    \item \texttt{EntryKind entryKind()} that returns the kind of the entry.
+    \item \texttt{EntryKind entryKind()} that returns the kind of the entry. A kind is intended as the "kind of usage"
     \item \texttt{<T extends Type> T type()} that returns the type of the entry.
     \item \texttt{Location location()} that returns the location of the entry.
 \end{itemize}
 
-The \texttt{entryKind} method is used to get the kind of the entry, the in this case the kind of the entry is an \texttt{EntryKind} enum that can assume three different values: \texttt{DEFINE}, \texttt{USE}, and \texttt{IMPORT}. The \texttt{type} method is used to get the type of the entry, note that this method retrives the type as a generic type using \texttt{entryType} method that return an \texttt{EntryType}. An \texttt{EntryType} is a class that encapsulates the type of the entry and allow the retrival of the type from a \texttt{Token} during the \textbf{parse} phase.
+The \texttt{entryKind} method is used to get the kind of the entry, the in this case the kind of the entry is an \texttt{EntryKind} enum that can assume three different values: \texttt{DEFINE}, \texttt{USE}, and \texttt{IMPORT}. The \texttt{type} method is used to get the type of the entry, note that this method retrives the type as a generic type using the \texttt{entryType} method that returns an \texttt{EntryType} object. \texttt{EntryType} is a class that encapsulates the type of the entry and allows the retrival of the type from a \texttt{Token} during the \textbf{parse} phase.
 The \texttt{location} method is used to get the location of the entry, the location is a class that encaps the information about the location of the entry in the source code.
 
 
@@ -119,7 +120,7 @@ The \texttt{TypingEnvironment} class is the symbol table of the type system. As 
     \item \texttt{void removeIf(Predicate<SymbolTableEntry> predicate)} that removes the entries that satisfy the given \texttt{predicate}.
 \end{itemize}
 
-The \texttt{TypingEnvironment} class contains a map (\texttt{HashMap<IDENTIFIER, EntryTypeBinder>}) from identifiers to \texttt{EntryTypeBinder}. One of the most important concepts is that the \texttt{EntryTypeBinder} can change, in fact in the constructor must be passed the class that extends \texttt{EntryTypeBinder} interface. This is to allow different kind of binding.
+The \texttt{TypingEnvironment} class contains a map \linebreak (\texttt{HashMap<IDENTIFIER, EntryTypeBinder>}) from identifiers to \texttt{EntryTypeBinder}. One of the most important concepts is that the \texttt{EntryTypeBinder} can change, the class that extends the \texttt{EntryTypeBinder} interface must be passed to the constructor. This is to allow different kinds of binding.
 Hence, the first method \texttt{bindTypeToIdentifier} is used to bind the given \texttt{variable} to the given \texttt{SymbolTableEntry}. This method could fail if the \texttt{variable} is already bounded.
 
 
@@ -182,7 +183,7 @@ The \texttt{CompilationUnit} class is a logical unit of source code. As shown in
 \begin{itemize}
     \item \texttt{Scope<IDENTIFIER> scope} that is the scope of the compilation unit.
     \item \texttt{AbstractCompilationUnit<IDENTIFIER> compilationUnitParent} that is the parent compilation unit of the compilation unit.
-    \item \texttt{Stack<Scope<IDENTIFIER>> stack} that is the stack of the scopes of the compilation unit.
+    \item \texttt{Stack<Scope<IDENTIFIER> > stack} that is the stack of the scopes of the compilation unit.
     \item \texttt{InferencingStrategy inferencingStrategy} that is the inferencing strategy of the compilation unit.
     \item \texttt{Location location} that is the location of the compilation unit.
     \item \texttt{CompilationUnitTask task} that is the task of the compilation unit.
@@ -211,7 +212,7 @@ In order to perform the compilation, we need a task that is able to perform the 
     \item \texttt{AtomicReference<CompilationUnitToken> token} that is the token of the compilation unit task.
     \item \texttt{Consumer<Context> consumer} that is the consumer of the compilation unit task.
     \item \texttt{Context context} that is the context of the compilation unit task.
-    \item \texttt{Class<? extends AbstractCompilationHelper<?, ?>> aClass} that is the class of the compilation unit task.
+    \item \texttt{Class<? extends AbstractCompilationHelper<?, ?> > aClass} that is the class of the compilation unit task.
     \item \texttt{PRIORITY priority} that is the priority of the compilation unit task.
 \end{itemize}
 
@@ -233,9 +234,9 @@ Additionally, the \texttt{CompilationUnitTask} class has one main method:
 The \texttt{CompilationHelper} class is an helper class that is used to perform the compilation. As shown in Listing~\ref{lst:impl:CompilationHelper}, the \texttt{CompilationHelper} class has numerous fields and methods. The methods have been omitted for brevity. Meanwhile, the \texttt{CompilationHelper} class has numerous fields:
 
 \begin{itemize}
-  \item \texttt{Class<? extends AbstractCompilationUnit<?>> compilationUnitClass} that is the class of the compilation unit.
+ \item \texttt{Class<? extends AbstractCompilationUnicnt<?> > compilationUnitClass} that is the class of the compilation unit.
   \item \texttt{Class<? extends LSPGraph> lspGraphClass} that is the class of the LSP graph.
-  \item \texttt{Class<? extends SymbolTableEntryFactory<?, ?>> symbolTableEntryFactoryClass} that is the class of the symbol table entry factory.
+  \item \texttt{Class<? extends SymbolTableEntryFactory<?, ?> > symbolTableEntryFactoryClass} that is the class of the symbol table entry factory.
   \item \texttt{Map<String, String> baseTypes} that is the map of the base types.
   \item \texttt{SubmissionPublisher<Object> publisher} that is the publisher of the compilation helper.
   \item \texttt{InferencingStrategy inferencingStrategy} that is the inferencing strategy of the compilation helper.
