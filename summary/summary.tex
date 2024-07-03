@@ -1,0 +1,242 @@
+\documentclass{adapt-lab}
+\usepackage{pifont}
+\usepackage{rotating}
+
+\newcommand{\cwcomment}[1]{\profcomment[Walter]{#1}}
+\newcommand{\bfcomment}[1]{\studcomment[Federico]{#1}}
+
+%\usepackage{amsthm}
+%\usepackage{amssymb}
+%\usepackage{amsmath}
+%\usepackage{subfig}
+
+% ========== My settings ==========
+\usetikzlibrary{angles,shadows.blur,positioning,backgrounds}
+\usepackage{forest}
+
+% \usepackage[altpo]{backnaur}
+\usepackage{backnaur}
+
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+\usepackage{bussproofs} % for proof trees
+\usepackage{booktabs} % for tables
+\usepackage{amsmath} % for math
+
+\newcommand{\circleblack}{\CIRCLE}
+\newcommand{\circlewhite}{\Circle}
+\newcommand{\circleleft}{\LEFTcircle}
+\newcommand{\circleright}{\RIGHTcircle}
+
+% TEXTTT breakable ==================
+% \newcommand*\justify{%
+%   \fontdimen2\font=0.4em% interword space
+%   \fontdimen3\font=0.2em% interword stretch
+%   \fontdimen4\font=0.1em% interword shrink
+%   \fontdimen7\font=0.1em% extra space
+%   \hyphenchar\font=`\-% allowing hyphenation
+% }
+% \renewcommand{\texttt}[1]{%
+%   \begingroup
+%   \ttfamily
+%   \begingroup\lccode`~=`/\lowercase{\endgroup\def~}{/\discretionary{}{}{}}%
+%   \begingroup\lccode`~=`[\lowercase{\endgroup\def~}{[\discretionary{}{}{}}%
+%   \begingroup\lccode`~=`.\lowercase{\endgroup\def~}{.\discretionary{}{}{}}%
+%   \catcode`/=\active\catcode`[=\active\catcode`.=\active
+%   \justify\scantokens{#1\noexpand}%
+%   \endgroup
+% }
+% ===============================
+
+\tcbset{
+    myboxstyle/.style={
+        enhanced, breakable,
+        sharp corners,
+        % left skip=8mm,
+        % attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+        boxed title style={colframe=#1!40, height=6mm, bean arc, boxrule=1pt},
+        colback=#1!10, colframe=#1!30, boxrule=1pt,
+        coltitle=black, colbacktitle=#1!10,
+        fonttitle=\bfseries,
+    }
+}
+
+% \fboxsep=10mm %padding thickness
+\fboxrule=1.5pt %border thickness
+
+\hypersetup{
+    colorlinks = true
+}
+
+\tcbuselibrary{theorems}
+\newtcbtheorem{mydefinition}{Highlight}
+{myboxstyle=yellow}{def}
+% \newtcbtheorem[number within=section]{mytheo}{My Theorem}%
+% {colback=green!5,colframe=green!35!black,fonttitle=\bfseries}{th}
+
+\RequirePackage{xspace}
+\RequirePackage[tikz]{bclogo}
+\definecolor{bgblue}{RGB}{245,243,253}
+\definecolor{ttblue}{RGB}{91,194,224}
+\renewcommand\bcStyleTitre[1]{\large\textcolor{ttblue}{#1}}
+\newenvironment{Caveats}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcbombe, barre=none,noborder=true]{Caveats}}{\end{bclogo}}
+\newenvironment{Tips}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bclampe, barre=none,noborder=true]{Tips \& Tricks}}{\end{bclogo}}
+\newenvironment{Info}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcinfo, barre=none,noborder=true]{Info}}{\end{bclogo}}
+\newenvironment{Warning}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcattention, barre=none,noborder=true]{Warning}}{\end{bclogo}}
+
+
+\newtheorem{definition}{Formal Definition}
+% =================================
+
+\renewcommand{\thesection}{\arabic{section}}
+\begin{document}
+
+% \title{Code Less to Code More}
+% \subtitle{Streamlining LSP Development for \\ Language Families \vspace{2cm}}
+% \title{Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages}
+% \subtitle{\vspace{3pt}\small Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages}
+\title{Toward a Modular Approach for Type Systems and LSP \\ Generation \\}
+% \subtitle{Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages \\}
+\author{Federico Cristiano Bruzzone}
+\matricola{27427A}
+\ayear{2023-2024}
+\advisor{Prof.\,Walter Cazzola}
+\coadvisor{Dr.\,Luca Favalli}
+% \school{Universit\`a degli Studi di Milano}
+\degree{MSc in Computer Science}
+\selectlanguage{english}
+
+\makefirstpage
+
+% \frontmatter
+%
+% \tableofcontents
+%
+% \mainmatter
+
+\break
+
+\section{Institution where the internship work was carried out}
+
+My internship was carried out at the \textbf{ADAPT-Lab} of the Universit\`a degli Studi di Milano, under the supervision of Prof.\,Walter \textbf{Cazzola} and Dr.\,Luca \textbf{Favalli}.
+ The lab is part of the Department of Computer Science and is focused on research in the field of programming languages and software engineering.
+
+\section{Initial context}
+
+The landscape of software development has been undergoing rapid transformation, driven by the increasing complexity and diversity of programming languages and tools. Among the key advancements, the Language Server Protocol (LSP) has emerged as a crucial technology, fundamentally reshaping how developers interact with their development environments. Before the advent of LSP, each Integrated Development Environment (IDE) had to implement its own set of language-specific features such as auto-completion, error checking, and refactoring. This approach often resulted in a fragmented and inconsistent development experience, requiring substantial effort to maintain and update these features across different environments.
+
+The introduction of LSP marked a significant paradigm shift by decoupling language-specific functionalities from IDEs. This modular and scalable approach allows developers to leverage sophisticated language services without being restricted to a particular IDE. LSP facilitates a standardized communication protocol between language servers and IDEs, ensuring a uniform and streamlined development experience across various platforms. By utilizing JSON-RPC for its communication, LSP ensures that language features are implemented consistently, enhancing the overall efficiency and portability of development tools.
+
+\section{Work Objectives}
+
+The primary objectives of this work are to explore and elucidate the transformative impact of the Language Server Protocol on software development. Specifically, the goals are:
+\begin{enumerate}
+    \item \textbf{Examine the foundational concepts and technologies underlying LSP}: This includes understanding the components of LSP, such as JSON-RPC and command specifications, and their roles in facilitating seamless integration between language servers and IDEs.
+    \item \textbf{Investigate the role of compilers and language workbenches in LSP development}: This involves exploring how compilers and language workbenches can be leveraged to integrate language-specific features into LSP, enabling the creation of robust and efficient language servers.
+    \item \textbf{Analyze the benefits and challenges of DSLs}: This includes examining the advantages of Domain-Specific Languages (DSLs) in the context of LSP, as well as the challenges associated with designing and implementing DSLs for specific domains.
+    \item \textbf{Explore static analysis and type systems}: Delve into the theoretical and practical aspects of these technologies and their integration into language servers to enhance code quality and developer productivity.
+    \item \textbf{Assess the impact of modular architectures in software and language development}: Evaluate how modularity, as promoted by LSP and related tools, supports the efficient development and maintenance of programming languages and their features.
+    \item \textbf{Demonstrate practical implementations and case studies}: Provide detailed examples and case studies to illustrate the real-world applications and benefits of the proposed concepts and technologies.
+\end{enumerate}
+
+\section{Description of work performed}
+
+This thesis undertakes a comprehensive exploration of critical aspects in modern software development, with a primary focus on advancing language server protocols (LSP) and refining type systems to enhance programming language capabilities.
+
+The Language Server Protocol (LSP) serves as a cornerstone in facilitating seamless communication between integrated development environments (IDEs) and language servers. Operating on the JSON-RPC standard, LSP defines essential commands and methods crucial for efficient source code analysis and manipulation. This protocol not only standardizes the interactions between IDEs and language servers but also supports a wide array of programming languages, thereby improving developer productivity and software quality.
+
+Language workbenches (LWs) are pivotal tools examined in this thesis, designed to facilitate the creation and customization of domain-specific languages (DSLs). Some LWs promote modularization and composability, allowing for the efficient reuse of language components across different projects and domains.
+
+A portion of the thesis is dedicated to exploring the theoretical foundations and practical implementations of type systems. Type systems are fundamental to program analysis and verification, ensuring type safety and enhancing code reliability. Theoretical aspects, including type theory as a logic for reasoning about program behavior, are discussed in-depth. Practical implementations such as type inference mechanisms, which automate the deduction of data types in programs, are also examined for their role in improving developer productivity and code readability.
+
+DSLs are investigated for their ability to streamline software development by providing specialized syntax and semantics tailored to specific problem domains. Internal and external DSLs are compared, highlighting their respective advantages in enhancing code maintainability and expressiveness. By enabling developers to write code that closely aligns with domain-specific concepts, DSLs contribute to reducing development time and minimizing errors in complex software systems.
+
+The thesis also delves into software and language product lines, focusing on strategies for managing feature variability across different product variants. By employing configurable feature models and systematic configuration management techniques, organizations can effectively tailor software products to meet diverse customer requirements while maintaining code coherence and integrity.
+
+\section{Technologies involved}
+
+The work involved the following technologies:
+\begin{itemize}
+    \item \textbf{Language Server Protocol (LSP)}: A standardized communication protocol that enables the integration of language-specific features into IDEs.
+    \item \textbf{JSON-RPC}: A lightweight remote procedure call protocol that serves as the foundation for LSP communication.
+    \item \textbf{Compilers and Language Workbenches (LWs)}: Tools that facilitate the creation and customization of domain-specific languages (DSLs) and language features.
+    \item \textbf{Type Systems}: Theoretical frameworks and practical implementations that govern data types and their interactions in programming languages.
+    \item \textbf{Domain-Specific Languages (DSLs)}: Specialized languages designed to address specific problem domains and enhance developer productivity.
+    \item \textbf{Software Product Lines (SPLs)}: A methodology for managing feature variability across software product variants.
+\end{itemize}
+
+\section{Competences and achievements}
+
+During the course of this research, significant competences and achievements have been attained, primarily highlighted by the development of a robust software library comprising approximately 5,000 lines of Java code. This library was meticulously crafted to enhance the functionality and interoperability of language server protocols (LSP) within integrated development environments (IDEs). The key competences and achievements include:
+
+    Library Development: A comprehensive software library was designed and implemented, leveraging Java programming language to encapsulate essential functionalities required for effective LSP integration. This library encompasses modules for command specifications, JSON-RPC communication, key method implementations, and advanced source code analysis capabilities.
+
+    LSP Enhancement: By focusing on extending LSP capabilities, the library enables seamless communication between IDEs and language servers, fostering improved code navigation, syntax highlighting, code completion, and real-time error detection. These enhancements significantly elevate the development experience by providing developers with powerful tools to streamline software development workflows.
+
+    Modular Design: The library was architected with a modular design approach, facilitating easy integration and scalability across different IDE environments and programming languages. This modular architecture promotes code reusability, maintenance efficiency, and adaptability to evolving software requirements.
+
+    Type System Integration: Integral to the library's functionality is its robust type system integration, which enhances program analysis and verification capabilities. The implementation includes sophisticated mechanisms for type inference, symbol table management, and scope resolution, ensuring accurate and efficient handling of language-specific constructs.
+
+    Contributions to Language Engineering: Through the development of this library, significant contributions have been made to the field of language engineering. By advancing LSP capabilities and promoting best practices in software language design and implementation, the research underscores its commitment to improving software development practices and fostering innovation in language tooling.
+
+These competences and achievements underscore the dedication to advancing the state of the art in software language engineering, with a specific focus on enhancing LSP functionality and promoting effective integration within modern IDE environments. The developed library stands as a testament to the research's commitment to excellence and innovation in software development tools and methodologies.
+
+\begingroup
+\let\clearpage\relax
+% bibliography
+\bibliographystyle{plain}
+\bibliography{local,strings,reflection,aosd,my_work,oolanguages,programming,software_engineering, logic,dsl,pl,distributed_systems,grammars,pattern,biomedicine,splc,roles}
+\endgroup
+
+\nocite{Bettini13b}
+\nocite{Barros22}
+\nocite{Sun17}
+\nocite{Cazzola20}
+\nocite{Degueule15}
+\nocite{Krahn10}
+\nocite{Visser10}
+\nocite{Volter11, Voelter12}
+\nocite{Cazzola21b, Cazzola15f}
+\nocite{Leduc20}
+\nocite{Cazzola15c, Cazzola14c}
+\nocite{Cazzola15f, Cazzola21b}
+\nocite{Fowler10}
+\nocite{Bettini13b}
+\nocite{Barros22}
+\nocite{Bunder19a}
+\nocite{Rodriguez-Echeverria18a}
+\nocite{Cazzola20}
+\nocite{Paulin93, Colmerauer90}
+\nocite{Rodriguez-Echeverria18}
+\nocite{Rask21}
+\nocite{Rask21a}
+\nocite{Lammel18, Voelter13}
+\nocite{Erdweg13b}
+\nocite{Basten15, Mernik05, Parr09}
+\nocite{Gunasinghe22}
+\nocite{Kang90}
+\nocite{Cazzola23d, Cazzola20}
+\nocite{Cazzola15f}
+\nocite{Cazzola15f}
+\nocite{Cazzola16, Cazzola16i, Cazzola15f}
+\nocite{Haugen08, Cazzola14e, White09}
+\nocite{Batory04, Kastner11}
+\nocite{Niephaus20, Rodriguez-Echeverria18}
+\nocite{Apel13, Czarnecki04, Prehofer01}
+\nocite{Kiczales01, Kiczales97, Laddad03}
+\nocite{Liebig13}
+\nocite{Wende09}
+\nocite{Cazzola15c, Cazzola14c}
+\nocite{Cazzola19}
+\nocite{Prehofer97}
+\nocite{Rosenmuller11}
+
+% \appendix
+%
+% \bibliographystyle{plain}
+% \bibliography{local,strings,reflection,aosd,my_work,oolanguages,programming,software_engineering, logic,dsl,pl,distributed_systems,grammars,pattern,biomedicine,splc,roles}
+
+\end{document}
