@@ -704,7 +704,36 @@
     }
     \end{tikzpicture}
     }
+\end{frame}
 
+\subsection[Type System Modularization]{Type System Modularization}
+\begin{frame}{\secname}
+    \framesubtitle{\subsecname}
+    \begin{onlyenv}<1>
+        \begin{center}
+        \slidejs*[0.5\textwidth]{sum.js}
+        \end{center}
+    \end{onlyenv}
+
+    \begin{onlyenv}<2>
+    \begin{tabular}{p{0.5\textwidth} p{0.5\textwidth}}
+        \slidejs*[0.5\textwidth]{sum.js}
+        &
+        \vspace{0.5cm}
+            \begin{itemize}
+                \item Compilation Unit
+                \item Compilation Unit Task
+                \item Compilation Helper
+            \end{itemize}
+    \end{tabular}
+    \end{onlyenv}
+
+
+    \vspace{-0.5cm}
+    \begin{center}
+    \includegraphics<1>[width=0.9\linewidth, height=0.7\textheight]{figs/simple_ast.pdf}
+    \includegraphics<2>[width=0.9\linewidth, height=0.7\textheight]{figs/simple_ast_annotated.pdf}
+    \end{center}
 \end{frame}
 
 % - Type System implementation and a Java Library for Neverlang in order to support the type system for every langauge developed with Neverlang.
@@ -719,17 +748,18 @@
 \section[LSP in Action]{LSP in Action}
 % Movie
 \begin{frame}
+    \framesubtitle{\subsecname}
     {\hspace*{6cm}\vbox to 0cm {\vspace*{4cm}\includegraphics[width=9cm]{./figs/black_rect.png}}}
     \begin{center}
     \includemedia[
       width=1\textwidth,
       height=1\textheight,
       % activate=pageopen,
-      keepaspectratio,
-      playbutton=plain,
-      addresource=videos/LSP_in_action.webm,
+      % keepaspectratio,
+      % playbutton=plain,
+      addresource=videos/LSP_in_action.mp4,
       flashvars={
-         source=videos/LSP_in_action.webm
+         source=videos/LSP_in_action.mp4
          &autoPlay=false
          &loop=true
       }
@@ -738,10 +768,10 @@
 \end{frame}
 \setbeamercolor{background canvas}{bg=white}
 
-\section[LSP in Action]{LSP in Action}
-% Movie
 \begin{frame}
-    HELLO
+    \begin{center}
+        \huge Thanks for your attention!
+    \end{center}
 \end{frame}
 % ============================================================================
 

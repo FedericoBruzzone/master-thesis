@@ -139,6 +139,7 @@ The primary objectives of this work are to explore and elucidate the transformat
     \item \textbf{Analyze the benefits and challenges of DSLs}: This includes examining the advantages of Domain-Specific Languages (DSLs) in the context of LSP, as well as the challenges associated with designing and implementing DSLs for specific domains.
     \item \textbf{Explore static analysis and type systems}: Delve into the theoretical and practical aspects of these technologies and their integration into language servers to enhance code quality and developer productivity.
     \item \textbf{Assess the impact of modular architectures in software and language development}: Evaluate how modularity, as promoted by LSP and related tools, supports the efficient development and maintenance of programming languages and their features.
+    \item \textbf{Reducing the number of combinations}: Investigate how to reduce the number of combinations ($\mathbf{L} + \mathbf{E}$ where $\mathbf{L}$ is the number of languages and $\mathbf{E}$ is the number of editors) to support LSP for $\mathbf{L}$ languages, moving towards a more modular approach ($\mathbf{L} \times 1$) to streamline LSP development.
     \item \textbf{Demonstrate practical implementations and case studies}: Provide detailed examples and case studies to illustrate the real-world applications and benefits of the proposed concepts and technologies.
 \end{enumerate}
 
@@ -153,6 +154,8 @@ Language workbenches (LWs) are pivotal tools examined in this thesis, designed t
 A portion of the thesis is dedicated to exploring the theoretical foundations and practical implementations of type systems. Type systems are fundamental to program analysis and verification, ensuring type safety and enhancing code reliability. Theoretical aspects, including type theory as a logic for reasoning about program behavior, are discussed in-depth. Practical implementations such as type inference mechanisms, which automate the deduction of data types in programs, are also examined for their role in improving developer productivity and code readability.
 
 DSLs are investigated for their ability to streamline software development by providing specialized syntax and semantics tailored to specific problem domains. Internal and external DSLs are compared, highlighting their respective advantages in enhancing code maintainability and expressiveness. By enabling developers to write code that closely aligns with domain-specific concepts, DSLs contribute to reducing development time and minimizing errors in complex software systems.
+
+In addition, we reduce the number of combinations ($\mathbf{L} + \mathbf{E}$) required to support LSP for $\mathbf{L}$ languages, moving towards a more modular approach ($\mathbf{L} \times 1$) to streamline LSP development. We demonstrated that generating the \textbf{client} $\mathbf{L} \times 1$ is feasible.
 
 The thesis also delves into software and language product lines, focusing on strategies for managing feature variability across different product variants. By employing configurable feature models and systematic configuration management techniques, organizations can effectively tailor software products to meet diverse customer requirements while maintaining code coherence and integrity.
 
@@ -170,17 +173,16 @@ The work involved the following technologies:
 
 \section{Competences and achievements}
 
-During the course of this research, significant competences and achievements have been attained, primarily highlighted by the development of a robust software library comprising approximately 5,000 lines of Java code. This library was meticulously crafted to enhance the functionality and interoperability of language server protocols (LSP) within integrated development environments (IDEs). The key competences and achievements include:
+Thanks to this work, we are writing a paper for the \textit{Journal of Systems and Software} called \textbf{Code More to Code Less: Streamlining LSP Development for Language Families}.
 
-    Library Development: A comprehensive software library was designed and implemented, leveraging Java programming language to encapsulate essential functionalities required for effective LSP integration. This library encompasses modules for command specifications, JSON-RPC communication, key method implementations, and advanced source code analysis capabilities.
-
-    LSP Enhancement: By focusing on extending LSP capabilities, the library enables seamless communication between IDEs and language servers, fostering improved code navigation, syntax highlighting, code completion, and real-time error detection. These enhancements significantly elevate the development experience by providing developers with powerful tools to streamline software development workflows.
-
-    Modular Design: The library was architected with a modular design approach, facilitating easy integration and scalability across different IDE environments and programming languages. This modular architecture promotes code reusability, maintenance efficiency, and adaptability to evolving software requirements.
-
-    Type System Integration: Integral to the library's functionality is its robust type system integration, which enhances program analysis and verification capabilities. The implementation includes sophisticated mechanisms for type inference, symbol table management, and scope resolution, ensuring accurate and efficient handling of language-specific constructs.
-
-    Contributions to Language Engineering: Through the development of this library, significant contributions have been made to the field of language engineering. By advancing LSP capabilities and promoting best practices in software language design and implementation, the research underscores its commitment to improving software development practices and fostering innovation in language tooling.
+During the course of this research, significant competences and achievements have been attained, primarily highlighted by the development of a robust software library comprising approximately 10000 lines of Java code. This library was meticulously crafted to enhance the functionality and interoperability of language server protocols (LSP) within integrated development environments (IDEs). The key competences and achievements include:
+\begin{itemize}
+    \item Library Development: A comprehensive software library was designed and implemented, leveraging Java programming language to encapsulate essential functionalities required for effective LSP integration. This library encompasses modules for command specifications, JSON-RPC communication, key method implementations, and advanced source code analysis capabilities.
+    \item LSP Enhancement: By focusing on extending LSP capabilities, the library enables seamless communication between IDEs and language servers, fostering improved code navigation, syntax highlighting, code completion, and real-time error detection. These enhancements significantly elevate the development experience by providing developers with powerful tools to streamline software development workflows.
+    \item Modular Design: The library was architected with a modular design approach, facilitating easy integration and scalability across different IDE environments and programming languages. This modular architecture promotes code reusability, maintenance efficiency, and adaptability to evolving software requirements.
+    \item Type System Integration: Integral to the library's functionality is its robust type system integration, which enhances program analysis and verification capabilities. The implementation includes sophisticated mechanisms for type inference, symbol table management, and scope resolution, ensuring accurate and efficient handling of language-specific constructs.
+    \item Contributions to Language Engineering: Through the development of this library, significant contributions have been made to the field of language engineering. By advancing LSP capabilities and promoting best practices in software language design and implementation, the research underscores its commitment to improving software development practices and fostering innovation in language tooling.
+\end{itemize}
 
 These competences and achievements underscore the dedication to advancing the state of the art in software language engineering, with a specific focus on enhancing LSP functionality and promoting effective integration within modern IDE environments. The developed library stands as a testament to the research's commitment to excellence and innovation in software development tools and methodologies.
 
@@ -191,14 +193,7 @@ These competences and achievements underscore the dedication to advancing the st
 \bibliography{local,strings,reflection,aosd,my_work,oolanguages,programming,software_engineering, logic,dsl,pl,distributed_systems,grammars,pattern,biomedicine,splc,roles}
 \endgroup
 
-\nocite{Bettini13b}
-\nocite{Barros22}
-\nocite{Sun17}
 \nocite{Cazzola20}
-\nocite{Degueule15}
-\nocite{Krahn10}
-\nocite{Visser10}
-\nocite{Volter11, Voelter12}
 \nocite{Cazzola21b, Cazzola15f}
 \nocite{Leduc20}
 \nocite{Cazzola15c, Cazzola14c}
@@ -209,30 +204,16 @@ These competences and achievements underscore the dedication to advancing the st
 \nocite{Bunder19a}
 \nocite{Rodriguez-Echeverria18a}
 \nocite{Cazzola20}
-\nocite{Paulin93, Colmerauer90}
 \nocite{Rodriguez-Echeverria18}
-\nocite{Rask21}
-\nocite{Rask21a}
-\nocite{Lammel18, Voelter13}
-\nocite{Erdweg13b}
-\nocite{Basten15, Mernik05, Parr09}
-\nocite{Gunasinghe22}
-\nocite{Kang90}
 \nocite{Cazzola23d, Cazzola20}
 \nocite{Cazzola15f}
 \nocite{Cazzola15f}
 \nocite{Cazzola16, Cazzola16i, Cazzola15f}
 \nocite{Haugen08, Cazzola14e, White09}
-\nocite{Batory04, Kastner11}
-\nocite{Niephaus20, Rodriguez-Echeverria18}
 \nocite{Apel13, Czarnecki04, Prehofer01}
-\nocite{Kiczales01, Kiczales97, Laddad03}
-\nocite{Liebig13}
 \nocite{Wende09}
 \nocite{Cazzola15c, Cazzola14c}
 \nocite{Cazzola19}
-\nocite{Prehofer97}
-\nocite{Rosenmuller11}
 
 % \appendix
 %
