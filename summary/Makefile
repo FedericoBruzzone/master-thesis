@@ -2,7 +2,7 @@
 
 # default: all
 
-NAME = summary
+NAME = summary-eng
 FIGS_DIR = figs
 FIGS = $(shell find ./$(FIGS_DIR) -type f -name '*.tex')
 

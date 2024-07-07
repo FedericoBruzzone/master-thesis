@@ -1,4 +1,4 @@
-**If you do not want to waste too much time, read the [summary](https://github.com/FedericoBruzzone/master-thesis/blob/main/summary/summary.pdf) and the [presentation](https://github.com/FedericoBruzzone/master-thesis/blob/main/presentation/presentation.pdf)**
+**If you do not want to waste too much time, read the summary ([ENG](https://github.com/FedericoBruzzone/master-thesis/blob/main/summary/summary-eng.pdf) or [ITA](https://github.com/FedericoBruzzone/master-thesis/blob/main/summary/summary-ita.pdf)) and the [presentation](https://github.com/FedericoBruzzone/master-thesis/blob/main/presentation/presentation.pdf)**
 
 # Master thesis
 

@@ -1,0 +1,237 @@
+\documentclass{adapt-lab}
+\usepackage{pifont}
+\usepackage{rotating}
+
+\newcommand{\cwcomment}[1]{\profcomment[Walter]{#1}}
+\newcommand{\bfcomment}[1]{\studcomment[Federico]{#1}}
+
+%\usepackage{amsthm}
+%\usepackage{amssymb}
+%\usepackage{amsmath}
+%\usepackage{subfig}
+
+% ========== My settings ==========
+\usetikzlibrary{angles,shadows.blur,positioning,backgrounds}
+\usepackage{forest}
+
+% \usepackage[altpo]{backnaur}
+\usepackage{backnaur}
+
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+\usepackage{bussproofs} % for proof trees
+\usepackage{booktabs} % for tables
+\usepackage{amsmath} % for math
+
+\newcommand{\circleblack}{\CIRCLE}
+\newcommand{\circlewhite}{\Circle}
+\newcommand{\circleleft}{\LEFTcircle}
+\newcommand{\circleright}{\RIGHTcircle}
+
+% TEXTTT breakable ==================
+% \newcommand*\justify{%
+%   \fontdimen2\font=0.4em% interword space
+%   \fontdimen3\font=0.2em% interword stretch
+%   \fontdimen4\font=0.1em% interword shrink
+%   \fontdimen7\font=0.1em% extra space
+%   \hyphenchar\font=`\-% allowing hyphenation
+% }
+% \renewcommand{\texttt}[1]{%
+%   \begingroup
+%   \ttfamily
+%   \begingroup\lccode`~=`/\lowercase{\endgroup\def~}{/\discretionary{}{}{}}%
+%   \begingroup\lccode`~=`[\lowercase{\endgroup\def~}{[\discretionary{}{}{}}%
+%   \begingroup\lccode`~=`.\lowercase{\endgroup\def~}{.\discretionary{}{}{}}%
+%   \catcode`/=\active\catcode`[=\active\catcode`.=\active
+%   \justify\scantokens{#1\noexpand}%
+%   \endgroup
+% }
+% ===============================
+
+\tcbset{
+    myboxstyle/.style={
+        enhanced, breakable,
+        sharp corners,
+        % left skip=8mm,
+        % attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+        boxed title style={colframe=#1!40, height=6mm, bean arc, boxrule=1pt},
+        colback=#1!10, colframe=#1!30, boxrule=1pt,
+        coltitle=black, colbacktitle=#1!10,
+        fonttitle=\bfseries,
+    }
+}
+
+% \fboxsep=10mm %padding thickness
+\fboxrule=1.5pt %border thickness
+
+\hypersetup{
+    colorlinks = true
+}
+
+\tcbuselibrary{theorems}
+\newtcbtheorem{mydefinition}{Highlight}
+{myboxstyle=yellow}{def}
+% \newtcbtheorem[number within=section]{mytheo}{My Theorem}%
+% {colback=green!5,colframe=green!35!black,fonttitle=\bfseries}{th}
+
+\RequirePackage{xspace}
+\RequirePackage[tikz]{bclogo}
+\definecolor{bgblue}{RGB}{245,243,253}
+\definecolor{ttblue}{RGB}{91,194,224}
+\renewcommand\bcStyleTitre[1]{\large\textcolor{ttblue}{#1}}
+\newenvironment{Caveats}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcbombe, barre=none,noborder=true]{Caveats}}{\end{bclogo}}
+\newenvironment{Tips}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bclampe, barre=none,noborder=true]{Tips \& Tricks}}{\end{bclogo}}
+\newenvironment{Info}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcinfo, barre=none,noborder=true]{Info}}{\end{bclogo}}
+\newenvironment{Warning}{\begin{bclogo}[couleur=bgblue, arrondi =0 , logo=\bcattention, barre=none,noborder=true]{Warning}}{\end{bclogo}}
+
+
+\newtheorem{definition}{Formal Definition}
+% =================================
+
+\renewcommand{\thesection}{\arabic{section}}
+\begin{document}
+
+% \title{Code Less to Code More}
+% \subtitle{Streamlining LSP Development for \\ Language Families \vspace{2cm}}
+% \title{Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages}
+% \subtitle{\vspace{3pt}\small Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages}
+\title{Toward a Modular Approach for Type Systems and LSP \\ Generation \\}
+% \subtitle{Moving from $\mathcal{L} + \mathcal{E}$ to $\mathcal{L} \times 1$ combinations to support LSP for $\mathcal{L}$ languages \\}
+\author{Federico Cristiano Bruzzone}
+\matricola{27427A}
+\ayear{2023-2024}
+\advisor{Prof.\,Walter Cazzola}
+\coadvisor{Dr.\,Luca Favalli}
+% \school{Universit\`a degli Studi di Milano}
+\degree{MSc in Computer Science}
+% \selectlanguage{english}
+\selectlanguage{italian}
+
+\makefirstpage
+
+% \frontmatter
+%
+% \tableofcontents
+%
+% \mainmatter
+
+\break
+
+\section{Ente presso cui \`e stato svolto il lavoro di stage}
+
+Il mio tirocinio si è svolto presso l'\textbf{ADAPT-Lab} dell'Universit\`a degli Studi di Milano, sotto la supervisione del Prof.\,Walter \textbf{Cazzola} e del Dr.\,Luca \textbf{Favalli}.
+Il laboratorio fa parte del Dipartimento di Informatica ed è focalizzato sulla ricerca nel campo dei linguaggi di programmazione e dell'ingegneria del software.
+
+\section{Contesto iniziale}
+
+Il panorama dello sviluppo software sta subendo una rapida trasformazione, guidato dalla crescente complessità e diversità dei linguaggi di programmazione e degli strumenti. Tra i principali progressi, il \textbf{Language Server Protocol} (LSP) è emerso come una tecnologia cruciale, ridefinendo fondamentalmente il modo in cui gli sviluppatori interagiscono con i loro ambienti di sviluppo. Prima dell'avvento di LSP, ogni Integrated Development Environment (IDE) doveva implementare il proprio set di funzionalità specifiche del linguaggio, come il completamento automatico, il controllo degli errori e il refactoring. Questo approccio spesso risultava in un'esperienza di sviluppo \textit{frammentata} e \textit{incoerente}, richiedendo un notevole sforzo per mantenere e aggiornare queste funzionalità nei diversi ambienti. Grazie alla loro natura modulare ed estensibile, i \textbf{Language Workbenches} (LWs) avrebbero potuto essere utilizzati per semplificare lo sviluppo di sistemi di tipi e funzionalità specifiche del linguaggio.
+
+\section{Obiettivi del lavoro}
+
+Questa sezione delinea gli obiettivi principali dello studio, concentrandosi sui concetti fondamentali e le tecnologie dietro il \textbf{Language Server Protocol} (LSP). L'accento è posto su \textbf{analisi statica}, \textbf{Type Systems} (TSs) e l'integrazione di \textbf{compilatori} e \textbf{language workbenches} (LWs), insieme ai benefici e alle sfide dei \textbf{domain-specific languages} (DSLs) e delle \textbf{architetture modulari}.
+
+\begin{enumerate}
+    \item \textit{Esaminare i concetti fondamentali e le tecnologie alla base del \textbf{LSP}}: Questo include la comprensione dei componenti del LSP, come JSON-RPC e le specifiche dei comandi.
+
+    \item \textit{Esplorare l'analisi statica e i \textbf{TSs}}: Approfondire gli aspetti teorici e pratici di queste tecnologie e la loro integrazione nei language server per migliorare la qualità del codice e la produttività degli sviluppatori.
+
+    \item \textit{Indagare il ruolo dei \textbf{compilatori} e dei \textbf{LWs} nello sviluppo di LSP}: Questo comporta l'esplorazione di come le fasi del compilatore e le language workbenches possano essere sfruttati per integrare LSP.
+
+    \item \textit{Analizzare i benefici e le sfide dei \textbf{DSLs}}: Questo include l'esame dei vantaggi dei DSLs nel contesto di LSP, nonché le sfide associate alla progettazione e implementazione dei DSLs nel dominio dei \textbf{TSs}.
+
+    \item \textit{Valutare l'impatto delle architetture modulari nello sviluppo dei \textbf{TSs} e di \textbf{LSP}}: Valutare come la modularità, promossa da LSP e dagli strumenti correlati, supporti lo sviluppo efficiente e la manutenzione dei linguaggi di programmazione e delle loro funzionalità.
+
+    \item \textit{Ridurre il numero di combinazioni per supportare $\mathbf{L}$ linguaggi e $\mathbf{E}$ editors}: Indagare come la modularità potrebbe ridurre il numero di combinazioni, passando da $\mathbf{L} + \mathbf{E}$ a $\mathbf{L} \times 1$ per semplificare lo sviluppo di LSP.
+
+    \item \textit{Dimostrare implementazioni pratiche e \textbf{casi di studio}}: Fornire esempi dettagliati e casi di studio per illustrare le applicazioni reali e i benefici dei concetti e delle tecnologie proposti.
+\end{enumerate}
+
+\section{Descrizione lavoro svolto}
+
+Il lavoro svolto in questo studio ha comportato un'esplorazione completa e un'implementazione pratica dei concetti fondamentali e delle tecnologie alla base del \textbf{Language Server Protocol} (LSP). L'obiettivo principale era generare l'integrazione e le funzionalità di LSP per ogni linguaggio possibile scritto in Neverlang per creare un'esperienza di sviluppo più coesa ed efficiente.
+
+Inizialmente, è stata condotta un'analisi \textit{approfondita} dei componenti del LSP, sottolineando il ruolo di JSON-RPC come protocollo di comunicazione e le varie specifiche dei comandi che definiscono le interazioni tra IDEs e language servers. Questa comprensione fondamentale era cruciale per sviluppare soluzioni robuste che potessero integrarsi senza problemi nei diversi ambienti di sviluppo.
+
+La ricerca ha anche esplorato l'\textbf{analisi statica} e i \textbf{sistemi di tipi}, esaminando sia i framework teorici che le applicazioni pratiche. Queste indagini sono state fondamentali per incorporare controlli avanzati della qualità del codice e miglioramenti della produttività degli sviluppatori nei language servers. Integrando questi elementi, il progetto mirava a fornire feedback in tempo reale e rilevamento degli errori, migliorando significativamente l'esperienza di codifica.
+
+Una parte significativa del lavoro si è concentrata sull'interazione tra \textbf{compilatori} e \textbf{language workbenches} (LWs) nel contesto dello sviluppo di LSP. Lo studio ha esaminato come diverse fasi delle operazioni del compilatore potessero essere sfruttate per supportare le funzionalità del LSP, garantendo che le caratteristiche specifiche del linguaggio fossero implementate e mantenute accuratamente. Le language workbenches, con le loro architetture modulari ed estensibili, sono stati utilizzati per semplificare la creazione e la personalizzazione di queste funzionalità.
+
+La ricerca ha inoltre indagato i benefici e le sfide associati ai \textbf{domain-specific languages} (DSLs). Progettando e implementando DSLs su misura per domini specifici dei sistemi di tipi, lo studio mirava a dimostrare come questi linguaggi specializzati potessero migliorare la produttività degli sviluppatori e la qualità del codice. Sono state affrontate anche le sfide della progettazione e implementazione dei DSLs, fornendo approfondimenti su strategie efficaci per superare questi ostacoli.
+
+La \textbf{modularità} è stata un tema chiave per tutto il progetto, con un forte accento su come le \textbf{architetture modulari} potessero supportare lo sviluppo e la manutenzione efficienti dei linguaggi di programmazione e delle loro funzionalità. Questo approccio modulare non solo ha facilitato il riutilizzo e la scalabilità del codice, ma ha anche svolto un ruolo cruciale nella riduzione del numero di combinazioni necessarie per supportare più linguaggi, semplificando così lo sviluppo di LSP. Infatti, riduciamo il numero di combinazioni ($\mathbf{L} + \mathbf{E}$) richieste per supportare LSP per $\mathbf{L}$ linguaggi e $\mathbf{E}$ editors a $\mathbf{L} \times 1$ combinazioni, generando i \textbf{client}.
+
+Per illustrare le applicazioni pratiche e i benefici dei concetti e delle tecnologie proposti, sono stati forniti dettagliati casi di studio e implementazioni pratiche (ad esempio, l'integrazione di LSP e del sistema di tipi per Neverlang e Simplelang). Questi esempi hanno mostrato l'impatto reale della ricerca e hanno evidenziato il potenziale per migliorare i flussi di lavoro dello sviluppo software attraverso capacità avanzate dei language server.
+
+\section{Tecnologie coinvolte}
+
+Il lavoro ha coinvolto le seguenti tecnologie:
+\begin{itemize}
+\item \textbf{Language Server Protocol (LSP)}: Un protocollo di comunicazione standardizzato che consente l'integrazione di funzionalità specifiche del linguaggio negli IDE.
+\item \textbf{JSON-RPC}: Un protocollo leggero di chiamata di procedura remota che serve come base per la comunicazione LSP.
+\item \textbf{Compilatori e Language Workbenches (LWs)}: Strumenti e framework utilizzati per analizzare, trasformare e generare codice, nonché per sviluppare linguaggi specifici del dominio e funzionalità del linguaggio.
+\item \textbf{Sistemi di Tipi}: Framework teorici e implementazioni pratiche che governano i tipi di dati e le loro interazioni nei linguaggi di programmazione.
+\item \textbf{Domain-Specific Languages (DSLs)}: Linguaggi specializzati progettati per affrontare specifici domini di problemi e migliorare la produttività degli sviluppatori.
+\item \textbf{LSP4J}: Una libreria Java che fornisce supporto per l'implementazione di language server utilizzando il LSP.
+\item \textbf{Software Product Lines (SPLs)}: Una metodologia per gestire la variabilità delle funzionalità tra le varianti di prodotti software.
+\item \textbf{Linguaggi di Programmazione}: Inclusi Java, Neverlang, TypeScript, JavaScript e altri linguaggi.
+\end{itemize}
+
+\section{Competenze e risultati raggiunti}
+\fbox{
+    \parbox{0.96\textwidth}{
+    \centering
+    Stiamo scrivendo un articolo per \href{https://www.scimagojr.com/journalsearch.php?q=19309&tip=sid&clean=0}{\textit{Journal of Systems and Software}} intitolato \newline ``\textbf{Code Less to Code More}: Streamlining LSP Development for Language Families''.
+    }
+}
+
+\vspace{0.5cm}
+
+Inoltre, nel corso di questa ricerca sono state acquisite competenze significative e raggiunti risultati importanti. Le competenze chiave e i risultati includono:
+
+\begin{itemize}
+    \item \textit{Sviluppo di una libreria}: \`E stata progettata e implementata una libreria software completa, sfruttando il linguaggio di programmazione Java per racchiudere le funzionalità essenziali richieste per un'integrazione efficace di LSP. Questa libreria comprende moduli per le specifiche dei comandi, la comunicazione JSON-RPC, le implementazioni dei metodi chiave e capacità avanzate di analisi del codice sorgente per i sistemi di tipi. La libreria comprende circa $10000$ righe di codice.
+    \item \textit{Miglioramento dello sviluppo di LSP}: Concentrandosi sull'estensione delle capacità di LSP, la libreria consente una comunicazione senza soluzione di continuità tra gli IDE e i language server, favorendo una migliore navigazione del codice, evidenziazione della sintassi, completamento del codice e rilevamento degli errori in tempo reale. Questi miglioramenti elevano significativamente l'esperienza di sviluppo fornendo agli sviluppatori strumenti potenti per ottimizzare i flussi di lavoro dello sviluppo software.
+    \item \textit{Design modulare}: La libreria è stata progettata con un approccio modulare, facilitando l'integrazione e la scalabilità nei diversi ambienti IDE e linguaggi di programmazione. Questa architettura modulare promuove la riusabilità del codice, l'efficienza della manutenzione e l'adattabilità ai requisiti software in evoluzione.
+    \item \textit{Integrazione del sistema di tipi}: Integrale alla funzionalità della libreria è la sua robusta integrazione del sistema di tipi, che migliora le capacità di analisi e verifica del programma. L'implementazione include meccanismi sofisticati per l'inferenza dei tipi, la gestione delle tabelle dei simboli e la risoluzione degli scope, garantendo una gestione accurata ed efficiente dei costrutti specifici del linguaggio.
+    \item \textit{Un nuovo DSL per i sistemi di tipi e l'implementazione di LSP}: È stato progettato e implementato un nuovo DSL per supportare la definizione dei sistemi di tipi e delle funzionalità di LSP. Questo DSL fornisce un'astrazione ad alto livello per specificare i costrutti e le interazioni specifiche del linguaggio, consentendo uno sviluppo rapido e una personalizzazione dei sistemi di tipi e delle funzionalità del linguaggio.
+    \item \textit{Contributi all'ingegneria dei linguaggi}: Attraverso lo sviluppo di questa libreria, sono stati fatti significativi contributi al campo dell'ingegneria dei linguaggi. Avanzando le capacità di LSP e promuovendo le migliori pratiche nella progettazione e implementazione dei linguaggi software, la ricerca sottolinea il suo impegno a migliorare le pratiche di sviluppo software e a promuovere l'innovazione negli strumenti linguistici.
+\end{itemize}
+
+\begingroup
+\let\clearpage\relax
+% bibliography
+\bibliographystyle{plain}
+\bibliography{local,strings,reflection,aosd,my_work,oolanguages,programming,software_engineering, logic,dsl,pl,distributed_systems,grammars,pattern,biomedicine,splc,roles}
+\endgroup
+
+\nocite{Cazzola20}
+\nocite{Cazzola21b, Cazzola15f}
+\nocite{Leduc20}
+\nocite{Cazzola15c, Cazzola14c}
+\nocite{Cazzola15f, Cazzola21b}
+\nocite{Fowler10}
+\nocite{Bettini13b}
+\nocite{Barros22}
+\nocite{Bunder19a}
+\nocite{Rodriguez-Echeverria18a}
+\nocite{Cazzola20}
+\nocite{Rodriguez-Echeverria18}
+\nocite{Cazzola23d, Cazzola20}
+\nocite{Cazzola15f}
+\nocite{Cazzola15f}
+\nocite{Cazzola16, Cazzola16i, Cazzola15f}
+\nocite{Haugen08, Cazzola14e, White09}
+\nocite{Wende09}
+\nocite{Cazzola15c, Cazzola14c}
+\nocite{Cazzola19}
+
+% \appendix
+%
+% \bibliographystyle{plain}
+% \bibliography{local,strings,reflection,aosd,my_work,oolanguages,programming,software_engineering, logic,dsl,pl,distributed_systems,grammars,pattern,biomedicine,splc,roles}
+
+\end{document}
+
