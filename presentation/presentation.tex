@@ -32,6 +32,8 @@
 \newcommand{\scopeminwidth}{((\globalminwidth - 1cm) / 2 - 0.5cm)}
 \newcommand{\scopeminheight}{(\globalminheight / 3)}
 
+\setlist[itemize,1]{label=\alert{--}}
+
 
 \title[Toward TSs and LSP generation]{Toward a Modular Approach for Type Systems and LSP generation}
 % \author{Federico Cristiano Bruzzone}
@@ -60,6 +62,8 @@
 \hyphenpenalty=10000
 \hbadness=10000
 
+
+
 \begin{document}
 
 \begin{frame}
@@ -81,7 +85,7 @@
         \end{itemize}
         &
         \begin{itemize}
-            \item Error handling and recovery
+            \item Error handling
             \item \alert{IDE support}
             \item Documentation
         \end{itemize}
@@ -174,8 +178,17 @@
 
 \begin{frame}{\secname}
     % \framesubtitle{\subsecname}
-    This could be achieved using a \alert{modular} approach and \\
-    \alert{feature-oriented} programming.
+
+    \alert{Feature-Oriented Programming} (FOP) is a programming paradigm that allows the development of \alert{software product lines} (SPLs).
+
+    \pause
+
+    \bigskip
+    \begin{itemize}
+        \item[\alert{-}] \alert{Feature} is a unit of functionality that satisfies a requirement.
+        \item[\alert{-}] \alert{Feature Model} is a model that represents the variability of the SPL.
+        \item[\alert{-}] \alert{Feature Configuration} is a set of features that compose a product.
+    \end{itemize}
 \end{frame}
 
 
@@ -247,33 +260,37 @@
 
 % ============================================================================
 
-\section[Scientific Contribution]{Scientific Contribution}
-\subsection[]{}
-\begin{frame}{\secname}
-    \framesubtitle{\subsecname}
-    % - Type System implementation and a Java Library for Neverlang in order to support the type system for every langauge developed with Neverlang.
-    % - Type System Modularization
-    % - DSL for Type System definition
-    % - LSP generation for Neverlang languages
-    % - Client and Syntax Highlighting generation
-
-    \begin{itemize}[itemsep=10pt]
-        \item[\alert{-}] \alert{Methodology} for whole LWs that support at least component modularization.
-        \item[\alert{-}] Type System and LSP \alert{Modularization}.
-        \item[\alert{-}] \alert{DSL} (about 2k LoC) for Type System definition.
-        \item[\alert{-}] \alert{LSP} generation for Neverlang languages.
-        \item[\alert{-}] \alert{Client} and \alert{Syntax Highlighting} generation reducing to $\mathbf{N} \times \mathbf{1}$ the number of combinations.
-        \item[\alert{-}] Implementation of a \alert{Java Library} (about 6k LoC) for \alert{Neverlang} to support the type system for every language developed with Neverlang.
-    \end{itemize}
-
-\end{frame}
-
  % Quello che abbiamo fatto è stato sviluppare un approccio modulare
  % nell'implementazione dei sistemi di tipi e nell'aggiunta opzionale
  % di fasi di compilazione per fare type checking e type inference e
  % per la generazione dell'LSP.
  % Questo approccio modulare è stato implementato in Neverlang,
  % ma è applicabile a qualsiasi linguaggio che supporti la modularizzazione.
+
+\section[Scientific Contribution]{Scientific Contribution}
+\subsection[]{}
+\begin{frame}{\secname}
+    \framesubtitle{\subsecname}
+
+    \begin{itemize}[itemsep=10pt]
+        \item[\alert{-}] \alert{Methodology} for whole LWs that support at least component modularization.
+        \item[\alert{-}] Type System and LSP \alert{Modularization}.
+        \item[\alert{-}] \alert{DSL} (about 2k LoC) for Type System definition.
+        \item[\alert{-}] \alert{LSP} generation for Neverlang languages.
+        \item[\alert{-}] \alert{Client} and \alert{Syntax Highlighting} generation reducing the number of combinations.
+        \item[\alert{-}] Implementation of a \alert{Java Library} (about 6k LoC) for \alert{Neverlang} to support the type system for every language developed with Neverlang.
+        \item[\alert{-}] 3 \alert{use cases} to show the effectiveness of the methodology.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{\secname}
+    \framesubtitle{\subsecname}
+
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{figs/lsp-combination-nx1.pdf}
+    \end{center}
+\end{frame}
+
 
 \subsection[Type System Components]{Type System Components}
 
@@ -981,6 +998,17 @@
 % ============================================================================
 \setbeamercolor{background canvas}{bg=black}
 \section[LSP in Action]{LSP in Action}
+
+\subsection[]{VSCode client}
+\begin{frame}{\secname}
+    \framesubtitle{\subsecname}
+    {\hspace*{6cm}\vbox to 0cm {\vspace*{4cm}\includegraphics[width=9cm]{./figs/black_rect.png}}}
+    \begin{center}
+        \includegraphics<1>[width=0.6\textwidth]{imgs/neverlang-lsp-before.png}
+        \includegraphics<2>[width=0.8\textwidth]{imgs/neverlang-lsp-after.png}
+    \end{center}
+\end{frame}
+
 \subsection[]{Nvim client}
 % Movie
 \begin{frame}{\secname}
@@ -1002,12 +1030,41 @@
     ]{}{VPlayer.swf}
     \end{center}
 \end{frame}
+
+
 \setbeamercolor{background canvas}{bg=white}
 
 % ============================================================================
 \section{Conclusions}
 
-\begin{frame}{\secname}
+\begin{frame}
+    \frametitle{\secname}
+
+    \Large Interesting results:
+    \normalsize
+    \begin{itemize}
+        \item We are writing an article (\alert{Code Less to Code More}) to be submitted to \alert{JSS}.
+    \end{itemize}
+
+    \bigskip
+    \Large Interesting twist:
+    \normalsize
+    \begin{itemize}
+        \item Recycling the code of the \alert{TS} to define a new compilation phase inside of \alert{Neverlang}.
+    \end{itemize}
+
+    \bigskip
+    \Large Future work:
+    \normalsize
+    \begin{itemize}
+        \item Define the same methodology for the \alert{DAP}.
+    \end{itemize}
+
+\end{frame}
+
+
+% ============================================================================
+\begin{frame}
     \begin{center}
         \huge Thanks for your attention!
     \end{center}
