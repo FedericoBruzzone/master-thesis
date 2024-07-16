@@ -2,7 +2,7 @@
 
 # Master thesis
 
-This repository contains my master thesis in Computer Science developed at the [ADAPT Lab](https://cazzola.di.unimi.it/adapt-lab.html), Università degli Studi di Milano.
+This repository contains my master thesis in Computer Science carried out at the [ADAPT Lab](https://cazzola.di.unimi.it/adapt-lab.html), Università degli Studi di Milano.
 
 ## Info
 
