@@ -14,7 +14,6 @@
 \usepackage{booktabs}
 \usepackage{tikz}
 
-\usepackage{media9}
 
 \usepackage{enumitem}
 \usepackage{makecell}
@@ -34,6 +33,7 @@
 
 \setlist[itemize,1]{label=\alert{--}}
 
+\usepackage{media9}
 
 \title[Toward TSs and LSP generation]{Toward a Modular Approach for Type Systems and LSP generation}
 % \author{Federico Cristiano Bruzzone}
@@ -1009,26 +1009,33 @@
     \end{center}
 \end{frame}
 
-\subsection[]{Nvim client}
+\subsection[]{Neovim client}
 % Movie
-\begin{frame}{\secname}
+\begin{frame}{Embedded Animation}
+    \frametitle{\secname}
     \framesubtitle{\subsecname}
-    {\hspace*{6cm}\vbox to 0cm {\vspace*{4cm}\includegraphics[width=9cm]{./figs/black_rect.png}}}
+    {\hspace*{6cm}\vbox to 0cm {\vspace*{3cm}\includegraphics[width=9cm]{./figs/black_rect.png}}}
+
     \begin{center}
-    \includemedia[
-      width=1\textwidth,
-      height=1\textheight,
-      % activate=pageopen,
-      % keepaspectratio,
-      % playbutton=plain,
-      addresource=videos/LSP_in_action.mp4,
-      flashvars={
-         source=videos/LSP_in_action.mp4
-         &autoPlay=false
-         &loop=true
-      }
-    ]{}{VPlayer.swf}
+    \href{run:./videos/LSP_in_action.mp4}{{\color{white}Demonstration}}
     \end{center}
+
+    % ===== VIDEO =====
+    % \begin{center}
+    % \includemedia[
+    %   width=1\textwidth,
+    %   height=1\textheight,
+    %   % keepaspectratio,
+    %   activate=pageopen,
+    %   playbutton=plain,
+    %   addresource=videos/LSP_in_action.mp4,
+    %   flashvars={
+    %      source=videos/LSP_in_action.mp4
+    %      &autoPlay=true
+    %      &loop=true
+    %   }
+    % ]{}{VPlayer.swf}
+    % \end{center}
 \end{frame}
 
 

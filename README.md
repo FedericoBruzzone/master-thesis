@@ -2,8 +2,7 @@
 
 # Master thesis
 
-
-This repository contains the report of my master thesis at [ADAPT Lab](https://cazzola.di.unimi.it/adapt-lab.html), Università degli Studi di Milano.
+This repository contains my master thesis in Computer Science developed at the [ADAPT Lab](https://cazzola.di.unimi.it/adapt-lab.html), Università degli Studi di Milano.
 
 ## Info
 
@@ -11,10 +10,11 @@ This repository contains the report of my master thesis at [ADAPT Lab](https://c
 - **Author**: Federico Cristiano Bruzzone
 - **Supervisor**: Prof. Walter Cazzola
 - **Co-Advisor**: Dr. Luca Favalli
+- **Final Grade**: 110/110 cum laude
 - **Academic Year**: 2023/2024
 - **Degree**: Master's Degree in Computer Science
 - **University**: [Università degli Studi di Milano](https://www.unimi.it/en) (Italy)
-- **Department**: [Computer Science Department](https://www.unimi.it/en/education/master-programme/computer-science-master)
+- **Department**: [Computer Science](https://www.unimi.it/en/education/master-programme/computer-science-master)
 - **Lab**: [ADAPT Lab](https://di.unimi.it/it/ricerca/risorse-e-luoghi-della-ricerca/laboratori-di-ricerca/adapt-lab)
 
 ## Contact
