@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="neverlang-lsp-implementation-1.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/neverlang-lsp/neverlang-lsp-implementation/build/libs/neverlang-lsp-implementation-1.0.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

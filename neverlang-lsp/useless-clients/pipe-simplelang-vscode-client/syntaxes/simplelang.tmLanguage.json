@@ -1,0 +1,56 @@
+{
+  "fileTypes": ["sl"],
+  "name": "SimpleLanguage",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    }
+  ],
+
+
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\b(function)\\b",
+          "name": "storage.type.simplelang"
+        },
+        {
+          "match": "\\b(return|if|else)\\b",
+          "name": "keyword.control"
+        }
+      ]
+    },
+
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.simplelang"
+            }
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.java"
+            }
+          },
+          "name": "string.quoted.double.simplelang",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.simplelang"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "scopeName": "source.simplelang",
+  "uuid": "4e5fede3-9647-47d6-b771-22f6f59c1db7"
+}

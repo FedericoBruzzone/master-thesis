@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = "AdaptLab" //  optional target repository name
+            url "https://maven.adapt-lab.di.unimi.it/neverlang/releases"
+        }
+        maven {
+            name = "AdaptLab" //  optional target repository name
+            url "https://maven.adapt-lab.di.unimi.it/neverlang/snapshots"
+        }
+        gradlePluginPortal()
+        mavenLocal()
+    }
+}
+
+rootProject.name = 'neverlang-lsp'
+include 'simplelang'
+include 'neverlang-typesystem'
+include 'neverlang-lsp-implementation'
+include 'neverlang-lsp-core'
+include 'neverlang-lsp-visualizer'
+include 'simplelang-typesystem'
+include 'simplelang-lsp'
+include 'neverlang-lsp-defaults'
+
+//include 'neverlang-lsp-gradle'
+//include 'neverlang-lsp-client-generator'
+//include 'vscode-client'
+//include 'nvim-client'

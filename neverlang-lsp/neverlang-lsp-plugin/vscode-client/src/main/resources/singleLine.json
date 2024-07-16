@@ -1,0 +1,10 @@
+'{'
+  "begin": "{0}",
+  "beginCaptures": '{'
+    "0": '{'
+      "name": "punctuation.definition.comment.{1}"
+    '}'
+  '}',
+  "end": "$",
+  "name": "comment.line.double-slash.{1}"
+'}'

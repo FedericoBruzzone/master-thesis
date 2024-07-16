@@ -1,0 +1,31 @@
+'{'
+          "begin": "{5}",
+          "beginCaptures": '{'
+            "0": '{'
+              "name": "punctuation.definition.comment.{1}"
+            '}'
+          '}',
+          "end": "$",
+          "name": "comment.line.double-slash.{1}"
+        '}',
+        '{'
+          "begin": "{6}",
+          "beginCaptures": '{'
+            "0": '{'
+              "name": "punctuation.definition.comment.{1}"
+            '}'
+          '}',
+          "end": "{7}",
+          "endCaptures": '{'
+            "0": '{'
+              "name": "punctuation.definition.comment.{1}"
+            '}'
+          '}',
+          "name": "comment.block.{1}",
+          "patterns": [
+            '{'
+              "match": "(?<=\\s|^)//.*",
+              "name": "comment.line.double-slash.{1}"
+            '}'
+          ]
+        '}'

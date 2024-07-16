@@ -1,0 +1,14 @@
+plugins {
+		id "java-library"
+}
+
+dependencies {
+		// EMBED LSP PROTOCOL
+		api "org.eclipse.lsp4j:org.eclipse.lsp4j:0.19.0"
+		implementation project(':neverlang-typesystem')
+		implementation project(':neverlang-lsp-core')
+		implementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+		testImplementation project(":simplelang-typesystem")
+
+//    implementation "it.unimi.di.adaptlab:neverlang-commons-types:1.0.0-SNAPSHOT"
+}

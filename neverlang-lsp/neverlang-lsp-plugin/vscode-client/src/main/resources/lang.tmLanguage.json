@@ -1,0 +1,72 @@
+'{'
+  "fileTypes": ["{0}"],
+  "name": "{1}",
+  "patterns": [
+    '{'
+      "include": "#keywords"
+    '}',
+    '{'
+      "include": "#strings"
+    '}',
+    '{'
+      "include": "#comments"
+    '}'
+  ],
+
+  "repository": '{'
+    "keywords": '{'
+      "patterns": [
+        '{'
+          "match": "\\b({2})\\b",
+          "name": "keyword.control"
+        '}',
+        '{'
+          "match": "\\b([{3}])\\b",
+          "name": "keyword.operator"
+        '}',
+        '{'
+          "match": "\\b({4})\\b",
+          "name": "constant.other"
+        '}'
+      ]
+    '}',
+
+
+    "comments": '{'
+      "patterns": [
+        {5}
+      ]
+    '}',
+
+
+    "strings": '{'
+      "patterns": [
+        '{'
+          "begin": "\"",
+          "beginCaptures": '{'
+            "0": '{'
+              "name": "punctuation.definition.string.begin.{1}"
+            '}'
+          '}',
+          "end": "\"",
+          "endCaptures": '{'
+            "0": '{'
+              "name": "punctuation.definition.string.end.java"
+            '}'
+          '}',
+          "name": "string.quoted.double.{1}",
+          "patterns": [
+            '{'
+              "match": "\\\\.",
+              "name": "constant.character.escape.{1}"
+            '}'
+          ]
+        '}'
+      ]
+    '}'
+  '}',
+  "scopeName": "source.{1}",
+  "uuid": "4e5fede3-9647-47d6-b771-22f6f59c1db7"
+'}'
+
+

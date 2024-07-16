@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/neverlang-lsp/neverlang-lsp-client-generator/neverlang-lsp-client-generator.iml" filepath="$PROJECT_DIR$/neverlang-lsp/neverlang-lsp-client-generator/neverlang-lsp-client-generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/neverlang-lsp/neverlang-lsp-gradle/neverlang-lsp-gradle.iml" filepath="$PROJECT_DIR$/neverlang-lsp/neverlang-lsp-gradle/neverlang-lsp-gradle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/neverlang-lsp/nvim-client/nvim-client.iml" filepath="$PROJECT_DIR$/neverlang-lsp/nvim-client/nvim-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/neverlang-lsp/vscode-client/vscode-client.iml" filepath="$PROJECT_DIR$/neverlang-lsp/vscode-client/vscode-client.iml" />
+    </modules>
+  </component>
+</project>

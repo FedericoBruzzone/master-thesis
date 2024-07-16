@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/neverlang-lsp/simplelang-lsp/build/libs/simplelang-client.jar!/" />
+      <root url="jar://$PROJECT_DIR$/neverlang-lsp/simplelang-lsp/build/libs/simplelang-lsp-1.0.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
