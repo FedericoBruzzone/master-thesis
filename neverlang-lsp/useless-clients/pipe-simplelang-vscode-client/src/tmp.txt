@@ -1,0 +1,38 @@
+    
+    
+    
+    
+// outputChannel.appendLine("Start with Socket");
+    // return async () => {
+    //   let socket = net.connect({
+    //     port: 5123,
+    //   });
+    //   let result: StreamInfo = {
+    //     writer: socket,
+    //     reader: socket,
+    //   };
+    //   socket.on("error", () =>
+    //     vscode.window.showErrorMessage("Language server unreachable")
+    //   );
+    //   return result;
+    // };
+    // outputChannel.appendLine("Start with Process");
+    // return async () => {
+    //   let childProcess = spawn("/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/examples/simplelanguage/run.sh", [], {
+    //     stdio: "pipe",
+    //   });
+    //   let result: StreamInfo = {
+    //     writer: childProcess.stdin,
+    //     reader: childProcess.stdout,
+    //   };
+    //   childProcess.on("error", () =>
+    //     vscode.window.showErrorMessage("Language server unreachable")
+    //   );
+    //   return result;
+    // };
+
+
+
+
+
+    java  task ':runLSP' property 'mainClass' 

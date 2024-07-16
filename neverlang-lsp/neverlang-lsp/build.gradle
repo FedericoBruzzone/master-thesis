@@ -1,0 +1,91 @@
+plugins {
+    id "neverlang" version "0.9-SNAPSHOT" apply false
+    id "eclipse"
+    id "com.diffplug.spotless" version "6.25.0" apply false
+}
+
+subprojects {
+
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "maven-publish"
+    apply plugin: "com.diffplug.spotless"
+
+
+    group 'it.unimi.di.adaptlab'
+    version '1.0.1-SNAPSHOT'
+
+    /*wrapper {
+        gradleVersion = '7.4'
+    }
+    compileJava {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }*/
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url "https://maven.adapt-lab.di.unimi.it/neverlang/releases"
+        }
+        maven {
+            url "https://maven.adapt-lab.di.unimi.it/neverlang/snapshots"
+        }
+    }
+
+    ext {
+        neverlangVersion = "2.5.6-SNAPSHOT"
+        junitVersion = "5.9.0"
+    }
+
+    dependencies {
+        implementation 'com.intellij:annotations:12.0'
+        testImplementation 'org.assertj:assertj-core:3.23.1'
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
+    spotless {
+        format 'misc', {
+            // define the files to apply `misc` to
+            target '*.gradle', '*.md', '.gitignore'
+
+            // define the steps to apply to those files
+            trimTrailingWhitespace()
+            indentWithTabs(2) // or spaces. Takes an integer argument if you don't like 4
+            endWithNewline()
+        }
+
+        spotless {
+            java {
+                importOrder('java', 'javax', 'it.unimi.di.adaptlab', "neverlang", "dexter")
+                removeUnusedImports()
+                trimTrailingWhitespace()
+                palantirJavaFormat('2.38.0').style("GOOGLE") // Tab size = 2
+                //palantirJavaFormat('2.9.0').style("GOOGLE") // Tab size = 2
+                //googleJavaFormat().aosp() // Tab size = 4
+            }
+        }
+    }
+
+    build {
+        dependsOn spotlessApply
+    }
+}
+
+

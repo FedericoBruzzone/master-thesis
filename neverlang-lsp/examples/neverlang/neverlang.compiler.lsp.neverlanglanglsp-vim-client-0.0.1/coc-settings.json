@@ -1,0 +1,22 @@
+{
+  "semanticTokens.filetypes": [ "*" ],
+  "semanticTokens.enable": true,
+  "coc.preferences.semanticTokensHighlights": true,
+  "coc.preferences.semanticTokensHighlightsStyle": "default",
+
+  "languageserver": {
+    "neverlang.compiler.lsp.NeverlangLangLSP": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "/home/fcb/Documents/neverlang-lsp/examples/neverlang/build/libs/neverlang.compiler.lsp.NeverlangLangLSP-client.jar"
+      ],
+      "rootPatterns": [
+        "build.gradle"
+      ],
+      "filetypes": [
+        "neverlang.compiler.lsp.NeverlangLangLSP"
+      ]
+    }
+  }
+}

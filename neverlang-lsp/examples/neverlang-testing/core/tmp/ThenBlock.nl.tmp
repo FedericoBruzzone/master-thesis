@@ -1,0 +1,26 @@
+module neverlang.core.typelang.blck.ThenBlock {
+
+    imports {
+        neverlang.core.typelang.Formatting;
+    }
+
+    reference syntax {
+        Then: Then <-- "then" Callback;
+        Test <-- "";
+        // Callback <-- "test";
+    }
+
+    role(translate) {
+        Then: .{}.
+        //Callback: .{}.
+        0 .{
+            $$Formatting.callback($n,0);
+        }.
+
+        1 .{
+            $1.method = $$Formatting.withCallback($1);
+        }.
+    }
+}
+
+

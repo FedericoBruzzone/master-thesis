@@ -1,0 +1,17 @@
+//apply plugin: "neverlang"
+//
+//neverlang {
+//    compiler {
+//        version = neverlangVersion
+//    }
+//}
+
+dependencies {
+//    nlgImplementation project(":neverlang-typesystem")
+		compileOnly project(":neverlang-lsp-core")
+		implementation project(":neverlang-typesystem")
+		implementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+		implementation "it.unimi.di.adaptlab:neverlang-dexter:${neverlangVersion}"
+		implementation 'org.jgrapht:jgrapht-core:1.5.1'
+		implementation project(":neverlang-lsp-defaults")
+}

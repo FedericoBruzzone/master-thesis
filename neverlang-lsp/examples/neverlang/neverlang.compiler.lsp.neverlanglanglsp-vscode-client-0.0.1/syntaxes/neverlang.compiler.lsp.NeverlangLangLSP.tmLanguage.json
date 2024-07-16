@@ -1,0 +1,72 @@
+{
+  "fileTypes": ["nl"],
+  "name": "neverlang.compiler.lsp.NeverlangLangLSP",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#comments"
+    }
+  ],
+
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\b(concrete|slices|role|declare|roles|out-buckets|language|reference|slice|provides|from|categories|bundle|init|mapping|static|imports|endemic|module|in-buckets|tags|with|as|rename|left|syntax|style|attributes|requires)\\b",
+          "name": "keyword.control"
+        },
+        {
+          "match": "\\b([:;.,;:=,;:<---->$#+-->.;:<>!;:<>!;;<--<,,=>,=>:::,;:[][]\\*])\\b",
+          "name": "keyword.operator"
+        },
+        {
+          "match": "\\b()\\b",
+          "name": "constant.other"
+        }
+      ]
+    },
+
+
+    "comments": {
+      "patterns": [
+        
+      ]
+    },
+
+
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.neverlang.compiler.lsp.NeverlangLangLSP"
+            }
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.java"
+            }
+          },
+          "name": "string.quoted.double.neverlang.compiler.lsp.NeverlangLangLSP",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.neverlang.compiler.lsp.NeverlangLangLSP"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "scopeName": "source.neverlang.compiler.lsp.NeverlangLangLSP",
+  "uuid": "4e5fede3-9647-47d6-b771-22f6f59c1db7"
+}
+
+

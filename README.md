@@ -19,8 +19,6 @@ This repository contains my master thesis in Computer Science developed at the [
 
 ## Contact
 
-- Email:
-  - [federico.bruzzone.i@gmail.com]
-  - [federico.bruzzone@studenti.unimi.it]
-- GitHub:
-  - [FedericoBruzzone](https://github.com/FedericoBruzzone)
+If you have any questions, suggestions, or feedback, do not hesitate to [contact me](https://federicobruzzone.github.io/).
+
+

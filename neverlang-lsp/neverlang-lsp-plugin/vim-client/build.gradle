@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':neverlang-lsp-client-generator')
+    implementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+}

@@ -1,0 +1,22 @@
+{
+  "semanticTokens.filetypes": [ "*" ],
+  "semanticTokens.enable": true,
+  "coc.preferences.semanticTokensHighlights": true,
+  "coc.preferences.semanticTokensHighlightsStyle": "default",
+
+  "languageserver": {
+    "simplelang.SimpleLang": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/examples/simplelanguage/build/libs/simplelang.SimpleLang-client.jar"
+      ],
+      "rootPatterns": [
+        "build.gradle"
+      ],
+      "filetypes": [
+        "simplelang.SimpleLang"
+      ]
+    }
+  }
+}

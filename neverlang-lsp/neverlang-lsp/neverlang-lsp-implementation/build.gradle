@@ -1,0 +1,81 @@
+plugins {
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'application'
+}
+apply plugin: "neverlang"
+
+application {
+	mainClassName = 'neverlang.compiler.lsp.PipeLauncher'
+}
+
+def jarname = "neverlang"
+
+shadowJar {
+	archiveBaseName.set(jarname)
+	archiveClassifier.set("client")
+	archiveVersion.set('')
+}
+
+sourceSets {
+		typesystem {
+				java {
+						srcDirs = ['src/main/typesystem']
+				}
+		}
+}
+
+repositories {
+		maven {
+				url 'https://repo.gradle.org/gradle/libs-releases-local/'
+		}
+}
+
+neverlang {
+		compiler {
+				version = neverlangVersion
+				neverlangModule = "neverlang.compiler.lsp.TypeLangModule"
+				abstractModules = ["neverlankitg.compiler.lsp.NeverlangLangLSPModule"]
+				dependsOnRuntime sourceSets.named("typesystem").get()
+		}
+}
+
+dependencies {
+		nlgImplementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+		implementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+		implementation "it.unimi.di.adaptlab:neverlang-dexter:${neverlangVersion}"
+		implementation "it.unimi.di.adaptlab:neverlang-gradle-model:0.9-SNAPSHOT"
+		implementation sourceSets.named("typesystem").get().output
+		implementation project(":neverlang-typesystem")
+		implementation project(":neverlang-lsp-core")
+		typesystemImplementation project(":neverlang-typesystem")
+		typesystemImplementation project(":neverlang-lsp-core")
+		testImplementation "it.unimi.di.adaptlab:neverlang-junit-extension:$neverlangVersion"
+		typesystemCompileOnly "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+		typesystemCompileOnly "it.unimi.di.adaptlab:neverlang-dexter:${neverlangVersion}"
+		implementation "it.unimi.di.adaptlab:neverlang-decompiler:${neverlangVersion}"
+		implementation 'org.gradle:gradle-tooling-api:7.3-20210825160000+0000'
+
+		implementation project(':neverlang-lsp-defaults')
+		typesystemImplementation project(':neverlang-lsp-defaults')
+//    implementation "it.unimi.di.adaptlab:neverlang-commons-types:1.0.0-SNAPSHOT"
+}
+
+//publishing {
+//	publications {
+//		customPublication(MavenPublication) { // mavenJava
+//			from components.java
+//			from sourceSets.typesystem.output.classesDirs
+//		}
+//	}
+//}
+
+jar {
+	// Add directories with generated sources (might be several - one for every supported language).
+	from sourceSets.typesystem.output.classesDirs
+	// Add output directories of the sourceset's resources.
+	from sourceSets.typesystem.output.resourcesDir
+}
+
+tasks.named("spotlessJava") {
+		mustRunAfter("compileNeverlang")
+}

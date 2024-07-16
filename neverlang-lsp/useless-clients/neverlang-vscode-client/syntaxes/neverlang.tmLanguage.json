@@ -1,0 +1,35 @@
+{
+  "name": "Neverlang",
+  "scopeName": "source.nl",
+  "fileTypes": ["nl"],
+  "patterns": [
+    {
+      "match": "\\b(modules?|roles?|reference|concrete|syntax|from|imports|declare|endemic|slices?|language|with|when)\\b",
+      "name": "keyword.source.nl",
+      "comment": "Main language keywords"
+    },
+    {
+      "match": "//.*\n",
+      "name": "comment.line.nl"
+    },
+
+    {
+      "begin": "/\\*",
+      "end": "\\*/",
+      "name": "comment.block.nl"
+    },
+    {
+      "begin": "(\\.|\\<|@)\\{",
+      "end": "\\}(\\.|\\>)",
+      "patterns": [
+        {
+          "match": "\\$\\d+",
+          "name": "variable.language.nl",
+          "comment": "Nonterminals"
+        },
+        { "include": "source.java" }
+      ]
+    }
+  ],
+  "uuid": "16c2711b-9108-48f0-995d-9a0eee326d7e"
+}

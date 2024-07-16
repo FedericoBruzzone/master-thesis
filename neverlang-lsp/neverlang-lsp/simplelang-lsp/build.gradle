@@ -1,0 +1,76 @@
+plugins {
+		id 'com.github.johnrengelman.shadow' version '8.1.1'
+		id 'application'
+}
+
+application {
+//    mainClassName = 'lsp.SocketLauncher'
+		mainClassName = 'lsp.PipeLauncher'
+}
+
+def jarname = "simplelang"
+
+shadowJar {
+		archiveBaseName.set(jarname)
+		archiveClassifier.set("client")
+		archiveVersion.set('')
+}
+
+dependencies {
+		implementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+		implementation project(":neverlang-typesystem")
+		implementation project(":neverlang-lsp-core")
+		implementation project(":simplelang")
+		implementation project(":simplelang-typesystem")
+		implementation project(":neverlang-lsp-defaults")
+}
+
+//task test() {
+//    def text = 'Dear "$firstname $lastname",\nSo nice to meet you in <% print city %>.\nSee you in ${month},\n${signed}'
+//
+//    def binding = ["firstname":"Sam", "lastname":"Pullara", "city":"San Francisco", "month":"December", "signed":"Groovy-Dev"]
+//
+//    def engine = new groovy.text.SimpleTemplateEngine()
+//    def template1 = engine.createTemplate(text).make(binding)
+//
+//    def result = 'Dear "Sam Pullara",\nSo nice to meet you in San Francisco.\nSee you in December,\nGroovy-Dev'
+//
+//    doLast {
+//        if (project.hasProperty("args")) {
+//            println "Our input argument with project property ["+project.getProperty("args")+"]"
+//        }
+//        println template1
+//    }
+//}
+
+//task generate_nvim_client() { // type: Exec
+//
+//    def template = """
+//vim.api.nvim_create_autocmd('FileType', {
+//    pattern = 'simplelanguage',
+//    callback = function()
+//        local cmd = {
+//            "java",
+//            "-jar",
+//            "/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/neverlang-lsp/simplelang-lsp/build/libs/shadow.jar",
+//        }
+//        local client = vim.lsp.start({
+//            name = 'simplelanguage',
+//            cmd = cmd,
+//            root_dir = vim.fs.dirname(vim.fs.find({ 'start.lsp', 'build.gradle' }, { upward = true })[1]),
+//        })
+//        vim.lsp.buf_attach_client(0, client)
+//    end,
+//})
+//"""
+//    doLast {
+//        if (project.hasProperty("args")) {
+//            println "Our input argument with project property ["+project.getProperty("args")+"]"
+//        }
+//
+//        println jarname
+//        println template
+//    }
+//}
+//generate_nvim_client.dependsOn shadowJar
+//generate_nvim_client.mustRunAfter shadowJar

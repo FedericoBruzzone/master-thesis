@@ -1,0 +1,22 @@
+'{'
+  "semanticTokens.filetypes": [ "*" ],
+  "semanticTokens.enable": true,
+  "coc.preferences.semanticTokensHighlights": true,
+  "coc.preferences.semanticTokensHighlightsStyle": "default",
+
+  "languageserver": '{'
+    "{0}": '{'
+      "command": "java",
+      "args": [
+        "-jar",
+        "{1}/{0}-client.jar"
+      ],
+      "rootPatterns": [
+        "build.gradle"
+      ],
+      "filetypes": [
+        "{0}"
+      ]
+    '}'
+  '}'
+'}'

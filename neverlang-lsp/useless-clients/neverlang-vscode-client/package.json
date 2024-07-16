@@ -1,0 +1,92 @@
+{
+  "name": "neverlang-lsp",
+  "displayName": "neverlang-lsp",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:neverlang"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "neverlang.codeLens",
+        "title": "%neverlang.codeLens%",
+        "category": "NeverlangLSP"
+      },
+      {
+        "command": "neverlang.astVisualizer",
+        "title": "%neverlang.astVisualizer%",
+        "category": "NeverlangLSP"
+      }
+    ],
+    "languages": [
+      {
+        "id": "neverlang",
+        "aliases": [
+          "Neverlang",
+          "neverlang"
+        ],
+        "extensions": [
+          ".nl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "neverlang",
+        "scopeName": "source.nl",
+        "path": "./syntaxes/neverlang.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "properties": {
+        "neverlang.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "message",
+            "verbose"
+          ],
+          "default": "off"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "install:all": "yarn install && cd ast-visualizer && yarn install",
+    "start:webview": "cd ast-visualizer && yarn run dev",
+    "build:webview": "cd ast-visualizer && yarn run build",
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.73.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.26.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "cytoscape-dagre": "^2.5.0",
+    "vscode-languageclient": "^8.0.2"
+  }
+}

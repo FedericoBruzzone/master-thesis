@@ -1,0 +1,60 @@
+plugins {
+    id "neverlang" version "0.9-SNAPSHOT" apply false
+    id "eclipse"
+}
+
+subprojects {
+
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "maven-publish"
+
+    group 'it.unimi.di.adaptlab'
+    version '1.0.1-SNAPSHOT'
+
+    /*wrapper {
+        gradleVersion = '7.4'
+    }
+    compileJava {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }*/
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url "https://maven.adapt-lab.di.unimi.it/neverlang/releases"
+        }
+        maven {
+            url "https://maven.adapt-lab.di.unimi.it/neverlang/snapshots"
+        }
+    }
+
+    ext {
+        neverlangVersion = "2.5.6-SNAPSHOT"
+        junitVersion = "5.9.0"
+    }
+
+    dependencies {
+        implementation 'com.intellij:annotations:12.0'
+        testImplementation 'org.assertj:assertj-core:3.23.1'
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
+}

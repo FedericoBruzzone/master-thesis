@@ -1,0 +1,22 @@
+plugins {
+		id 'application'
+}
+
+dependencies {
+		implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+		implementation 'com.graphql-java:graphql-java:20.0'
+		implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
+		implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+		implementation project(":neverlang-lsp-core")
+		//TODO: remove this dependency
+		implementation project(':neverlang-typesystem')
+		implementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+		implementation "it.unimi.di.adaptlab:neverlang-dexter:${neverlangVersion}"
+//    implementation project(":neverlang-lsp-implementation")
+		testImplementation "it.unimi.di.adaptlab:neverlang-junit-extension:$neverlangVersion"
+}
+
+
+application {
+		mainClassName = "neverlanglsp.astvisualizer.SocketLauncher"
+}

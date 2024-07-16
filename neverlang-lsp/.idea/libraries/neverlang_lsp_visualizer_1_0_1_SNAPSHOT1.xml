@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="neverlang-lsp-visualizer-1.0.1-SNAPSHOT1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/neverlang-lsp/neverlang-lsp-visualizer/build/distributions/neverlang-lsp-visualizer-1.0.1-SNAPSHOT.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

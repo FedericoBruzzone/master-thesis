@@ -1,0 +1,40 @@
+apply plugin: "neverlang"
+
+neverlang {
+		compiler {
+				version = neverlangVersion
+				neverlangModule = "simplelang.TypeLangModule"
+				abstractModules = ["simplelang.SimpleLangModule"]
+		}
+}
+
+
+repositories {
+		mavenCentral()
+}
+
+dependencies {
+		nlgImplementation project(":neverlang-lsp-core")
+		implementation project(":neverlang-lsp-core")
+		nlgImplementation project(":simplelang-typesystem")
+		implementation project(":simplelang-typesystem")
+		implementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+		implementation "it.unimi.di.adaptlab:neverlang-dexter:${neverlangVersion}"
+		implementation project(":neverlang-typesystem")
+		implementation 'org.jgrapht:jgrapht-core:1.5.1'
+		testImplementation 'org.jgrapht:jgrapht-io:1.5.1'
+		testImplementation "it.unimi.di.adaptlab:neverlang-junit-extension:$neverlangVersion"
+		testImplementation project(":simplelang-lsp")
+		implementation project(':neverlang-lsp-defaults')
+
+		implementation "it.unimi.di.adaptlab:neverlang-commons-types:1.0.0-SNAPSHOT"
+}
+
+//task runExprLangDefaultActions(type: neverlang.execClass){
+//    classpath = sourceSets.main.runtimeClasspath + sourceSets.nlg.runtimeClasspath
+//    languageMainClass = "simplelang.SimpleLangTest"
+//}
+
+tasks.named("spotlessJava") {
+		mustRunAfter("compileNeverlang")
+}

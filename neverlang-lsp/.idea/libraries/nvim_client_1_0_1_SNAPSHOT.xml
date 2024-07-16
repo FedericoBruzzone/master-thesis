@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="nvim-client-1.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/neverlang-lsp/nvim-client/build/libs/nvim-client-1.0.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
