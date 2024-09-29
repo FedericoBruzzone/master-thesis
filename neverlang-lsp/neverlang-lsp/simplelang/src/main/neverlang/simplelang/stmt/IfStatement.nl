@@ -14,7 +14,6 @@ module simplelang.stmt.IfStatement {
 
 	    categories:
 	        keyword = { "if", "else" };
-
 	}
 
 	role(before-each){
@@ -25,14 +24,14 @@ module simplelang.stmt.IfStatement {
 	}
 
 	role(type-checker) {
-                0 <typecheck> .{
-                    try {
-                        eval $1
-                        check $0.token : $0.type is controvariant $1.type
-                    }
-                    tryEval $2
-                    tryEval $3
-                }.
+        0 <typecheck> .{
+            try {
+                eval $1
+                check $0.token : $0.type is controvariant $1.type
+            }
+            tryEval $2
+            tryEval $3
+        }.
 	}
 
 }

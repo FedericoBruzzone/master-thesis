@@ -17,10 +17,13 @@ module simplelang.types.BooleanType {
 
     role(type-checker) {
         0 .{
+// infer boolean $0.token
+
             $0.type = $$CompilationUnit.typeInference(Token.of("boolean"), new IdentifierSignature());
         }.
 
         1 .{
+// infer boolean $1.token
             $1.type = $$CompilationUnit.typeInference(Token.of("boolean"), new IdentifierSignature());
         }.
     }

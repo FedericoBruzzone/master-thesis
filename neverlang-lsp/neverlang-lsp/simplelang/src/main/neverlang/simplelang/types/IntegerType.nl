@@ -12,6 +12,7 @@ module simplelang.types.IntegerType {
 
     role(type-checker) {
         0 .{
+        // infer int $0.token
             $0.type = $$CompilationUnit.typeInference(Token.of("int"), new IdentifierSignature());
         }.
 

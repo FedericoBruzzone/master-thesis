@@ -8,6 +8,7 @@ module simplelang.types.StringType {
 
     role(type-checker) {
         0 .{
+        // infer string $0.token
             $0.type = $$CompilationUnit.typeInference(Token.of("string"), new IdentifierSignature());
         }.
 

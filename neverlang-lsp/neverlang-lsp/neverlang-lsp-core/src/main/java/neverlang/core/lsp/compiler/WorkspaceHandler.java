@@ -76,6 +76,7 @@ public abstract class WorkspaceHandler implements Flow.Subscriber<SourceEvent> {
         .filter(e -> e instanceof Subscribable)
         .map(e -> (Subscribable) e)
         .map(Subscribable::getSubscriber);
+    // TODO: Add new subscriber for compilation phase
   }
 
   public Path getRootDir() {

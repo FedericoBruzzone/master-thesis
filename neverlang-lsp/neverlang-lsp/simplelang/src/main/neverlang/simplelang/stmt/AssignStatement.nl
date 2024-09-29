@@ -18,9 +18,7 @@ module simplelang.stmt.AssignStatement {
 	    AssignStatement <-- Identifier "=" Expression ";";
 	}
 
-
 	role(type-checker) {
-
         0 <typecheck> @{
             try {
                 infer identifier $1.token with [$2.type] => $1.type
@@ -30,7 +28,6 @@ module simplelang.stmt.AssignStatement {
                 define $2 $1
             }
         }.
-
 	}
 
 }
