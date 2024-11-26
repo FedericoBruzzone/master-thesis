@@ -28,6 +28,12 @@ module simplelang.expr.Expression {
             brackets = { "(", ")" };
     }
 
+    role(debug) {
+        CBO: @{
+
+        }.
+    }
+
     role(type-checker) {
         CBO: @{
             $CBO[0].token = Token.fromNTASTNode($n, 0);

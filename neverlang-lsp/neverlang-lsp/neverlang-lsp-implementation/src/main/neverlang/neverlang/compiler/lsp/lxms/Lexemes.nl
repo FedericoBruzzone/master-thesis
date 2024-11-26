@@ -27,7 +27,7 @@ module neverlang.compiler.lsp.lxms.Lexemes {
             $3.token = Token.fromASTNode($n, 0);
         }.
 
-        String: .{
+        4 .{
             $4.String = #0.matches.group(1);
             $4.token = Token.fromASTNode($n, 0);
         }.

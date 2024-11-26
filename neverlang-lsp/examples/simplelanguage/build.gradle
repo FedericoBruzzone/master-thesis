@@ -20,7 +20,8 @@ neverlangLSPClient {
   // languageName = "SimpleLang" // ERROR: This should be the class name of the language inside of a package with the same name in lowercase
   languageName = "simplelang.SimpleLang" // It must be the class name with the package name
   fileExt = "sl"
-  jarPath = "/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/examples/simplelanguage/build/libs"
+  // 11/18/24 -> "/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/examples/simplelanguage/build/libs"
+  jarPath = "/home/fcb/dev/tesi-bruzzone/trunk/master-thesis/neverlang-lsp/examples/simplelanguage/build/libs"
   launcher = "lsp.PipeLauncher"
   // jarPath = "/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/neverlang-lsp/simplelang-lsp/build/libs"
 }

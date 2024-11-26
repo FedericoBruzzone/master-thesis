@@ -5,6 +5,7 @@ import java.util.concurrent.SubmissionPublisher;
 import java.util.stream.Stream;
 import neverlang.core.lsp.capabilities.CapabilityBuilder;
 import neverlang.core.lsp.compiler.SourceEvent;
+import neverlang.core.lsp.compiler.WorkspaceHandler;
 import neverlang.core.lsp.services.NeverlangLSPDocumentService;
 import neverlang.core.lsp.services.NeverlangLSPLanguageServer;
 import neverlang.core.lsp.services.NeverlangLSPWorkspaceService;
@@ -25,6 +26,20 @@ public abstract class NeverlangLSPProvider {
 
   public WorkspaceBuilder workspaceBuilder() {
     return (workspace) -> Stream.empty();
+  }
+
+  public Stream<String> typesystems() {
+    return Stream.of();
+  }
+
+  // NEW
+  public String langName() {
+    return "";
+  }
+
+  // NEW
+  public Class<? extends WorkspaceHandler> workspaceHandler() {
+    return null;
   }
 
   public List<CapabilityBuilder> capabilities() {

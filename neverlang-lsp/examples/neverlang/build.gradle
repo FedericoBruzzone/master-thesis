@@ -20,7 +20,8 @@ neverlangLSPClient {
   languageName = "neverlang.compiler.lsp.NeverlangLangLSP" // It must be the class name with the package name
   fileExt = "nl"
   // Arch linux
-  jarPath = "/home/fcb/Documents/neverlang-lsp/examples/neverlang/build/libs"
+  // 11/18/24 -> "/home/fcb/Documents/neverlang-lsp/examples/neverlang/build/libs"
+  jarPath = "/home/fcb/dev/tesi-bruzzone/trunk/master-thesis/neverlang-lsp/examples/neverlang/build/libs"
   // MACOS jarPath = "/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/examples/neverlang/build/libs"
   // jarPath = "/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/neverlang-lsp/simplelang-lsp/build/libs"
 
