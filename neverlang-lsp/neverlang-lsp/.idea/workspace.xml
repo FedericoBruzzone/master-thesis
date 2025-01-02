@@ -60,25 +60,7 @@
                 <item name="neverlang-lsp" type="f1a62948:ProjectNode" />
                 <item name="neverlang-lsp" type="2d1252cf:ModuleNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="neverlang-lsp" type="f1a62948:ProjectNode" />
-                <item name="neverlang-lsp-implementation" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="neverlang-lsp" type="f1a62948:ProjectNode" />
-                <item name="neverlang-lsp-implementation" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="neverlang-lsp" type="f1a62948:ProjectNode" />
-                <item name="neverlang-lsp-implementation" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
+                <item name="publishing" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -152,7 +134,7 @@
     &quot;Gradle.neverlang-lsp:simplelang [build].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.neverlang-lsp:simplelang [testClasses].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.neverlang-lsp:simplelang [test].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.neverlang-lsp:simplelang-lsp [:simplelang-lsp:SocketLauncher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.neverlang-lsp:simplelang-lsp [:simplelang-lsp:SocketLauncher.main()].executor&quot;: &quot;Debug&quot;,
     &quot;Gradle.neverlang-lsp:simplelang-lsp [assemble].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.neverlang-lsp:simplelang-lsp [build].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -176,7 +158,20 @@
       <recent name="neverlang.core.typelang.annotations" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.neverlang-lsp [clean]">
+  <component name="RunManager" selected="Application.SocketLauncher">
+    <configuration name="SocketLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="lsp.SocketLauncher" />
+      <module name="neverlang-lsp.simplelang-lsp.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lsp.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="neverlang-lsp [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -221,7 +216,7 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="neverlang-lsp [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="neverlang-lsp [publishToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -232,7 +227,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="dependencies" />
+            <option value="publishToMavenLocal" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -265,42 +260,20 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="neverlang-lsp:neverlang-lsp-implementation [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/neverlang-lsp-implementation" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="clean" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
     <list>
+      <item itemvalue="Application.SocketLauncher" />
+      <item itemvalue="Gradle.neverlang-lsp [publishToMavenLocal]" />
       <item itemvalue="Gradle.neverlang-lsp [clean]" />
-      <item itemvalue="Gradle.neverlang-lsp [dependencies]" />
       <item itemvalue="Gradle.neverlang-lsp:neverlang-lsp-implementation [build]" />
-      <item itemvalue="Gradle.neverlang-lsp:neverlang-lsp-implementation [clean]" />
       <item itemvalue="Gradle.neverlang-lsp [build]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SocketLauncher" />
+        <item itemvalue="Gradle.neverlang-lsp [publishToMavenLocal]" />
         <item itemvalue="Gradle.neverlang-lsp [clean]" />
         <item itemvalue="Gradle.neverlang-lsp [build]" />
         <item itemvalue="Gradle.neverlang-lsp:neverlang-lsp-implementation [build]" />
-        <item itemvalue="Gradle.neverlang-lsp:neverlang-lsp-implementation [clean]" />
-        <item itemvalue="Gradle.neverlang-lsp [dependencies]" />
       </list>
     </recent_temporary>
   </component>
@@ -370,7 +343,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/neverlang-lsp-implementation/build/generated/sources/neverlang/main/java/neverlang/compiler/lsp/mdl/labels/ProductionLabels$role$type_checker$0.java</url>
-          <line>61</line>
+          <line>56</line>
           <option name="timeStamp" value="96" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -390,18 +363,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/neverlang-lsp-implementation/build/generated/sources/neverlang/main/java/neverlang/compiler/lsp/lxms/Lexemes$role$type_checker$5.java</url>
-          <line>75</line>
+          <line>71</line>
           <option name="timeStamp" value="208" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/simplelang-typesystem/src/main/java/simplelang/typesystem/basetypes/BooleanBaseType.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="209" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/neverlang-lsp-implementation/src/main/java/neverlang/compiler/lsp/LSPProvider.java</url>
           <line>50</line>
           <option name="timeStamp" value="210" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/simplelang/build/generated/sources/neverlang/main/java/simplelang/fun/FunDeclaration$role$type_checker$0.java</url>
+          <line>87</line>
+          <option name="timeStamp" value="213" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

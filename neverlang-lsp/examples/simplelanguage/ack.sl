@@ -2,8 +2,8 @@ function sum(m,n) {
     if (m == 0) {
         return m + n;
     } else {
-        //return false; /* hello */
-        return m + n;
+        return false;
+        // return m + n;
     }
 }
 

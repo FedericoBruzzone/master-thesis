@@ -7,7 +7,7 @@ vim.api.nvim_create_autocmd(FileType, {
         local cmd = {
             "java",
             "-jar",
-            "/Users/federicobruzzone/Documents/ADAPT-LAB/tesi-dagostino/trunk/examples/simplelanguage/build/libs/simplelang.SimpleLang-client.jar",
+            "/home/fcb/dev/tesi-bruzzone/trunk/master-thesis/neverlang-lsp/examples/simplelanguage/build/libs/simplelang.SimpleLang-client.jar",
         }
         local client = vim.lsp.start({
             name = "simplelang.SimpleLang",
